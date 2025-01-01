@@ -23,8 +23,8 @@ def onExpressionModelUpdate():
       [2,5,-6,7],
       [5,0,-3,2]
     ]
-    M1 = Matrix.from_2d_list(temp_list)
-    print(Op.reducedRowEchelonForm(M1))
+    M1 = linearalgebra.Matrix.from_2d_list(temp_list)
+    print(linearalgebra.Op.reducedRowEchelonForm(M1))
 
   editormatrices.onMatrixModelUpdate("A")
 
