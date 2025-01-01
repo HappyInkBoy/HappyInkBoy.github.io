@@ -393,7 +393,9 @@ class Op():
         if mat[row][col] == -0.0:
           mat[row][col] = 0.0
 
-    return mat
+    rref_matrix = Matrix.from_2d_list(mat)
+
+    return rref_matrix
 
   @classmethod
   def determinant(cls, mat):

@@ -18,13 +18,10 @@ def onExpressionModelUpdate():
       for col in range(A["cols"]):
         A["matrix"][row][col] = B["matrix"][row][col] + C["matrix"][row][col]
   if expression == "A=RREF(B)":
-    temp_list = [
-      [1,2,3,4],
-      [2,5,-6,7],
-      [5,0,-3,2]
-    ]
-    M1 = linearalgebra.Matrix.from_2d_list(temp_list)
-    print(linearalgebra.Op.reducedRowEchelonForm(M1))
+    B = model["matrices"]["B"]["matrix"]
+    M1 = linearalgebra.Matrix.from_2d_list(B)
+    temp_matrix = linearalgebra.Op.reducedRowEchelonForm(M1)
+    model["matrices"]["A"]["matrix"] = temp_matrix.give_2d_list()
 
   editormatrices.onMatrixModelUpdate("A")
 
