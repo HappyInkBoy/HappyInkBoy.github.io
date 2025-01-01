@@ -17,16 +17,16 @@ def onExpressionModelUpdate():
     for row in range(A["rows"]):
       for col in range(A["cols"]):
         A["matrix"][row][col] = B["matrix"][row][col] + C["matrix"][row][col]
-    if expression == "A=RREF(B)":
-      temp_list = [
-        [1,2,3,4],
-        [2,5,-6,7],
-        [5,0,-3,2]
-      ]
-      M1 = Matrix.from_2d_list(temp_list)
-      print(Op.reducedRowEchelonForm(M1))
+  if expression == "A=RREF(B)":
+    temp_list = [
+      [1,2,3,4],
+      [2,5,-6,7],
+      [5,0,-3,2]
+    ]
+    M1 = Matrix.from_2d_list(temp_list)
+    print(Op.reducedRowEchelonForm(M1))
 
-    editormatrices.onMatrixModelUpdate("A")
+  editormatrices.onMatrixModelUpdate("A")
 
 def expressionInputAction(event):
   element = event.target
