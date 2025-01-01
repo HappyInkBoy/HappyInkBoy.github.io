@@ -73,7 +73,7 @@ def matrixEditAction(event):
   col = laData["col"]
   element.clear()
   input = html.INPUT()
-  input.attrs["class_name"] = "matrix"
+  input.class_name = "matrix"
   element <= input
   input.bind("blur", matrixEditInputCloseAction)
 
