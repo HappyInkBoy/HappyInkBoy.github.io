@@ -22,6 +22,13 @@ def onExpressionModelUpdate():
     M1 = linearalgebra.Matrix.from_2d_list(B)
     temp_matrix = linearalgebra.Op.reducedRowEchelonForm(M1)
     model["matrices"]["A"]["matrix"] = temp_matrix.give_2d_list()
+  if expression == "ANS=AB":
+    A = model["matrices"]["A"]["matrix"]
+    B = model["matrices"]["B"]["matrix"]
+    M1 = linearalgebra.Matrix.from_2d_list(A)
+    M2 = linearalgebra.Matrix.from_2d_list(B)
+    temp_matrix = M1.multiply(M2)
+    model["matrices"]["ANS"]["matrix"] = temp_matrix.give_2d_list()
 
   editormatrices.onMatrixModelUpdate("A")
 

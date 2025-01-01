@@ -11,6 +11,7 @@ Nov 16, 2024: Modified the __init() method to assign the Matrix class a list of 
 Nov 25, 2024: Added the give_2d_list() method to the Matrix class
 Dec 30, 2024: Modified the entire code's methods (except for give_2d_list() and from_2d_list()) such that they are in camel case instead of using underscores. Also modified the from_2d_list() method to properly create a matrix from a 2d list of floats/ints
 Dec 31, 2024: Finished the determinant() method. Modified the __str__() magic method for the Matrix class. Added the hadamardProduct() method.
+Jan 1, 2025: Added the trace() method. Modified the methods of the Op class to all be static methods instead of class methods.
 """
 import math
 
@@ -258,8 +259,8 @@ class Op():
   This class will be used to perform more complex operations on vectors and matrices
   """
 
-  @classmethod
-  def dotProduct(cls, v1, v2):
+  @staticmethod
+  def dotProduct(v1, v2):
     """
     Operation for the dot product of two vectors
     Args:
@@ -277,8 +278,8 @@ class Op():
       raise Exception("Cannot evaluate the dot product of two vectors with different dimesions")
     return scalar
 
-  @classmethod
-  def crossProduct(cls, v1, v2):
+  @staticmethod
+  def crossProduct(v1, v2):
     """
     Operation for the cross product of two vectors
     Args:
@@ -299,8 +300,8 @@ class Op():
 
     return v3
   
-  @classmethod
-  def angleBetweenVectors(cls, v1, v2):
+  @staticmethod
+  def angleBetweenVectors(v1, v2):
     """
     Finds the angle between to given vecters using the dot product
     Args:
@@ -322,8 +323,8 @@ class Op():
       raise Exception("Cannot evaluate the angle between two vectors with different dimesions")
     return angle
 
-  @classmethod
-  def hadamardProduct(cls, mat1, mat2):
+  @staticmethod
+  def hadamardProduct(mat1, mat2):
     """
     Computes the hadamard product of two matrices/vectors
     Args:
@@ -347,8 +348,30 @@ class Op():
     result = Matrix.from_2d_list(result)
     return result
 
-  @classmethod
-  def reducedRowEchelonForm(cls, mat):
+  @staticmethod
+  def trace(mat):
+    """
+    Computes the trace of the matrix (trace is the sum of the matrix's diagonals)
+    Args:
+      mat (Matrix): A square matrix
+    Returns:
+      result (float or int): The sum of the matrix's diagonals
+    """
+    # Add more validations later
+
+    if not mat.square:
+      raise Exception("Cannot evaluate the trace of a non-square matrix")
+
+    mat = mat.give_2d_list()
+
+    result = 0
+    for i in range(0,len(mat)):
+      result += mat[i][i]
+    
+    return result
+
+  @staticmethod
+  def reducedRowEchelonForm(mat):
     """
     Converts a matrix into reduced row echelon form
     Args:
@@ -397,8 +420,8 @@ class Op():
 
     return rref_matrix
 
-  @classmethod
-  def determinant(cls, mat):
+  @staticmethod
+  def determinant(mat):
     """
     Computes the determinant of a provided matrix
     Args:
@@ -491,8 +514,3 @@ my_list2 = [
   [3,2,1],
   [3,2,1]
 ]
-
-M1 = Matrix.from_2d_list(my_list1)
-M2 = Matrix.from_2d_list(my_list2)
-
-print(Op.hadamardProduct(M1,M2))
