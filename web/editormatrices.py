@@ -57,16 +57,27 @@ def initMatrixPlusMinus(parentNode, name, rowsOrCols):
     plus.bind("click", plusMinusAction)
 
 def matrixEditInputCloseAction(event):
+  if event.type == "keyup" and event.key != "Enter":
+     return
   element = event.target
   laData = eval(element.parent.attrs["laData"])
   name = laData["name"]
   row = laData["row"]
   col = laData["col"]
-  model["matrices"][name]["matrix"][row][col] = float(element.value)
+  try:
+    model["matrices"][name]["matrix"][row][col] = float(element.value)
+  except Exception:
+    pass # no new value
+  element.unbind("blur", matrixEditInputCloseAction)
+  element.unbind("keyup", matrixEditInputCloseAction)
   onMatrixModelUpdate(name)
 
 def matrixEditAction(event):
   element = event.target
+  if "laData" not in element.attrs:
+     print("wrong element to hook matrixEditAction")
+     print(element)
+     return
   laData = eval(element.attrs["laData"])
   name = laData["name"]
   row = laData["row"]
@@ -75,7 +86,9 @@ def matrixEditAction(event):
   input = html.INPUT()
   input.class_name = "matrix"
   element <= input
+  input.focus()
   input.bind("blur", matrixEditInputCloseAction)
+  input.bind("keyup", matrixEditInputCloseAction)
 
 
 def onMatrixModelUpdate(name):
@@ -115,4 +128,3 @@ def initMatrix(parentNode, name):
     matrixEditor <= row2
     parentNode <= matrixEditor
     onMatrixModelUpdate(name)
-   
