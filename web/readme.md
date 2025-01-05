@@ -3,6 +3,7 @@
 * open terminal
 * go to <folder that contains this github repo>/web
 * enter this command to start a local http server: `python3 -m http.server`
+* open web browser to http://localhost:8000/calculator.html
 
 # To publish
 

@@ -25,13 +25,21 @@ def onExpressionModelUpdate():
 
   editormatrices.onMatrixModelUpdate("A")
 
+def isValidExpression(expression):
+  return expression == "A=B+C" or expression == "A=RREF(B)"
+
 def expressionInputAction(event):
-  if event.type == "keyup" and event.key != "Enter":
-     return
   element = event.target
+  if event.type == "keyup" and event.key != "Enter":
+     element.class_name = "valid" if isValidExpression(element.value) else "invalid"
+     return
   model["expression"] = element.value
   element.value = ""
   onExpressionModelUpdate()
+
+def enterCommand(commandName):
+  input = document["expression-input"]
+  input.value += commandName
 
 def initExpression(parentNode):
   input = html.INPUT(id="expression-input")
