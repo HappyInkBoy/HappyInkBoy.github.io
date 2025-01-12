@@ -14,6 +14,7 @@ Dec 31, 2024: Finished the determinant() method. Modified the __str__() magic me
 Jan 1, 2025: Added the trace() method. Modified the methods of the Op class to all be static methods instead of class methods. Added the __add__(), __sub__(), and scalarMultiply() methods to the Matrix class. Renamed multiply() to matrixMultiply(). Fixed a bug in matrixMultiply()
 Jan 2, 2025: Added the transpose() method. Fixed the hadamardProduct() method to now work with vectors.
 Jan 11, 2025: Added the inverseMatrix() and __pow__() methods to the Matrix class
+Jane 12, 2025: Fixed matrixMultiply() to work with different types of non-square matrices.
 """
 import math
 
@@ -299,7 +300,16 @@ class Matrix():
     Returns:
       transformed_matrix (Matrix or Vector): The resulting tranformation/vector after being transformed by the calling matrix
     """
-    # Add validations later
+    
+    if (not isinstance(other_matrix,Matrix)) and (not isinstance(other_matrix,Vector)):
+      raise TypeError(f"matrixMultiply() can only multiply matrices wih other matrices or vectors, not {type(other_matrix)} objects")
+    elif isinstance(other_matrix, Vector):
+      if len(self.vector_list) != len(other_matrix.components):
+        raise Exception("Cannot multiply matrices of incompatible dimensions")
+    elif isinstance(other_matrix, Matrix):
+      if len(self.vector_list) != len(other_matrix.vector_list[0].components):
+        raise Exception("Cannot multiply matrices of incompatible dimensions")
+
     if isinstance(other_matrix, Vector):
       other_matrix_vectors = [other_matrix] # Turns it into a 2d list due to how the algorithm works for matrix multiplication
     else:
@@ -308,7 +318,7 @@ class Matrix():
     transformed_matrix_list = []
 
     for vector in other_matrix_vectors:
-      transformed_vector = Vector([0]*len(vector.components)) # Creates the zero vector
+      transformed_vector = Vector([0]*len(self.vector_list[0].components)) # Creates the zero vector
       for index, comp in enumerate(vector.components):
         # (Note to self) This calculation could be a bit cleaner if you made __iadd__() for the Vector class
         transformed_vector = transformed_vector + self.vector_list[index]*comp
@@ -339,11 +349,9 @@ class Matrix():
           sublist.append(0)
       identity_matrix_list.append(sublist)
 
-
     # Below is the code for creating the augmented matrix
 
     temp_list = self.vector_list.copy()
-
     for sublist in identity_matrix_list:
       temp_list.append(Vector(sublist))
 
@@ -651,13 +659,12 @@ class Op():
 # ---------------------------
 
 my_list1 = [
-  [1,2],
-  [1,4],
+  [1,2,3]
 ]
 my_list2 = [
-  [3,2,1],
-  [3,2,1],
-  [1,2,3]
+  [3,1],
+  [3,2],
+  [3,2]
 ]
 
 M1 = Matrix.from_2d_list(my_list1)
@@ -666,4 +673,4 @@ M2 = Matrix.from_2d_list(my_list2)
 v1 = Vector([1,2,3])
 
 
-print(M1**-2)
+print(M1.matrixMultiply(M2))
