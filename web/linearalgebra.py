@@ -11,7 +11,9 @@ Nov 16, 2024: Modified the __init() method to assign the Matrix class a list of 
 Nov 25, 2024: Added the give_2d_list() method to the Matrix class
 Dec 30, 2024: Modified the entire code's methods (except for give_2d_list() and from_2d_list()) such that they are in camel case instead of using underscores. Also modified the from_2d_list() method to properly create a matrix from a 2d list of floats/ints
 Dec 31, 2024: Finished the determinant() method. Modified the __str__() magic method for the Matrix class. Added the hadamardProduct() method.
-Jan 1, 2025: Added the trace() method. Modified the methods of the Op class to all be static methods instead of class methods.
+Jan 1, 2025: Added the trace() method. Modified the methods of the Op class to all be static methods instead of class methods. Added the __add__(), __sub__(), and scalarMultiply() methods to the Matrix class. Renamed multiply() to matrixMultiply(). Fixed a bug in matrixMultiply()
+Jan 2, 2025: Added the transpose() method. Fixed the hadamardProduct() method to now work with vectors.
+Jan 11, 2025: Added the inverseMatrix() and __pow__() methods to the Matrix class
 """
 import math
 
@@ -215,9 +217,81 @@ class Matrix():
       components_list.append(sublist)
     
     return components_list
+  
+  def __add__(self, mat):
+    """
+    This functions adds a matrix to another matrix of the same dimension
+    Args:
+      mat (Matrix): A matrix of the same dimension
+    Returns:
+      Matrix(result): The sum of both matrices
+    """
+    if not isinstance(mat, Matrix):
+      raise TypeError(f"Cannot add a {type(mat)} to a Matrix")
+    elif len(mat.vector_list) != len(self.vector_list) or len(mat.vector_list[0].components) != len(self.vector_list[0].components):
+      raise Exception("Cannot add two matrices with different dimensions")
     
+    result = []
 
-  def multiply(self, other_matrix):
+    for i in range(0,len(mat.vector_list)):
+      result.append(self.vector_list[i] + mat.vector_list[i])
+    
+    return Matrix(result)
+  
+  def __sub__(self, mat):
+    """
+    This functions subtracts a matrix from another matrix of the same dimension
+    Args:
+      mat (Matrix): A matrix of the same dimension
+    Returns:
+      Matrix(result): The difference of both matrices
+    """
+    if not isinstance(mat, Matrix):
+      raise TypeError(f"Cannot subtract a {type(mat)} from a Matrix")
+    elif len(mat.vector_list) != len(self.vector_list) or len(mat.vector_list[0].components) != len(self.vector_list[0].components):
+      raise Exception("Cannot subtract two matrices with different dimensions")
+    
+    result = []
+
+    for i in range(0,len(mat.vector_list)):
+      result.append(self.vector_list[i] - mat.vector_list[i])
+    
+    return Matrix(result)
+
+  def scalarMultiply(self, scalar):
+    """
+    This functions mutliplies the matrix with a scalar (number)
+    Args:
+      scalar (int or float): The number that is multiplying the matrix
+    Returns:
+      Matrix(result): The matrix that is a product of the scalar multiplication
+    """
+    if not isinstance(scalar, int) and not isinstance(scalar, float):
+      raise TypeError(f"Cannot multiply a matrix with {type(scalar)}")
+    
+    result = []
+    for i in range(0,len(self.vector_list)):
+      result.append(self.vector_list[i] * scalar)
+    
+    return Matrix(result)
+
+  def transpose(self):
+    """
+    Creates a transposed matrix
+    Returns:
+      transposed_matrix (Matrix): A transposed matrix
+    """
+    # Note that this function relies on the way that I implemented the Matrix class (in terms of it being a list of vectors and how the give_2d_list() method returns the matrix as a 2d list in a different format from the vectors) so if I modify the way that the __init__() works, then I have to modify this method
+    temp_list = self.give_2d_list()
+    transposed_vector_list = []
+    for sublist in temp_list:
+      transposed_vector_list.append(Vector(sublist))
+    
+    transposed_matrix = Matrix(transposed_vector_list)
+
+    return transposed_matrix
+
+  def matrixMultiply(self, other_matrix):
     """
     This is the function for matrix-vector/matrix-matrix multiplication
     Args:
@@ -234,7 +308,7 @@ class Matrix():
     transformed_matrix_list = []
 
     for vector in other_matrix_vectors:
-      transformed_vector = Vector([0,0]) # Creates the zero vector
+      transformed_vector = Vector([0]*len(vector.components)) # Creates the zero vector
       for index, comp in enumerate(vector.components):
         # (Note to self) This calculation could be a bit cleaner if you made __iadd__() for the Vector class
         transformed_vector = transformed_vector + self.vector_list[index]*comp
@@ -246,6 +320,63 @@ class Matrix():
       transformed_matrix = Matrix(transformed_matrix_list)
 
     return transformed_matrix
+  
+  def inverseMatrix(self):
+    """
+    Returns the inverse matrix of the calling object
+    """
+
+    if not self.square:
+      raise Exception("Only square matrices can be exponentiated")
+
+    identity_matrix_list = []
+    for i in range(0,len(self.vector_list)):
+      sublist = []
+      for j in range(0,len(self.vector_list[0].components)):
+        if i == j:
+          sublist.append(1)
+        else:
+          sublist.append(0)
+      identity_matrix_list.append(sublist)
+
+
+    # Below is the code for creating the augmented matrix
+
+    temp_list = self.vector_list.copy()
+
+    for sublist in identity_matrix_list:
+      temp_list.append(Vector(sublist))
+
+    temp_matrix = Matrix(temp_list)
+    temp_matrix = Op.reducedRowEchelonForm(temp_matrix)
+    midpoint = math.floor((len(temp_matrix.vector_list)-1)/2)
+    inverse_matrix_list = temp_matrix.vector_list[midpoint+1:] # The +1 is there because (by default), the starting index in inclusive for list slicing. Therefore, I needed to add 1 to make it exclusive.
+    
+    return Matrix(inverse_matrix_list)
+  
+  def __pow__(self, exponent):
+    """
+    Raises a matrix to any power
+    Args:
+      exponent (int): An integer value
+    Returns:
+      exponentiated_matrix (Matrix): The power of the exponentiation
+    """
+    if not self.square:
+      raise Exception("Only square matrices can be exponentiated")
+    elif not isinstance(exponent,int):
+      raise TypeError("Matrix object can only be raised the power of an integer")
+    
+    # Inverts the matrix if the exponent is negative
+    if exponent < 0:
+      temp_matrix = self.inverseMatrix()
+    
+    original_matrix = Matrix(temp_matrix.vector_list.copy())
+    exponentiated_matrix = Matrix(temp_matrix.vector_list.copy())
+    for i in range(0,abs(exponent)-1):
+      exponentiated_matrix = exponentiated_matrix.matrixMultiply(original_matrix)
+    
+    return exponentiated_matrix
 
   def __str__(self):
     """
@@ -335,17 +466,28 @@ class Op():
     """
     # This is the simplest thing to calculate (just multiply the components)
     
-    # Add validations later
-    mat1 = mat1.give_2d_list()
-    mat2 = mat2.give_2d_list()
-    result = []
-    for row in range(0,len(mat1)):
-      sublist = []
-      for col in range(0,len(mat1[0])):
-        sublist.append(mat1[row][col]*mat2[row][col])
-      result.append(sublist)
+    if isinstance(mat1,Vector) and isinstance(mat2,Vector):
+      if not Vector.isSameDimension(mat1,mat2):
+        raise Exception("Cannot evaluate the hadamard product of two vectors with different dimensions")
+      result = []
+      for i in range(0,len(mat1.components)):
+        result.append(mat1.components[i] * mat2.components[i])
+      result = Vector(result)
+    elif isinstance(mat1,Matrix) and isinstance(mat2,Matrix):
+      if len(mat1.vector_list) != len(mat2.vector_list) or len(mat1.vector_list[0].components) != len(mat1.vector_list[0].components):
+        raise Exception("Cannot evaluate the hadamard product of two matrices with different dimensions")
+      mat1 = mat1.give_2d_list()
+      mat2 = mat2.give_2d_list()
+      result = []
+      for row in range(0,len(mat1)):
+        sublist = []
+        for col in range(0,len(mat1[0])):
+          sublist.append(mat1[row][col]*mat2[row][col])
+        result.append(sublist)
+      result = Matrix.from_2d_list(result)
+    else:
+      raise TypeError("Hadamard product can only be evaluated for 2 vectors or 2 matrices")
 
-    result = Matrix.from_2d_list(result)
     return result
 
   @staticmethod
@@ -357,9 +499,10 @@ class Op():
     Returns:
       result (float or int): The sum of the matrix's diagonals
     """
-    # Add more validations later
 
-    if not mat.square:
+    if not isinstance(mat,Matrix):
+      raise TypeError(f"Cannot evaluate the trace of a {type(mat)} object")
+    elif not mat.square:
       raise Exception("Cannot evaluate the trace of a non-square matrix")
 
     mat = mat.give_2d_list()
@@ -379,7 +522,9 @@ class Op():
     Returns:
       rref_matrix (Matrix): The same matrix in reduced row echelon form
     """
-    # Add validations later
+
+    if not isinstance(mat,Matrix):
+      raise TypeError(f"Cannot convert a {type(mat)} object into reduced row echelon form")
 
     # BTW this code below has multiple return statements so maybe later I should modify it to only have one return statement
 
@@ -429,9 +574,10 @@ class Op():
     Returns:
       det (float): The signed volume of the polytope formed by the matrix's vectors
     """
-    if not mat.square:
+    if not isinstance(mat,Matrix):
+      raise TypeError(f"Cannot evaluate the determinant of a {type(mat)} object")
+    elif not mat.square:
       raise Exception("Cannot evaluate the determinant of a non-square matrix")
-    # Add more validations later
     
     # Code below converts the matrix into row echelon form (not reduced)
 
@@ -505,12 +651,19 @@ class Op():
 # ---------------------------
 
 my_list1 = [
-  [1,2,3],
-  [1,4,3],
-  [1,2,3]
+  [1,2],
+  [1,4],
 ]
 my_list2 = [
   [3,2,1],
   [3,2,1],
-  [3,2,1]
+  [1,2,3]
 ]
+
+M1 = Matrix.from_2d_list(my_list1)
+M2 = Matrix.from_2d_list(my_list2)
+
+v1 = Vector([1,2,3])
+
+
+print(M1**-2)
