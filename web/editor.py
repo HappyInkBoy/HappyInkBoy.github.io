@@ -8,6 +8,7 @@ editor = html.TABLE()
 editor <= html.TR(html.TD(html.DIV(id="commands")))
 editor <= html.TR(html.TD(html.DIV(id="matrices")))
 editor <= html.TR(html.TD(html.DIV(id="expression")))
+editor <= html.TR(html.TD(html.DIV(id="error")))
 editor <= html.TR(html.TD(html.DIV(id="history")))
 document <= editor
 

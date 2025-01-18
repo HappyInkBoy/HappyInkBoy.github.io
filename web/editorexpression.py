@@ -34,6 +34,14 @@ def enterCommand(commandName):
   input = document["expression-input"]
   input.value += commandName
 
+def setError(error):
+  errorDiv = document['error']
+  errorDiv.innerHTML = error
+
+def clearError():
+  errorDiv = document['error']
+  errorDiv.innerHTML = ""
+
 def initExpression(parentNode):
   input = html.INPUT(id="expression-input")
   parentNode <= input
@@ -49,10 +57,16 @@ regular_expressions = {
 }
 
 def parser(expression):
-  expression = expression.replace(" ", "")
-  r = re.search(regular_expressions["assignment_exp"], expression)
-  if r and r.group(1) and r.group(2):
-    parserAssignmentExpression(r.group(1), r.group(2))
+  try:
+    expression = expression.replace(" ", "")
+    r = re.search(regular_expressions["assignment_exp"], expression)
+    if r and r.group(1) and r.group(2):
+      parserAssignmentExpression(r.group(1), r.group(2))
+    clearError()
+  except Exception as err:
+    print("ok2")
+    setError(str(err))
+
   
 
 def parserAssignmentExpression(variable, implicitExpression):
@@ -78,6 +92,9 @@ def parserDualExpression(leftVariable, dualOperator, rightVariable):
   elif dualOperator == "☉":
     result = linearalgebra.Op.hadamardProduct(leftMatrix,rightMatrix)
   elif dualOperator == "·":
+    if len(leftMatrix.vector_list) > 1 or len(rightMatrix.vector_list) > 1:
+      print("ok")
+      raise Exception("Dot product can only be performed on column vectors")
     leftVector = leftMatrix.vector_list[0]
     rightVector = rightMatrix.vector_list[0]
     scalar_result = linearalgebra.Op.dotProduct(leftVector,rightVector)
