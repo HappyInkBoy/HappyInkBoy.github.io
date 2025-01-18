@@ -53,7 +53,9 @@ def initExpression(parentNode):
 
 regular_expressions = {
   "assignment_exp": "^([A-Z])=(.+)",
-  "dual_exp": "^([A-Z])([+-☉·⨯])([A-Z])"
+  "implicit_exp": "(.+)",
+  "dual_exp": "^([A-Z])([+-☉·⨯])([A-Z])",
+  "single_exp": "^([A-Z]+)\(([A-Z])\)"
 }
 
 def parser(expression):
@@ -66,16 +68,16 @@ def parser(expression):
       clearError()
       return
     
-    r = re.search(regular_expressions["dual_exp"], expression)
-    if r and r.group(1) and r.group(2) and r.group(3):
-      result = parserDualExpression(r.group(1), r.group(2), r.group(3))
-      modelMatrixResult = model["matrices"]["ANS"]
-      modelMatrixResult["matrix"] = result
+    r = re.search(regular_expressions["implicit_exp"], expression)
+    if r and r.group(1):
+      print("valid implicit expression")
+      parserImplicitExpression(r.group(1))
       clearError()
       return   
 
   except Exception as err:
     print("ok2")
+    print(str(err))
     setError(str(err))
 
   
@@ -83,13 +85,31 @@ def parser(expression):
 def parserAssignmentExpression(variable, implicitExpression):
   print(variable)
   print(implicitExpression)
-  # dual expression ?
+
+  r = re.search(regular_expressions["single_exp"], implicitExpression)
+  if r and r.group(1) and r.group(2):
+    result = parserSingleExpression(r.group(1), r.group(2))
+    modelMatrixResult = model["matrices"][variable]
+    modelMatrixResult["matrix"] = result
+
   r = re.search(regular_expressions["dual_exp"], implicitExpression)
   if r and r.group(1) and r.group(2) and r.group(3):
     result = parserDualExpression(r.group(1), r.group(2), r.group(3))
     modelMatrixResult = model["matrices"][variable]
     modelMatrixResult["matrix"] = result
-  # or single expression ?
+
+def parserImplicitExpression(implicitExpression):
+  r = re.search(regular_expressions["single_exp"], implicitExpression)
+  if r and r.group(1) and r.group(2):
+    result = parserSingleExpression(r.group(1), r.group(2))
+    modelMatrixResult = model["matrices"]["ANS"]
+    modelMatrixResult["matrix"] = result
+
+  r = re.search(regular_expressions["dual_exp"], implicitExpression)
+  if r and r.group(1) and r.group(2) and r.group(3):
+    result = parserDualExpression(r.group(1), r.group(2), r.group(3))
+    modelMatrixResult = model["matrices"]["ANS"]
+    modelMatrixResult["matrix"] = result
 
 def parserDualExpression(leftVariable, dualOperator, rightVariable):
   lm = list(model["matrices"][leftVariable]["matrix"])
@@ -115,5 +135,12 @@ def parserDualExpression(leftVariable, dualOperator, rightVariable):
     rightVector = rightMatrix.vector_list[0]
     vector_result = linearalgebra.Op.crossProduct(leftVector,rightVector)
     result = linearalgebra.Matrix([vector_result])
+  return result.give_2d_list()
+
+def parserSingleExpression(function, variable):
+  variable_list = list(model["matrices"][variable]["matrix"])
+  variable_matrix = linearalgebra.Matrix.from_2d_list(variable_list)
+  if function == "RREF":
+    result = linearalgebra.Op.reducedRowEchelonForm(variable_matrix)
 
   return result.give_2d_list()
