@@ -39,9 +39,9 @@ Valid expressions are represented below in the form of the EBNF (Extended Backus
 * matrix digit expression = variable, matrix digit operator, number ;
 
 Note that:
-☉ is U+2609
-· is U+00B7
-⨯ is U+2A2F
+* ☉ is U+2609
+* · is U+00B7
+* ⨯ is U+2A2F
 
 Below are strech goals
 * A + B + C
