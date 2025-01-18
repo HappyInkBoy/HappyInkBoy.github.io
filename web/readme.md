@@ -29,14 +29,14 @@ number = [ "-" ], digit, {digit} ;
 
 Valid expressions are represented below in the form of the EBNF (Extended Backus Naur Form): https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form
 
-dual operator = "+" | "-" | "*" | "☉" | "·" | "⨯" ;
-matrix digit operator = "^" ;
-single operator = "RREF" | "DET" | "TRACE" | "TRANSPOSE" ;
-assignement expression = variable, "=", implicit expression ;
-implicit expression = dual expression | single expression ;
-dual expression = variable, dual operator, variable ; 
-single expression = single operator, "(", variable, ")" ;
-matrix digit expression = variable, matrix digit operator, number ;
+* dual operator = "+" | "-" | "*" | "☉" | "·" | "⨯" ;
+* matrix digit operator = "^" ;
+* single operator = "RREF" | "DET" | "TRACE" | "TRANSPOSE" ;
+* assignement expression = variable, "=", implicit expression ;
+* implicit expression = dual expression | single expression ;
+* dual expression = variable, dual operator, variable ; 
+* single expression = single operator, "(", variable, ")" ;
+* matrix digit expression = variable, matrix digit operator, number ;
 
 Note that:
 ☉ is U+2609
