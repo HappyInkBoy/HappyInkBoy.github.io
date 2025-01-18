@@ -15,8 +15,8 @@ def onExpressionModelUpdate():
 #    M1 = linearalgebra.Matrix.from_2d_list(B)
 #    temp_matrix = linearalgebra.Op.reducedRowEchelonForm(M1)
 #    model["matrices"]["A"]["matrix"] = temp_matrix.give_2d_list()
-
-  editormatrices.onMatrixModelUpdate("A")
+  for key in model["matrices"]:
+    editormatrices.onMatrixModelUpdate(key)
 
 def isValidExpression(expression):
   return expression == "A=B+C" or expression == "A=RREF(B)"
@@ -61,8 +61,19 @@ def parser(expression):
     expression = expression.replace(" ", "")
     r = re.search(regular_expressions["assignment_exp"], expression)
     if r and r.group(1) and r.group(2):
+      print("valid assignment expression")
       parserAssignmentExpression(r.group(1), r.group(2))
-    clearError()
+      clearError()
+      return
+    
+    r = re.search(regular_expressions["dual_exp"], expression)
+    if r and r.group(1) and r.group(2) and r.group(3):
+      result = parserDualExpression(r.group(1), r.group(2), r.group(3))
+      modelMatrixResult = model["matrices"]["ANS"]
+      modelMatrixResult["matrix"] = result
+      clearError()
+      return   
+
   except Exception as err:
     print("ok2")
     setError(str(err))
