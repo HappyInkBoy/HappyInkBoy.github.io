@@ -124,13 +124,14 @@ def parserDualExpression(leftVariable, dualOperator, rightVariable):
     result = linearalgebra.Op.hadamardProduct(leftMatrix,rightMatrix)
   elif dualOperator == "·":
     if len(leftMatrix.vector_list) > 1 or len(rightMatrix.vector_list) > 1:
-      print("ok")
       raise Exception("Dot product can only be performed on column vectors")
     leftVector = leftMatrix.vector_list[0]
     rightVector = rightMatrix.vector_list[0]
     scalar_result = linearalgebra.Op.dotProduct(leftVector,rightVector)
     result = linearalgebra.Matrix.from_2d_list([[scalar_result]])
   elif dualOperator == "⨯":
+    if len(leftMatrix.vector_list) > 1 or len(rightMatrix.vector_list) > 1:
+      raise Exception("Cross product can only be performed on column vectors")
     leftVector = leftMatrix.vector_list[0]
     rightVector = rightMatrix.vector_list[0]
     vector_result = linearalgebra.Op.crossProduct(leftVector,rightVector)
@@ -142,5 +143,13 @@ def parserSingleExpression(function, variable):
   variable_matrix = linearalgebra.Matrix.from_2d_list(variable_list)
   if function == "RREF":
     result = linearalgebra.Op.reducedRowEchelonForm(variable_matrix)
+  elif function == "DET":
+    scalar_result = linearalgebra.Op.determinant(variable_matrix)
+    result = linearalgebra.Matrix.from_2d_list([[scalar_result]])
+  elif function == "TRACE":
+    scalar_result = linearalgebra.Op.trace(variable_matrix)
+    result = linearalgebra.Matrix.from_2d_list([[scalar_result]])
+  elif function == "TRANSPOSE":
+    result = variable_matrix.transpose()
 
   return result.give_2d_list()
