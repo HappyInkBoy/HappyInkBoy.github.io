@@ -67,13 +67,25 @@ def parserAssignmentExpression(variable, implicitExpression):
   # or single expression ?
 
 def parserDualExpression(leftVariable, dualOperator, rightVariable):
-  lm = model["matrices"][leftVariable]["matrix"]
+  lm = list(model["matrices"][leftVariable]["matrix"])
   leftMatrix = linearalgebra.Matrix.from_2d_list(lm)
-  rm = model["matrices"][rightVariable]["matrix"]
+  rm = list(model["matrices"][rightVariable]["matrix"])
   rightMatrix = linearalgebra.Matrix.from_2d_list(rm)
   if dualOperator == "+":
     result = leftMatrix + rightMatrix
   elif dualOperator == "-":
     result = leftMatrix - rightMatrix
+  elif dualOperator == "☉":
+    result = linearalgebra.Op.hadamardProduct(leftMatrix,rightMatrix)
+  elif dualOperator == "·":
+    leftVector = leftMatrix.vector_list[0]
+    rightVector = rightMatrix.vector_list[0]
+    scalar_result = linearalgebra.Op.dotProduct(leftVector,rightVector)
+    result = linearalgebra.Matrix.from_2d_list([[scalar_result]])
+  elif dualOperator == "⨯":
+    leftVector = leftMatrix.vector_list[0]
+    rightVector = rightMatrix.vector_list[0]
+    vector_result = linearalgebra.Op.crossProduct(leftVector,rightVector)
+    result = linearalgebra.Matrix([vector_result])
 
   return result.give_2d_list()

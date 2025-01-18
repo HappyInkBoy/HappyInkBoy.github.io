@@ -3,6 +3,9 @@ model = {
       { "command" : "+", "expression" : "+", "tooltip" : "Add 2 matrices. Example: A=B+C"},
       { "command" : "-", "expression" : "-",  "tooltip" : "Subtract 2 matrices. Example: A=B-C"},
       { "command" : "*", "expression" : "*",  "tooltip" : "Multiply 2 matrices. Example: A=B*C"},
+      { "command" : "⨯", "expression" : "⨯",  "tooltip" : "Cross product of 2 vectors. Example: A=B⨯C"},
+      { "command" : "·", "expression" : "·",  "tooltip" : "Dot product of 2 vectors. Example: A=B·C"},
+      { "command" : "☉", "expression" : "☉",  "tooltip" : "Hadamard product of 2 matrices. Example: A=B☉C"},
       { "command" : "RREF", "expression" : "RREF()",  "tooltip" : "Reduce Row Echelon Form. Example: A=RREF(B)"}
     ],
     "matrices" : {
