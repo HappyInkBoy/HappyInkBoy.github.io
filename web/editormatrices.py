@@ -116,12 +116,12 @@ def initMatrix(parentNode, name):
     row1 = html.TR()
     row1 <= html.TD(name)
     tdPlusOrMinus = html.TD()
-    initMatrixPlusMinus(tdPlusOrMinus, name, "cols")
+    initMatrixPlusMinus(tdPlusOrMinus, name, "rows")
     row1 <= tdPlusOrMinus
     matrixEditor <= row1
     row2 = html.TR()
     tdPlusOrMinus = html.TD()
-    initMatrixPlusMinus(tdPlusOrMinus, name, "rows")
+    initMatrixPlusMinus(tdPlusOrMinus, name, "cols")
     row2 <= tdPlusOrMinus
     m = html.TD(id=name)
     row2 <= m

@@ -18,9 +18,6 @@ def onExpressionModelUpdate():
   for key in model["matrices"]:
     editormatrices.onMatrixModelUpdate(key)
 
-def isValidExpression(expression):
-  return expression == "A=B+C" or expression == "A=RREF(B)"
-
 def expressionInputAction(event):
   element = event.target
   if event.type == "keyup" and event.key != "Enter":
@@ -47,6 +44,15 @@ def initExpression(parentNode):
   parentNode <= input
   input.bind("keyup", expressionInputAction)
 
+def isValidExpression(expression):
+  # Change this later
+  r = re.search(regular_expressions["assignment_exp"], expression)
+  if r and r.group(1) and r.group(2):
+    return True
+  r = re.search(regular_expressions["implicit_exp"], expression)
+  if r and r.group(1):
+    return True
+  return True
 
 # Parser below
 
