@@ -55,8 +55,11 @@ regular_expressions = {
   "implicit_exp": "(.+)",
   "dual_exp": "^([A-Z])([+-☉·⨯])([A-Z])$",
   "single_exp": "^([A-Z]+)\(([A-Z])\)",
-  "multiply_exp": "([A-Z]|[-+]?\d*\.?\d+|\d+)\*([A-Z]|[-+]?\d*\.?\d+|\d+)"
+  "multiply_exp": "^([A-Z]|[-+]?\d*\.?\d+|\d+)\*([A-Z]|[-+]?\d*\.?\d+|\d+)",
+  "exponent_exp": "^([A-Z])\^([0-9]+)"
 }
+
+# [-+]?\d*\.?\d+|\d+ is the regex for a float (like 2.5)
 
 # if freeFlight is True, evaluate expression without modifying the model
 # this is used to evaluate the expression the user is entering before they are done
@@ -96,6 +99,14 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
       modelMatrixResult["matrix"] = result
     return
 
+  r = re.search(regular_expressions["exponent_exp"], implicitExpression)
+  if r and r.group(1) and r.group(2):
+    result = parserExponentExpression(r.group(1), r.group(2))
+    modelMatrixResult = model["matrices"][variable]
+    if not freeFlight: 
+      modelMatrixResult["matrix"] = result
+    return
+
   r = re.search(regular_expressions["multiply_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserMultiplyExpression(r.group(1), r.group(2))
@@ -123,6 +134,14 @@ def parserImplicitExpression(implicitExpression, freeFlight):
       modelMatrixResult["matrix"] = result
     return
   
+  r = re.search(regular_expressions["exponent_exp"], implicitExpression)
+  if r and r.group(1) and r.group(2):
+    result = parserExponentExpression(r.group(1), r.group(2))
+    modelMatrixResult = model["matrices"]["ANS"]
+    if not freeFlight: 
+      modelMatrixResult["matrix"] = result
+    return
+
   r = re.search(regular_expressions["multiply_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserMultiplyExpression(r.group(1), r.group(2))
@@ -211,4 +230,13 @@ def parserMultiplyExpression(leftVariable, rightVariable):
     left_matrix = linearalgebra.Matrix.from_2d_list(left_list)
     result = left_matrix.scalarMultiply(rightVariable)
 
+  return result.give_2d_list()
+
+def parserExponentExpression(variable, exponent_string):
+  variable_list = list(model["matrices"][variable]["matrix"])
+  variable_matrix = linearalgebra.Matrix.from_2d_list(variable_list)
+  exponent = int(exponent_string)
+  print(type(variable_matrix), type(exponent))
+  result = variable_matrix**exponent
+  print(result)
   return result.give_2d_list()

@@ -378,6 +378,8 @@ class Matrix():
     # Inverts the matrix if the exponent is negative
     if exponent < 0:
       temp_matrix = self.inverseMatrix()
+    else:
+      temp_matrix = self
     
     original_matrix = Matrix(temp_matrix.vector_list.copy())
     exponentiated_matrix = Matrix(temp_matrix.vector_list.copy())
