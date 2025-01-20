@@ -54,7 +54,8 @@ regular_expressions = {
   "assignment_exp": "^([A-Z])=(.+)",
   "implicit_exp": "(.+)",
   "dual_exp": "^([A-Z])([+-☉·⨯])([A-Z])$",
-  "single_exp": "^([A-Z]+)\(([A-Z])\)"
+  "single_exp": "^([A-Z]+)\(([A-Z])\)",
+  "multiply_exp": "([A-Z]|[0-9]+)\*([A-Z]|[0-9]+)"
 }
 
 # if freeFlight is True, evaluate expression without modifying the model
@@ -95,6 +96,14 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
       modelMatrixResult["matrix"] = result
     return
 
+  r = re.search(regular_expressions["multiply_exp"], implicitExpression)
+  if r and r.group(1) and r.group(2):
+    result = parserMultiplyExpression(r.group(1), r.group(2))
+    modelMatrixResult = model["matrices"][variable]
+    if not freeFlight: 
+      modelMatrixResult["matrix"] = result
+    return
+
   r = re.search(regular_expressions["dual_exp"], implicitExpression)
   if r and r.group(1) and r.group(2) and r.group(3):
     result = parserDualExpression(r.group(1), r.group(2), r.group(3))
@@ -102,12 +111,21 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
     if not freeFlight: 
       modelMatrixResult["matrix"] = result
     return
+
   raise Exception("Invalid Assignment Expression") 
 
 def parserImplicitExpression(implicitExpression, freeFlight):
   r = re.search(regular_expressions["single_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserSingleExpression(r.group(1), r.group(2))
+    modelMatrixResult = model["matrices"]["ANS"]
+    if not freeFlight:
+      modelMatrixResult["matrix"] = result
+    return
+  
+  r = re.search(regular_expressions["multiply_exp"], implicitExpression)
+  if r and r.group(1) and r.group(2):
+    result = parserMultiplyExpression(r.group(1), r.group(2))
     modelMatrixResult = model["matrices"]["ANS"]
     if not freeFlight:
       modelMatrixResult["matrix"] = result
@@ -166,4 +184,31 @@ def parserSingleExpression(function, variable):
     result = variable_matrix.transpose()
   else:
     raise Exception("Unsupported function "+function)
+  return result.give_2d_list()
+
+def parserMultiplyExpression(leftVariable, rightVariable):
+
+  if any(char.isdigit() for char in leftVariable):
+    leftVariable = float(leftVariable)
+  if any(char.isdigit() for char in rightVariable):
+    rightVariable = float(rightVariable)
+
+  if isinstance(leftVariable,str) and isinstance(rightVariable,str):
+    left_list = list(model["matrices"][leftVariable]["matrix"])
+    left_matrix = linearalgebra.Matrix.from_2d_list(left_list)
+    right_list = list(model["matrices"][rightVariable]["matrix"])
+    right_matrix = linearalgebra.Matrix.from_2d_list(right_list)
+    result = left_matrix.matrixMultiply(right_matrix)
+  elif (isinstance(leftVariable,int) or isinstance(leftVariable,float)) and (isinstance(rightVariable,int) or isinstance(rightVariable,float)):
+    scalar_result = leftVariable * rightVariable
+    result = linearalgebra.Matrix.from_2d_list([[scalar_result]])
+  elif (isinstance(leftVariable,int) or isinstance(leftVariable,float)) and isinstance(rightVariable,str):
+    right_list = list(model["matrices"][rightVariable]["matrix"])
+    right_matrix = linearalgebra.Matrix.from_2d_list(right_list)
+    result = right_matrix.scalarMultiply(leftVariable)
+  elif isinstance(leftVariable,str) and (isinstance(rightVariable,int) or isinstance(rightVariable,float)):
+    left_list = list(model["matrices"][leftVariable]["matrix"])
+    left_matrix = linearalgebra.Matrix.from_2d_list(left_list)
+    result = left_matrix.scalarMultiply(rightVariable)
+
   return result.give_2d_list()
