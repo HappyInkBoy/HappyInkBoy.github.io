@@ -56,7 +56,7 @@ regular_expressions = {
   "dual_exp": "^([A-Z])([+-☉·⨯])([A-Z])$",
   "single_exp": "^([A-Z]+)\(([A-Z])\)",
   "multiply_exp": "^([A-Z]|[-+]?\d*\.?\d+|\d+)\*([A-Z]|[-+]?\d*\.?\d+|\d+)",
-  "exponent_exp": "^([A-Z])\^([0-9]+)"
+  "exponent_exp": "^([A-Z])\^([-+]?\d*\.?\d+|\d+)"
 }
 
 # [-+]?\d*\.?\d+|\d+ is the regex for a float (like 2.5)
@@ -235,7 +235,12 @@ def parserMultiplyExpression(leftVariable, rightVariable):
 def parserExponentExpression(variable, exponent_string):
   variable_list = list(model["matrices"][variable]["matrix"])
   variable_matrix = linearalgebra.Matrix.from_2d_list(variable_list)
-  exponent = int(exponent_string)
+
+  try:
+    exponent = int(exponent_string)
+  except ValueError:
+    raise Exception("This calculator does not support rational exponents for matrices")
+
   print(type(variable_matrix), type(exponent))
   result = variable_matrix**exponent
   print(result)
