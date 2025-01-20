@@ -8,7 +8,7 @@ model = editormodel.model
 
 def onExpressionModelUpdate():
   expression = model["expression"]
-  parser(expression)
+  parser(expression, False)
 
 #  if expression == "A=RREF(B)":
 #    B = model["matrices"]["B"]["matrix"]
@@ -45,14 +45,7 @@ def initExpression(parentNode):
   input.bind("keyup", expressionInputAction)
 
 def isValidExpression(expression):
-  # Change this later
-  r = re.search(regular_expressions["assignment_exp"], expression)
-  if r and r.group(1) and r.group(2):
-    return True
-  r = re.search(regular_expressions["implicit_exp"], expression)
-  if r and r.group(1):
-    return True
-  return True
+  return parser(expression, True)
 
 # Parser below
 
@@ -60,62 +53,74 @@ def isValidExpression(expression):
 regular_expressions = {
   "assignment_exp": "^([A-Z])=(.+)",
   "implicit_exp": "(.+)",
-  "dual_exp": "^([A-Z])([+-☉·⨯])([A-Z])",
+  "dual_exp": "^([A-Z])([+-☉·⨯])([A-Z])$",
   "single_exp": "^([A-Z]+)\(([A-Z])\)"
 }
 
-def parser(expression):
+# if freeFlight is True, evaluate expression without modifying the model
+# this is used to evaluate the expression the user is entering before they are done
+# if parser returns False, the expression is invalid or incomplete.
+#
+# if freeFlight is False, evaluate expression and put result in the model
+def parser(expression, freeFlight):
   try:
     expression = expression.replace(" ", "")
     r = re.search(regular_expressions["assignment_exp"], expression)
     if r and r.group(1) and r.group(2):
       print("valid assignment expression")
-      parserAssignmentExpression(r.group(1), r.group(2))
+      parserAssignmentExpression(r.group(1), r.group(2), freeFlight)
       clearError()
-      return
+      return True
     
     r = re.search(regular_expressions["implicit_exp"], expression)
     if r and r.group(1):
       print("valid implicit expression")
-      parserImplicitExpression(r.group(1))
+      parserImplicitExpression(r.group(1), freeFlight)
       clearError()
-      return   
+      return True  
+    return False
 
   except Exception as err:
-    print("ok2")
-    print(str(err))
     setError(str(err))
+    return False
 
   
 
-def parserAssignmentExpression(variable, implicitExpression):
-  print(variable)
-  print(implicitExpression)
-
+def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   r = re.search(regular_expressions["single_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserSingleExpression(r.group(1), r.group(2))
     modelMatrixResult = model["matrices"][variable]
-    modelMatrixResult["matrix"] = result
+    if not freeFlight: 
+      modelMatrixResult["matrix"] = result
+    return
 
   r = re.search(regular_expressions["dual_exp"], implicitExpression)
   if r and r.group(1) and r.group(2) and r.group(3):
     result = parserDualExpression(r.group(1), r.group(2), r.group(3))
     modelMatrixResult = model["matrices"][variable]
-    modelMatrixResult["matrix"] = result
+    if not freeFlight: 
+      modelMatrixResult["matrix"] = result
+    return
+  raise Exception("Invalid Assignment Expression") 
 
-def parserImplicitExpression(implicitExpression):
+def parserImplicitExpression(implicitExpression, freeFlight):
   r = re.search(regular_expressions["single_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserSingleExpression(r.group(1), r.group(2))
     modelMatrixResult = model["matrices"]["ANS"]
-    modelMatrixResult["matrix"] = result
+    if not freeFlight:
+      modelMatrixResult["matrix"] = result
+    return
 
   r = re.search(regular_expressions["dual_exp"], implicitExpression)
   if r and r.group(1) and r.group(2) and r.group(3):
     result = parserDualExpression(r.group(1), r.group(2), r.group(3))
     modelMatrixResult = model["matrices"]["ANS"]
-    modelMatrixResult["matrix"] = result
+    if not freeFlight:
+      modelMatrixResult["matrix"] = result
+    return
+  raise Exception("Invalid Expression") 
 
 def parserDualExpression(leftVariable, dualOperator, rightVariable):
   lm = list(model["matrices"][leftVariable]["matrix"])
@@ -142,6 +147,8 @@ def parserDualExpression(leftVariable, dualOperator, rightVariable):
     rightVector = rightMatrix.vector_list[0]
     vector_result = linearalgebra.Op.crossProduct(leftVector,rightVector)
     result = linearalgebra.Matrix([vector_result])
+  else:
+    raise Exception("Unsupported operator "+dualOperator)
   return result.give_2d_list()
 
 def parserSingleExpression(function, variable):
@@ -157,5 +164,6 @@ def parserSingleExpression(function, variable):
     result = linearalgebra.Matrix.from_2d_list([[scalar_result]])
   elif function == "TRANSPOSE":
     result = variable_matrix.transpose()
-
+  else:
+    raise Exception("Unsupported function "+function)
   return result.give_2d_list()
