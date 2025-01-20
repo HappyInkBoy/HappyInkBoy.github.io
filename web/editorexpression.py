@@ -55,7 +55,7 @@ regular_expressions = {
   "implicit_exp": "(.+)",
   "dual_exp": "^([A-Z])([+-☉·⨯])([A-Z])$",
   "single_exp": "^([A-Z]+)\(([A-Z])\)",
-  "multiply_exp": "([A-Z]|[0-9]+)\*([A-Z]|[0-9]+)"
+  "multiply_exp": "([A-Z]|[-+]?\d*\.?\d+|\d+)\*([A-Z]|[-+]?\d*\.?\d+|\d+)"
 }
 
 # if freeFlight is True, evaluate expression without modifying the model
