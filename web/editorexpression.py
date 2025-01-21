@@ -185,7 +185,7 @@ def parserDualExpression(leftVariable, dualOperator, rightVariable):
     vector_result = linearalgebra.Op.crossProduct(leftVector,rightVector)
     result = linearalgebra.Matrix([vector_result])
   else:
-    raise Exception("Unsupported operator "+dualOperator)
+    raise Exception("Unsupported expression: " + leftVariable + dualOperator + rightVariable)
   return result.give_2d_list()
 
 def parserSingleExpression(function, variable):
@@ -218,6 +218,8 @@ def parserMultiplyExpression(leftVariable, rightVariable):
     right_list = list(model["matrices"][rightVariable]["matrix"])
     right_matrix = linearalgebra.Matrix.from_2d_list(right_list)
     result = left_matrix.matrixMultiply(right_matrix)
+    if isinstance(result,linearalgebra.Vector):
+      result = linearalgebra.Matrix([result])
   elif (isinstance(leftVariable,int) or isinstance(leftVariable,float)) and (isinstance(rightVariable,int) or isinstance(rightVariable,float)):
     scalar_result = leftVariable * rightVariable
     result = linearalgebra.Matrix.from_2d_list([[scalar_result]])
