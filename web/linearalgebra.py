@@ -380,7 +380,7 @@ class Matrix():
       temp_matrix = self.inverseMatrix()
     else:
       temp_matrix = self
-    
+
     original_matrix = Matrix(temp_matrix.vector_list.copy())
     exponentiated_matrix = Matrix(temp_matrix.vector_list.copy())
     for i in range(0,abs(exponent)-1):
@@ -484,7 +484,7 @@ class Op():
         result.append(mat1.components[i] * mat2.components[i])
       result = Vector(result)
     elif isinstance(mat1,Matrix) and isinstance(mat2,Matrix):
-      if len(mat1.vector_list) != len(mat2.vector_list) or len(mat1.vector_list[0].components) != len(mat1.vector_list[0].components):
+      if (len(mat1.vector_list) != len(mat2.vector_list)) or (len(mat1.vector_list[0].components) != len(mat2.vector_list[0].components)):
         raise Exception("Cannot evaluate the hadamard product of two matrices with different dimensions")
       mat1 = mat1.give_2d_list()
       mat2 = mat2.give_2d_list()
@@ -661,12 +661,13 @@ class Op():
 # ---------------------------
 
 my_list1 = [
-  [1,2,3]
+  [0],
+  [0],
 ]
 my_list2 = [
-  [3,1],
-  [3,2],
-  [3,2]
+  [0],
+  [0],
+  [0]
 ]
 
 M1 = Matrix.from_2d_list(my_list1)
@@ -675,4 +676,3 @@ M2 = Matrix.from_2d_list(my_list2)
 v1 = Vector([1,2,3])
 
 
-print(M1.matrixMultiply(M2))

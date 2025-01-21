@@ -169,6 +169,8 @@ def parserDualExpression(leftVariable, dualOperator, rightVariable):
   elif dualOperator == "-":
     result = leftMatrix - rightMatrix
   elif dualOperator == "☉":
+    print(leftMatrix)
+    print(rightMatrix)
     result = linearalgebra.Op.hadamardProduct(leftMatrix,rightMatrix)
   elif dualOperator == "·":
     if len(leftMatrix.vector_list) > 1 or len(rightMatrix.vector_list) > 1:
