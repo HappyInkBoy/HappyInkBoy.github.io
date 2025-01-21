@@ -53,7 +53,7 @@ def isValidExpression(expression):
 regular_expressions = {
   "assignment_exp": "^([A-Z])=(.+)",
   "implicit_exp": "(.+)",
-  "dual_exp": "^([A-Z])([+-☉·⨯])([A-Z])$",
+  "dual_exp": "^([A-Z])([+-☉·×])([A-Z])$",
   "single_exp": "^([A-Z]+)\(([A-Z])\)",
   "multiply_exp": "^([A-Z]|[-+]?\d*\.?\d+|\d+)\*([A-Z]|[-+]?\d*\.?\d+|\d+)",
   "exponent_exp": "^([A-Z])\^([-+]?\d*\.?\d+|\d+)"
@@ -177,7 +177,7 @@ def parserDualExpression(leftVariable, dualOperator, rightVariable):
     rightVector = rightMatrix.vector_list[0]
     scalar_result = linearalgebra.Op.dotProduct(leftVector,rightVector)
     result = linearalgebra.Matrix.from_2d_list([[scalar_result]])
-  elif dualOperator == "⨯":
+  elif dualOperator == "×":
     if len(leftMatrix.vector_list) > 1 or len(rightMatrix.vector_list) > 1:
       raise Exception("Cross product can only be performed on column vectors")
     leftVector = leftMatrix.vector_list[0]

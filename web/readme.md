@@ -41,7 +41,7 @@ Valid expressions are represented below in the form of the EBNF (Extended Backus
 Note that:
 * ☉ is U+2609
 * · is U+00B7
-* ⨯ is U+2A2F
+* × is U+00D7
 
 Below are strech goals
 * A + B + C
