@@ -592,7 +592,6 @@ class Op():
     # Code below converts the matrix into row echelon form (not reduced)
 
     mat = mat.give_2d_list() # mat will be converted into an upper triangular matrix
-    zero_collumn = False # This bool is meant to be used to check if there is a collumn entirely made up of zeroes
     multiplication_list = [] # This is a list that records all of the coefficients used to multiply the rows
     # Each sublist in multiplication_list represents the coefficients used in the subtraction of each row in each collumn
 
@@ -608,11 +607,10 @@ class Op():
             for j in range(0,len(mat)):
               mat[col][j] += mat[i][j]
             # There is no break used here because the pivot is modified
-          elif i == len(mat):
+          elif i == len(mat)-1:
             # This means that all the values in the collumn are zero
             # If this occurs, the determinant is simply zero
-            zero_collumn = True
-            break
+            return 0
           i += 1
         if row <= col:
           continue
@@ -665,9 +663,9 @@ my_list1 = [
   [0],
 ]
 my_list2 = [
-  [0],
-  [0],
-  [0]
+  [0,0,0],
+  [0,0,0],
+  [0,0,0]
 ]
 
 M1 = Matrix.from_2d_list(my_list1)
@@ -676,3 +674,4 @@ M2 = Matrix.from_2d_list(my_list2)
 v1 = Vector([1,2,3])
 
 
+print(Op.determinant(M2))
