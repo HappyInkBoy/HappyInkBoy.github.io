@@ -97,8 +97,8 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
     modelMatrixResult = model["matrices"][variable]
     if not freeFlight: 
       modelMatrixResult["matrix"] = result
-      modelMatrixResult["rows"] = len(result[0])
-      modelMatrixResult["cols"] = len(result)
+      modelMatrixResult["rows"] = len(result)
+      modelMatrixResult["cols"] = len(result[0])
     return
 
   r = re.search(regular_expressions["exponent_exp"], implicitExpression)
@@ -107,8 +107,8 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
     modelMatrixResult = model["matrices"][variable]
     if not freeFlight: 
       modelMatrixResult["matrix"] = result
-      modelMatrixResult["rows"] = len(result[0])
-      modelMatrixResult["cols"] = len(result)
+      modelMatrixResult["rows"] = len(result)
+      modelMatrixResult["cols"] = len(result[0])
     return
 
   r = re.search(regular_expressions["multiply_exp"], implicitExpression)
@@ -117,8 +117,8 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
     modelMatrixResult = model["matrices"][variable]
     if not freeFlight: 
       modelMatrixResult["matrix"] = result
-      modelMatrixResult["rows"] = len(result[0])
-      modelMatrixResult["cols"] = len(result)
+      modelMatrixResult["rows"] = len(result)
+      modelMatrixResult["cols"] = len(result[0])
     return
 
   r = re.search(regular_expressions["dual_exp"], implicitExpression)
@@ -127,8 +127,8 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
     modelMatrixResult = model["matrices"][variable]
     if not freeFlight: 
       modelMatrixResult["matrix"] = result
-      modelMatrixResult["rows"] = len(result[0])
-      modelMatrixResult["cols"] = len(result)
+      modelMatrixResult["rows"] = len(result)
+      modelMatrixResult["cols"] = len(result[0])
     return
 
   raise Exception("Invalid Assignment Expression") 
@@ -140,8 +140,8 @@ def parserImplicitExpression(implicitExpression, freeFlight):
     modelMatrixResult = model["matrices"]["ANS"]
     if not freeFlight:
       modelMatrixResult["matrix"] = result
-      modelMatrixResult["rows"] = len(result[0])
-      modelMatrixResult["cols"] = len(result)
+      modelMatrixResult["rows"] = len(result)
+      modelMatrixResult["cols"] = len(result[0])
     return
   
   r = re.search(regular_expressions["exponent_exp"], implicitExpression)
@@ -150,8 +150,8 @@ def parserImplicitExpression(implicitExpression, freeFlight):
     modelMatrixResult = model["matrices"]["ANS"]
     if not freeFlight: 
       modelMatrixResult["matrix"] = result
-      modelMatrixResult["rows"] = len(result[0])
-      modelMatrixResult["cols"] = len(result)
+      modelMatrixResult["rows"] = len(result)
+      modelMatrixResult["cols"] = len(result[0])
     return
 
   r = re.search(regular_expressions["multiply_exp"], implicitExpression)
@@ -160,8 +160,8 @@ def parserImplicitExpression(implicitExpression, freeFlight):
     modelMatrixResult = model["matrices"]["ANS"]
     if not freeFlight:
       modelMatrixResult["matrix"] = result
-      modelMatrixResult["rows"] = len(result[0])
-      modelMatrixResult["cols"] = len(result)
+      modelMatrixResult["rows"] = len(result)
+      modelMatrixResult["cols"] = len(result[0])
     return
 
   r = re.search(regular_expressions["dual_exp"], implicitExpression)
@@ -170,8 +170,8 @@ def parserImplicitExpression(implicitExpression, freeFlight):
     modelMatrixResult = model["matrices"]["ANS"]
     if not freeFlight:
       modelMatrixResult["matrix"] = result
-      modelMatrixResult["rows"] = len(result[0])
-      modelMatrixResult["cols"] = len(result)
+      modelMatrixResult["rows"] = len(result)
+      modelMatrixResult["cols"] = len(result[0])
     return
   raise Exception("Invalid Expression") 
 
