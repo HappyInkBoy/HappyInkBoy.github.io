@@ -1,4 +1,4 @@
-from browser import document, html, window
+from browser import document, html, window, timer
 
 import editormodel
 
@@ -36,7 +36,6 @@ def plusMinusAction(event):
      return
   matrixModel["matrix"] = [[0 for col in range(matrixModel["cols"])] for row in range(matrixModel["rows"])]
   onMatrixModelUpdate(laData["name"])
-    
 
 def initMatrixPlusMinus(parentNode, name, rowsOrCols):
     minus = html.DIV("-")
@@ -59,8 +58,17 @@ def initMatrixPlusMinus(parentNode, name, rowsOrCols):
 def matrixEditInputCloseAction(event):
   if event.type == "keyup" and event.key != "Enter":
      return
-  element = event.target
-  laData = eval(element.parent.attrs["laData"])
+  element = event.target # the input field
+  # Blur callback is processed asynchronously so that the click
+  # callback hits the target element the user intended to
+  # Use case: edit a cell, then click on its right neighbour
+  # first cell's blur callback is fired first. Then click callback
+  # for its right neighbour is triggered as user intended
+  timer.set_timeout(matrixEditInputCloseDelayedUpdate, 200, element)
+
+def matrixEditInputCloseDelayedUpdate(element):
+  parent = element.parent # the td column that hosts the input field during the edit operation
+  laData = eval(parent.attrs["laData"])
   name = laData["name"]
   row = laData["row"]
   col = laData["col"]
@@ -70,10 +78,12 @@ def matrixEditInputCloseAction(event):
     pass # no new value
   element.unbind("blur", matrixEditInputCloseAction)
   element.unbind("keyup", matrixEditInputCloseAction)
-  onMatrixModelUpdate(name)
+  parent.clear()
+  parent.innerHTML = model["matrices"][name]["matrix"][row][col]
 
 def matrixEditAction(event):
   element = event.target
+  
   if "laData" not in element.attrs:
      print("wrong element to hook matrixEditAction")
      print(element)
@@ -94,22 +104,49 @@ def matrixEditAction(event):
 def onMatrixModelUpdate(name):
     matrixModel = model["matrices"][name]
     parentNode = document[name]
-    parentNode.clear()
-    matrixValueEditor = html.TABLE()
+    childNodes = parentNode.child_nodes
+    reuseTable = len(childNodes) == 1
+    if reuseTable:
+      matrixValueEditor = childNodes[0]
+    else:
+      matrixValueEditor = html.TABLE()
+      parentNode <= matrixValueEditor
     matrix = matrixModel["matrix"]
+    htmlRows = matrixValueEditor.child_nodes
+
+    # remove excess of row nodes (e.g. occurs when matrix shrank)
+    while len(htmlRows) > len(matrix):
+      node = htmlRows[len(htmlRows)-1]
+      matrixValueEditor.removeChild(node)
+      htmlRows = matrixValueEditor.child_nodes
+
     for rowIndex, rowValue in enumerate(matrix):
-        rowNode = html.TR()
+        if len(htmlRows) > rowIndex:
+          rowNode = htmlRows[rowIndex]
+        else:
+          rowNode = html.TR()
+          matrixValueEditor <= rowNode
+        htmlCols = rowNode.child_nodes
+
+        # remove excess of col nodes (e.g. occurs when matrix shrank)
+        while len(htmlCols) > len(rowValue):
+          node = htmlCols[len(htmlCols)-1]
+          rowNode.removeChild(node)
+          htmlCols = rowNode.child_nodes
+
         for colIndex, colValue in enumerate(rowValue):
-            colNode = html.TD(colValue)
-            colNode.attrs["laData"] = {
-                "name" : name,
-                "row" : rowIndex,
-                "col" : colIndex
-            }
-            colNode.bind("click", matrixEditAction)
-            rowNode <= colNode
-        matrixValueEditor <= rowNode
-    parentNode <= matrixValueEditor  
+            if len(htmlCols) > colIndex:
+              colNode = htmlCols[colIndex]
+            else:
+              colNode = html.TD()
+              colNode.attrs["laData"] = {
+                  "name" : name,
+                  "row" : rowIndex,
+                  "col" : colIndex
+              }
+              colNode.bind("click", matrixEditAction)
+              rowNode <= colNode
+            colNode.innerHTML = colValue
 
 def initMatrix(parentNode, name):
     matrixEditor = html.TABLE()
