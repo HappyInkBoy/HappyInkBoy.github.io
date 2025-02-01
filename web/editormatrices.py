@@ -4,7 +4,7 @@ import editormodel
 
 model = editormodel.model
 
-def initMatrices(parentNode, matricesModel):
+def initMatrices(parentNode):
   matricesTable = html.TABLE()
   row = html.TR()
   colA = html.TD()
@@ -24,6 +24,20 @@ def initMatrices(parentNode, matricesModel):
   initMatrix(colC, "C")
   initMatrix(colD, "D")
   initMatrix(colE, "ANS")
+
+def addMatrix(parentNode, variable):
+  if variable in model["matrices"]:
+    print("error - adding matrix "+variable+" which already exists")
+    return
+  model["matrices"][variable] = { "name" : variable, "rows" : 3, "cols" : 3, "matrix" : [[0,0,0],[0,0,0],[0,0,0]] }
+  matricesTable = html.TABLE()
+  row = html.TR()
+  col = html.TD()
+  row <= col
+  matricesTable <= row
+  parentNode <= matricesTable
+  initMatrix(col, variable)
+  return model["matrices"][variable]
 
 def plusMinusAction(event):
   element = event.target

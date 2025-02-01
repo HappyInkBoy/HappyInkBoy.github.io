@@ -124,8 +124,11 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   r = re.search(regular_expressions["dual_exp"], implicitExpression)
   if r and r.group(1) and r.group(2) and r.group(3):
     result = parserDualExpression(r.group(1), r.group(2), r.group(3))
-    modelMatrixResult = model["matrices"][variable]
-    if not freeFlight: 
+    if not freeFlight:
+      if variable in model["matrices"]:
+        modelMatrixResult = model["matrices"][variable]
+      else:
+        modelMatrixResult = editormatrices.addMatrix(document["matrices"], variable)
       modelMatrixResult["matrix"] = result
       modelMatrixResult["rows"] = len(result)
       modelMatrixResult["cols"] = len(result[0])

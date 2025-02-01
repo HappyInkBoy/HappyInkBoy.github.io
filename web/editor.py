@@ -18,5 +18,5 @@ document["expression"] <= "Expression"
 document["history"] <= "History"
 
 editorcommands.initCommands(document["commands"])
-editormatrices.initMatrices(document["matrices"], editormodel.model["matrices"])
+editormatrices.initMatrices(document["matrices"])
 editorexpression.initExpression(document["expression"])
