@@ -30,12 +30,9 @@ def addMatrix(parentNode, variable):
     print("error - adding matrix "+variable+" which already exists")
     return
   model["matrices"][variable] = { "name" : variable, "rows" : 3, "cols" : 3, "matrix" : [[0,0,0],[0,0,0],[0,0,0]] }
-  matricesTable = html.TABLE()
-  row = html.TR()
+  row = parentNode.select_one("table tr")
   col = html.TD()
   row <= col
-  matricesTable <= row
-  parentNode <= matricesTable
   initMatrix(col, variable)
   return model["matrices"][variable]
 
