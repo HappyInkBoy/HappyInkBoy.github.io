@@ -7,23 +7,23 @@ model = editormodel.model
 def initMatrices(parentNode):
   matricesTable = html.TABLE()
   row = html.TR()
+  colE = html.TD()
   colA = html.TD()
   colB = html.TD()
   colC = html.TD()
   colD = html.TD()
-  colE = html.TD()
+  row <= colE
   row <= colA
   row <= colB
   row <= colC
   row <= colD
-  row <= colE
   matricesTable <= row
   parentNode <= matricesTable
+  initMatrix(colE, "ANS")
   initMatrix(colA, "A")
   initMatrix(colB, "B")
   initMatrix(colC, "C")
   initMatrix(colD, "D")
-  initMatrix(colE, "ANS")
 
 def addMatrix(parentNode, variable):
   if variable in model["matrices"]:
