@@ -72,15 +72,15 @@ def solution(equation_matrix_list, variable_list):
 
   equation_matrix = la.Matrix.from_2d_list(equation_matrix_list)
 
-  rref_matrix = la.Op.reducedRowEchelonForm(equation_matrix)
-  # Add validations later (by that I mean that if the user either puts in too many equations or too few equations, then the solving cannot work)
-  
-  if len(rref_matrix.vector_list()) > len(rref_matrix.vector_list()[0].components)+1:
+  if len(equation_matrix.vector_list) > len(equation_matrix.vector_list[0].components)+1:
     # If there are at least 2 more columns than rows
     raise Exception("Not enough equations to find a point of intersection")
-  elif len(rref_matrix.vector_list()[0].components) >= len(rref_matrix.vector_list()):
+  elif len(equation_matrix.vector_list[0].components) >= len(equation_matrix.vector_list):
     # If the number of rows is greater than or equal to the number of columns
     raise Exception("Too many equations are provided")
+
+  rref_matrix = la.Op.reducedRowEchelonForm(equation_matrix)
+  # Add validations later (by that I mean that if the user either puts in too many equations or too few equations, then the solving cannot work)
 
   solution_dictionary = {}
 
