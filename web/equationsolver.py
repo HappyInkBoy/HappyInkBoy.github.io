@@ -56,14 +56,22 @@ def parseEquation(equation):
   variable = None
   coefficient = 0
 
-  matches = re.findall("([-+]?\d*\.?\d+|\d+)([a-z])", equation)
+  equation = equation.replace(" ","") # Removes spaces from the equation
+
+  matches = re.findall("([-+]?\d*\.?\d*)([a-z])", equation)
   equation_value = equation.split("=")[1]
 
   result = {}
 
-  for match in matches:
-    result[match[1]] = float(match[0])
-  # Add validations later
+  for m in matches:
+    variable = m[1]
+    coefficient = m[0]
+    if coefficient == "" or coefficient == "+":
+      coefficient = "1"
+    if coefficient == "-":
+      coefficient = "-1"
+    result[variable] = float(coefficient)
+
   result["zz_ans"] = float(equation_value)
 
   return result
