@@ -82,14 +82,16 @@ def solution(equation_matrix_list, variable_list):
   rref_matrix = la.Op.reducedRowEchelonForm(equation_matrix)
   # Add validations later (by that I mean that if the user either puts in too many equations or too few equations, then the solving cannot work)
 
-  solution_dictionary = {}
+  temp_matrix = rref_matrix.give_2d_list()
+  for index, sublist in enumerate(temp_matrix):
+    if sublist[index] != 1:
+      raise Exception("This system of equations has no point of intersection")
 
+  solution_dictionary = {}
   for index, row in enumerate(rref_matrix.give_2d_list()):
     solution_dictionary[variable_list[index]] = row[len(row)-1]
-
   print(solution_dictionary)
 
-  pass
 
 # [-+]?\d*\.?\d+|\d+ is the regex for a float (like 2.5)
 # [-+]?\d*\.?\d+|\d+[a-z] is the regex for a float times variable (like 2.5x)

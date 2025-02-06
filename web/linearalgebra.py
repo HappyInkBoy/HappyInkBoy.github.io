@@ -551,8 +551,11 @@ class Op():
         if num_rows == i:
           i = r
           lead += 1
-          if num_cols == lead:
-            return # The matrix cannot be put into rref
+          if num_cols == lead: # This occurs if an entire column (that has a pivot point) in the matrix is full of zeroes
+            # The two cases where this exception will occur is if:
+            # 1. There is an infinite solution (common line of intersection in 3d as an example)
+            # 2. There are no common points of intersection
+            raise Exception("Matrix cannot be put into reduced row echelon form")
       mat[i], mat[r] = mat[r], mat[i]
       value = mat[r][lead]
       for j in range(0,num_cols):
@@ -663,15 +666,20 @@ my_list1 = [
   [0],
 ]
 my_list2 = [
-  [0,0,0],
-  [0,0,0],
-  [0,0,0]
+  [1,0,-2,0],
+  [5,2,-1,0],
+  [2,0,-4,1]
+]
+my_list3 = [
+  [1,0,1,0],
+  [2,0,-3,0],
+  [4,0,-1,0]
 ]
 
 M1 = Matrix.from_2d_list(my_list1)
 M2 = Matrix.from_2d_list(my_list2)
+M3 = Matrix.from_2d_list(my_list3)
 
 v1 = Vector([1,2,3])
 
-
-print(Op.determinant(M2))
+print(Op.reducedRowEchelonForm(M2))
