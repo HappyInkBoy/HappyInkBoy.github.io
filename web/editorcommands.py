@@ -18,6 +18,8 @@ def initCommands(parentNode):
   row = html.TR()
   for cmd in model["commands"]:
     td = html.TD()
+    td.classList.add("command")
+    td.classList.add(cmd["operation_type"])
     td <= cmd["command"]
     td.title = cmd["tooltip"]
     td.attrs["laData"] = cmd["expression"]
