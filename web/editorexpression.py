@@ -54,7 +54,7 @@ regular_expressions = {
   "assignment_exp": "^([A-Z]+)=(.+)",
   "implicit_exp": "(.+)",
   "dual_exp": "^([A-Z]+)([+-☉·×])([A-Z]+)$",
-  "single_exp": "^([A-Z]+)\(([A-Z]+)\)",
+  "single_exp": "^([a-z]+)\(([A-Z]+)\)",
   "multiply_exp": "^([A-Z]+|[-+]?\d*\.?\d+|\d+)\*([A-Z]+|[-+]?\d*\.?\d+|\d+)",
   "exponent_exp": "^([A-Z]+)\^([-+]?\d*\.?\d+|\d+)"
 }
@@ -212,15 +212,15 @@ def parserDualExpression(leftVariable, dualOperator, rightVariable):
 def parserSingleExpression(function, variable):
   variable_list = list(model["matrices"][variable]["matrix"])
   variable_matrix = linearalgebra.Matrix.from_2d_list(variable_list)
-  if function == "RREF":
+  if function == "rref":
     result = linearalgebra.Op.reducedRowEchelonForm(variable_matrix)
-  elif function == "DET":
+  elif function == "det":
     scalar_result = linearalgebra.Op.determinant(variable_matrix)
     result = linearalgebra.Matrix.from_2d_list([[scalar_result]])
-  elif function == "TRACE":
+  elif function == "trace":
     scalar_result = linearalgebra.Op.trace(variable_matrix)
     result = linearalgebra.Matrix.from_2d_list([[scalar_result]])
-  elif function == "TRANSPOSE":
+  elif function == "transpose":
     result = variable_matrix.transpose()
   else:
     raise Exception("Unsupported function "+function)
