@@ -51,12 +51,12 @@ def isValidExpression(expression):
 
 
 regular_expressions = {
-  "assignment_exp": "^([A-Z])=(.+)",
+  "assignment_exp": "^([A-Z]+)=(.+)",
   "implicit_exp": "(.+)",
-  "dual_exp": "^([A-Z])([+-☉·×])([A-Z])$",
-  "single_exp": "^([A-Z]+)\(([A-Z])\)",
-  "multiply_exp": "^([A-Z]|[-+]?\d*\.?\d+|\d+)\*([A-Z]|[-+]?\d*\.?\d+|\d+)",
-  "exponent_exp": "^([A-Z])\^([-+]?\d*\.?\d+|\d+)"
+  "dual_exp": "^([A-Z]+)([+-☉·×])([A-Z]+)$",
+  "single_exp": "^([A-Z]+)\(([A-Z]+)\)",
+  "multiply_exp": "^([A-Z]+|[-+]?\d*\.?\d+|\d+)\*([A-Z]+|[-+]?\d*\.?\d+|\d+)",
+  "exponent_exp": "^([A-Z]+)\^([-+]?\d*\.?\d+|\d+)"
 }
 
 # [-+]?\d*\.?\d+|\d+ is the regex for a float (like 2.5)
