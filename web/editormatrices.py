@@ -70,15 +70,36 @@ def initMatrixPlusMinus(parentNode, name, rowsOrCols):
     plus.bind("click", plusMinusAction)
 
 def matrixEditInputCloseAction(event):
-  if event.type == "keyup" and event.key != "Enter":
+  if event.type == "keyup" and event.key != "Enter" and event.key != "ArrowRight":
      return
   element = event.target # the input field
+
+  # If navigation key:
+  # - get the element row and col
+  # - compute the desired element row and col to enter edit
+  # - set id on the td elements NAME_ROW_COL when they are created
+  # - fetch the desired element by id
+  # - invoke matrixEditAction(event) with a fake event (target to desired element)
+
+  if event.type == "keyup" and event.key == "ArrowRight":
+    parent = element.parent # the td column that hosts the input field during the edit operation
+    if element.selectionStart < len(element.value):
+      return # In this case, the user's cursor is not at the end of the number
+    laData = eval(parent.attrs["laData"])
+    name = laData["name"]
+    row = laData["row"]
+    col = laData["col"]
+    targetRow = row
+    targetCol = col + 1
+    targetElement = document[f"{name}_{targetRow}_{targetCol}"]
+    timer.set_timeout(matrixEditAction, 200, targetElement)
+
   # Blur callback is processed asynchronously so that the click
   # callback hits the target element the user intended to
   # Use case: edit a cell, then click on its right neighbour
   # first cell's blur callback is fired first. Then click callback
   # for its right neighbour is triggered as user intended
-  timer.set_timeout(matrixEditInputCloseDelayedUpdate, 200, element)
+  timer.set_timeout(matrixEditInputCloseDelayedUpdate, 150, element)
 
 def matrixEditInputCloseDelayedUpdate(element):
   parent = element.parent # the td column that hosts the input field during the edit operation
@@ -95,9 +116,10 @@ def matrixEditInputCloseDelayedUpdate(element):
   parent.clear()
   parent.innerHTML = model["matrices"][name]["matrix"][row][col]
 
-def matrixEditAction(event):
-  element = event.target
-  
+def matrixEditActionEvent(event):
+  matrixEditAction(event.target)
+
+def matrixEditAction(element):  
   if "laData" not in element.attrs:
      print("wrong element to hook matrixEditAction")
      print(element)
@@ -152,13 +174,13 @@ def onMatrixModelUpdate(name):
             if len(htmlCols) > colIndex:
               colNode = htmlCols[colIndex]
             else:
-              colNode = html.TD()
+              colNode = html.TD(id=f"{name}_{rowIndex}_{colIndex}")
               colNode.attrs["laData"] = {
                   "name" : name,
                   "row" : rowIndex,
                   "col" : colIndex
               }
-              colNode.bind("click", matrixEditAction)
+              colNode.bind("click", matrixEditActionEvent)
               rowNode <= colNode
             colNode.innerHTML = colValue
 
