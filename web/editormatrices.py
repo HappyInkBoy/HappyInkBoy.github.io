@@ -70,8 +70,8 @@ def initMatrixPlusMinus(parentNode, name, rowsOrCols):
     plus.bind("click", plusMinusAction)
 
 def matrixEditInputCloseAction(event):
-  if event.type == "keyup" and event.key != "Enter" and event.key != "ArrowRight":
-     return
+  if event.type == "keyup" and event.key != "Enter" and event.key != "ArrowRight" and event.key != "ArrowLeft" and event.key != "ArrowDown" and event.key != "ArrowUp":
+    return
   element = event.target # the input field
 
   # If navigation key:
@@ -81,10 +81,53 @@ def matrixEditInputCloseAction(event):
   # - fetch the desired element by id
   # - invoke matrixEditAction(event) with a fake event (target to desired element)
 
+  if event.type == "keyup" and event.key == "ArrowDown":
+    parent = element.parent
+    laData = eval(parent.attrs["laData"])
+    name = laData["name"]
+    row = laData["row"]
+    col = laData["col"]
+    targetRow = row + 1
+    targetCol = col
+    targetElement = document[f"{name}_{targetRow}_{targetCol}"]
+    timer.set_timeout(matrixEditAction, 200, targetElement)
+  if event.type == "keyup" and event.key == "ArrowUp":
+    parent = element.parent
+    laData = eval(parent.attrs["laData"])
+    name = laData["name"]
+    row = laData["row"]
+    col = laData["col"]
+    targetRow = row - 1
+    targetCol = col
+    targetElement = document[f"{name}_{targetRow}_{targetCol}"]
+    timer.set_timeout(matrixEditAction, 200, targetElement)
+  if event.type == "keyup" and event.key == "ArrowLeft":
+    parent = element.parent # the td column that hosts the input field during the edit operation
+    if element.selectionStart > 0:
+      element.attrs["navigationLeft"] = "cleared"
+      return
+    if element.selectionStart == 0 and element.attrs.get("navigationLeft") == "cleared":
+      element.attrs["navigationLeft"] = "active"
+      return # In this case, the user's cursor is not at the end of the number
+    element.attrs["navigationLeft"] = "cleared"
+    laData = eval(parent.attrs["laData"])
+    name = laData["name"]
+    row = laData["row"]
+    col = laData["col"]
+    targetRow = row
+    targetCol = col - 1
+    targetElement = document[f"{name}_{targetRow}_{targetCol}"]
+    timer.set_timeout(matrixEditAction, 200, targetElement)
+  
   if event.type == "keyup" and event.key == "ArrowRight":
     parent = element.parent # the td column that hosts the input field during the edit operation
     if element.selectionStart < len(element.value):
+      element.attrs["navigationRight"] = "cleared"
+      return
+    if element.selectionStart == len(element.value) and element.attrs.get("navigationRight") == "cleared":
+      element.attrs["navigationRight"] = "active"
       return # In this case, the user's cursor is not at the end of the number
+    element.attrs["navigationRight"] = "cleared"
     laData = eval(parent.attrs["laData"])
     name = laData["name"]
     row = laData["row"]
@@ -131,6 +174,8 @@ def matrixEditAction(element):
   element.clear()
   input = html.INPUT()
   input.class_name = "matrix"
+  input.attrs["navigationLeft"] = "cleared"
+  input.attrs["navigationRight"] = "cleared"
   element <= input
   input.focus()
   input.bind("blur", matrixEditInputCloseAction)
