@@ -171,8 +171,12 @@ def matrixEditAction(element):
   name = laData["name"]
   row = laData["row"]
   col = laData["col"]
+  originalValue = element.innerHTML
+  if originalValue == "0":
+    originalValue = ""
   element.clear()
   input = html.INPUT()
+  input.value = originalValue
   input.class_name = "matrix"
   input.attrs["navigationLeft"] = "cleared"
   input.attrs["navigationRight"] = "cleared"
