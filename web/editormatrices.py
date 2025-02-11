@@ -1,3 +1,4 @@
+
 from browser import document, html, window, timer
 
 import editormodel
@@ -114,6 +115,7 @@ def matrixEditInputCloseAction(event):
     timer.set_timeout(matrixEditAction, 200, targetElement)
   if event.type == "keyup" and event.key == "ArrowLeft":
     parent = element.parent # the td column that hosts the input field during the edit operation
+    element.attrs["navigationRight"] = "cleared" # user moved left inside the input field, so this resets our logic for navigating to the next cell on the right
     if element.selectionStart > 0:
       element.attrs["navigationLeft"] = "cleared"
       return
@@ -139,6 +141,7 @@ def matrixEditInputCloseAction(event):
   
   if event.type == "keyup" and event.key == "ArrowRight":
     parent = element.parent # the td column that hosts the input field during the edit operation
+    element.attrs["navigationLeft"] = "cleared" # user moved right inside the input field, so this resets our logic for navigating to the previous cell on the left
     if element.selectionStart < len(element.value):
       element.attrs["navigationRight"] = "cleared"
       return
@@ -203,7 +206,7 @@ def matrixEditAction(element):
   input.value = originalValue
   input.class_name = "matrix"
   input.attrs["navigationLeft"] = "cleared"
-  input.attrs["navigationRight"] = "cleared"
+  input.attrs["navigationRight"] = "active"
   element <= input
   input.focus()
   input.bind("blur", matrixEditInputCloseAction)
