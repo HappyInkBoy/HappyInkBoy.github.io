@@ -122,7 +122,14 @@ def matrixEditInputCloseAction(event):
     col = laData["col"]
     targetRow = row
     targetCol = col - 1
-    targetElement = document[f"{name}_{targetRow}_{targetCol}"]
+    try:
+      targetElement = document[f"{name}_{targetRow}_{targetCol}"]
+    except KeyError:
+      try:
+        colsCount = model["matrices"][name]["cols"]
+        targetElement = document[f"{name}_{targetRow-1}_{colsCount-1}"]
+      except KeyError:
+        return
     timer.set_timeout(matrixEditAction, 200, targetElement)
   
   if event.type == "keyup" and event.key == "ArrowRight":
@@ -140,7 +147,13 @@ def matrixEditInputCloseAction(event):
     col = laData["col"]
     targetRow = row
     targetCol = col + 1
-    targetElement = document[f"{name}_{targetRow}_{targetCol}"]
+    try:
+      targetElement = document[f"{name}_{targetRow}_{targetCol}"]
+    except KeyError:
+      try:
+        targetElement = document[f"{name}_{targetRow+1}_0"]
+      except KeyError:
+        return
     timer.set_timeout(matrixEditAction, 200, targetElement)
 
   # Blur callback is processed asynchronously so that the click
