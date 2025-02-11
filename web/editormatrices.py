@@ -89,7 +89,10 @@ def matrixEditInputCloseAction(event):
     col = laData["col"]
     targetRow = row + 1
     targetCol = col
-    targetElement = document[f"{name}_{targetRow}_{targetCol}"]
+    try:
+      targetElement = document[f"{name}_{targetRow}_{targetCol}"]
+    except KeyError:
+      return # Navigating out of bounds
     timer.set_timeout(matrixEditAction, 200, targetElement)
   if event.type == "keyup" and event.key == "ArrowUp":
     parent = element.parent
@@ -99,14 +102,17 @@ def matrixEditInputCloseAction(event):
     col = laData["col"]
     targetRow = row - 1
     targetCol = col
-    targetElement = document[f"{name}_{targetRow}_{targetCol}"]
+    try:
+      targetElement = document[f"{name}_{targetRow}_{targetCol}"]
+    except KeyError:
+      return # Navigating out of bounds
     timer.set_timeout(matrixEditAction, 200, targetElement)
   if event.type == "keyup" and event.key == "ArrowLeft":
     parent = element.parent # the td column that hosts the input field during the edit operation
     if element.selectionStart > 0:
       element.attrs["navigationLeft"] = "cleared"
       return
-    if element.selectionStart == 0 and element.attrs.get("navigationLeft") == "cleared":
+    if element.selectionStart == 0 and len(element.value) != 0 and element.attrs.get("navigationLeft") == "cleared":
       element.attrs["navigationLeft"] = "active"
       return # In this case, the user's cursor is not at the end of the number
     element.attrs["navigationLeft"] = "cleared"
@@ -124,7 +130,7 @@ def matrixEditInputCloseAction(event):
     if element.selectionStart < len(element.value):
       element.attrs["navigationRight"] = "cleared"
       return
-    if element.selectionStart == len(element.value) and element.attrs.get("navigationRight") == "cleared":
+    if element.selectionStart == len(element.value) and len(element.value) != 0 and element.attrs.get("navigationRight") == "cleared":
       element.attrs["navigationRight"] = "active"
       return # In this case, the user's cursor is not at the end of the number
     element.attrs["navigationRight"] = "cleared"
