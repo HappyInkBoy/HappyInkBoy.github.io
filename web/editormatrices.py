@@ -53,7 +53,12 @@ def plusMinusAction(event):
 
 def initMatrixPlusMinus(parentNode, name, rowsOrCols):
     minus = html.DIV("-")
+    minus.classList.add(rowsOrCols)
+    minus.classList.add("minus")
     plus = html.DIV("+")
+    plus.classList.add(rowsOrCols)
+    plus.classList.add("plus")
+    
     minus.attrs["laData"] = {
         "name" : name,
         "rowsOrCols" : rowsOrCols,
