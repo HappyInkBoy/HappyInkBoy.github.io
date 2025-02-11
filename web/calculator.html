@@ -26,27 +26,46 @@
       text-align: center;
       cursor: default;
   }
+  #commands{
+      padding: 5px 5px 10px 5px;
+  }
   .command {
     min-width: 2em;
+    padding: 0px 4px;
   }
   .command {
-    background-color: lightgrey;
+    background-color: #c9daf8;
+    box-shadow: 0 6px #8aafed;
   }
   .command:hover {
-    background-color: seashell;
+    background-color: #ddeaff;
   }
   .command:active {
-    background-color: white;
+    background-color: #f3f8ff;
+    box-shadow: 0 3px #648fd7;
+    transform: translateY(3px);
+  }
+  .command.single {
+    background-color: #bde0ff;
+    box-shadow: 0 6px #6fa8dc;
+  }
+  .command.single:hover {
+    background-color: #d6ecff;
+  }
+  .command.single:active {
+    background-color: #f1f8ff;
+    box-shadow: 0 3px #3d85c6;
+    transform: translateY(3px);
   }
 
   input.matrix {
     width: 3ch;
   }
   input.valid {
-    background-color: aqua;
+    background-color: #91f0ff;
   }
   input.invalid {
-    background-color: orange;
+    background-color: #ffccc7;
   }
   </style>
   <a href="guide.html">How to use the calculator</a>
