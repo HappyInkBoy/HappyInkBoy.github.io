@@ -1,6 +1,35 @@
 import linearalgebra as la
 import math
 import re
+from browser import document, html, window
+import editormodel
+
+model = editormodel.model
+
+def initEquations(parentNode):
+  input = html.TEXTAREA(id="equationtextarea")
+  input.maxLength = 5000
+  input.cols = 20
+  input.rows = 4
+  parentNode <= input
+  resolveButton = html.DIV("Resolve")
+  resolveButton.bind("click", resolveAction)
+  parentNode <= resolveButton  
+
+def resolveAction(event):
+  input = document["equationtextarea"]
+  equations = input.value.split("\n")
+  model["equation_solver"]["equations"] = equations
+  result_list = convertToMatrix(equations)
+  result_dict = solution(result_list[0],result_list[1])
+  model["equation_solver"]["solutions"] = result_dict
+  print(result_dict)
+
+def onEquationsModelUpdate():
+  pass
+
+def onSolutionsModelUpdate():
+  pass
 
 def convertToMatrix(equations):
   """
@@ -98,7 +127,8 @@ def solution(equation_matrix_list, variable_list):
   solution_dictionary = {}
   for index, row in enumerate(rref_matrix.give_2d_list()):
     solution_dictionary[variable_list[index]] = row[len(row)-1]
-  print(solution_dictionary)
+  
+  return solution_dictionary
 
 
 # [-+]?\d*\.?\d+|\d+ is the regex for a float (like 2.5)

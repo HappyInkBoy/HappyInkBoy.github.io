@@ -10,16 +10,19 @@ editor <= html.TR(html.TD(html.DIV(id="matrices")))
 editor <= html.TR(html.TD(html.DIV(id="expression")))
 editor <= html.TR(html.TD(html.DIV(id="error")))
 editor <= html.TR(html.TD(html.DIV(id="history")))
+editor <= html.TR(html.TD(html.DIV(id="equation_solver")))
 document <= editor
 
 document["commands"] <= "Commands"
 document["matrices"] <= "Matrices"
 document["expression"] <= "Expression"
 document["history"] <= "History"
+document["equation_solver"] <= "Equation Solver"
 
 editorcommands.initCommands(document["commands"])
 editormatrices.initMatrices(document["matrices"])
 editorexpression.initExpression(document["expression"])
+equationsolver.initEquations(document["equation_solver"])
 
 #print(equationsolver.parseEquation("x+y-z=2"))
 #equationsolver.convertToMatrix(["1x-2z=0", "5x+2y-1z=0", "-1x+4y+2z=5", "2x-3y+4z=-10"])

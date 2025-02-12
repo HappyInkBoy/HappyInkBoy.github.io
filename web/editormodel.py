@@ -20,5 +20,9 @@ model = {
         "D" : { "name" : "D", "rows" : 3, "cols" : 3, "matrix" : [[0,0,0],[0,0,0],[0,0,0]] }
     },
     "expression" : "",
-    "history" : {}
+    "history" : {},
+    "equation_solver" : {
+      "equations" : [],
+      "solutions" : {}
+    }
 }
