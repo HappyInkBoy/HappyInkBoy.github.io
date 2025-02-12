@@ -7,29 +7,55 @@ import editormodel
 model = editormodel.model
 
 def initEquations(parentNode):
+  equationTable = html.TABLE()
+  parentNode <= equationTable
+  row1 = html.TR()
+  td1 = html.TD()
   input = html.TEXTAREA(id="equationtextarea")
   input.maxLength = 5000
   input.cols = 20
   input.rows = 4
-  parentNode <= input
+  td1 <= input
+  row1 <= td1
+  equationTable <= row1
+
+  row2 = html.TR()
+  td2 = html.TD()
   resolveButton = html.DIV("Resolve")
   resolveButton.bind("click", resolveAction)
-  parentNode <= resolveButton  
+  td2 <= resolveButton
+  row2 <= td2
+  equationTable <= row2
+
+  row3 = html.TR()
+  td3 = html.TD(id="solutions_display")
+  row3 <= td3
+  equationTable <= row3
 
 def resolveAction(event):
   input = document["equationtextarea"]
   equations = input.value.split("\n")
   model["equation_solver"]["equations"] = equations
+  onEquationsModelUpdate()
+
+def onEquationsModelUpdate():
+  equations = model["equation_solver"]["equations"]
   result_list = convertToMatrix(equations)
   result_dict = solution(result_list[0],result_list[1])
   model["equation_solver"]["solutions"] = result_dict
   print(result_dict)
-
-def onEquationsModelUpdate():
-  pass
+  onSolutionsModelUpdate()
 
 def onSolutionsModelUpdate():
-  pass
+  solutionsNode = document["solutions_display"]
+  solutionsNode.clear()
+
+  result_dict = model["equation_solver"]["solutions"]
+  solutionText = "| "
+  for key in result_dict:
+    solutionText = solutionText + f"{key} = {result_dict[key]} | "
+
+  solutionsNode.innerHTML=solutionText
 
 def convertToMatrix(equations):
   """
