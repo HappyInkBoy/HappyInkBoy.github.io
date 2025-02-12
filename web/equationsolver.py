@@ -11,6 +11,7 @@ def initEquations(parentNode):
   parentNode <= equationTable
   row1 = html.TR()
   td1 = html.TD()
+  td1.class_name = "centered"
   input = html.TEXTAREA(id="equationtextarea")
   input.maxLength = 5000
   input.cols = 20
