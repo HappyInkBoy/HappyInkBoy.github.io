@@ -91,11 +91,27 @@ def parser(expression, freeFlight):
   
 
 def parserAssignmentExpression(variable, implicitExpression, freeFlight):
+  r = re.search("^([A-Z]+)$", implicitExpression)
+  if r and r.group(1):
+    result = model["matrices"][implicitExpression]["matrix"]
+    if not freeFlight: 
+      if variable in model["matrices"]:
+        modelMatrixResult = model["matrices"][variable]
+      else:
+        modelMatrixResult = editormatrices.addMatrix(document["matrices"], variable)
+      modelMatrixResult["matrix"] = result
+      modelMatrixResult["rows"] = len(result)
+      modelMatrixResult["cols"] = len(result[0])
+    return
+
   r = re.search(regular_expressions["single_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserSingleExpression(r.group(1), r.group(2))
-    modelMatrixResult = model["matrices"][variable]
     if not freeFlight: 
+      if variable in model["matrices"]:
+        modelMatrixResult = model["matrices"][variable]
+      else:
+        modelMatrixResult = editormatrices.addMatrix(document["matrices"], variable)
       modelMatrixResult["matrix"] = result
       modelMatrixResult["rows"] = len(result)
       modelMatrixResult["cols"] = len(result[0])
@@ -104,8 +120,11 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   r = re.search(regular_expressions["exponent_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserExponentExpression(r.group(1), r.group(2))
-    modelMatrixResult = model["matrices"][variable]
     if not freeFlight: 
+      if variable in model["matrices"]:
+        modelMatrixResult = model["matrices"][variable]
+      else:
+        modelMatrixResult = editormatrices.addMatrix(document["matrices"], variable)
       modelMatrixResult["matrix"] = result
       modelMatrixResult["rows"] = len(result)
       modelMatrixResult["cols"] = len(result[0])
@@ -114,8 +133,11 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   r = re.search(regular_expressions["multiply_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserMultiplyExpression(r.group(1), r.group(2))
-    modelMatrixResult = model["matrices"][variable]
     if not freeFlight: 
+      if variable in model["matrices"]:
+        modelMatrixResult = model["matrices"][variable]
+      else:
+        modelMatrixResult = editormatrices.addMatrix(document["matrices"], variable)
       modelMatrixResult["matrix"] = result
       modelMatrixResult["rows"] = len(result)
       modelMatrixResult["cols"] = len(result[0])
@@ -137,6 +159,16 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   raise Exception("Invalid Assignment Expression") 
 
 def parserImplicitExpression(implicitExpression, freeFlight):
+  r = re.search("^([A-Z]+)$", implicitExpression)
+  if r and r.group(1):
+    result = model["matrices"][implicitExpression]["matrix"]
+    modelMatrixResult = model["matrices"]["ANS"]
+    if not freeFlight:
+      modelMatrixResult["matrix"] = result
+      modelMatrixResult["rows"] = len(result)
+      modelMatrixResult["cols"] = len(result[0])
+    return
+
   r = re.search(regular_expressions["single_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserSingleExpression(r.group(1), r.group(2))
