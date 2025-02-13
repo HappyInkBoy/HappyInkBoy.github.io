@@ -23,7 +23,7 @@ def initEquations(parentNode):
 
   row2 = html.TR()
   td2 = html.TD()
-  resolveButton = html.DIV("Resolve")
+  resolveButton = html.DIV("Solve")
   resolveButton.bind("click", resolveAction)
   resolveButton.class_name = "solve"
   td2 <= resolveButton
