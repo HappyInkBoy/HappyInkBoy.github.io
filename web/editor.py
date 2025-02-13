@@ -5,20 +5,23 @@ import editormodel, editorcommands, editormatrices, editorexpression, equationso
 window.model = editormodel.model
 
 editor = html.TABLE()
+editor.class_name = "outer editor"
 editor <= html.TR(html.TD(html.DIV(id="commands")))
 editor <= html.TR(html.TD(html.DIV(id="matrices")))
 editor <= html.TR(html.TD(html.DIV(id="expression")))
 editor <= html.TR(html.TD(html.DIV(id="error")))
 editor <= html.TR(html.TD(html.DIV(id="history")))
-editor <= html.TR(html.TD(id="separator"))
-editor <= html.TR(html.TD(html.DIV(id="equation_solver")))
 document <= editor
+
+solver = html.TABLE()
+solver.class_name = "outer solver"
+solver <= html.TR(html.TD(html.DIV(id="equation_solver")))
+document <= solver
 
 document["commands"] <= "Commands"
 document["matrices"] <= "Matrices"
 document["expression"] <= "Expression"
 document["history"] <= "History"
-document["separator"] <= ""
 document["equation_solver"] <= "Equation Solver"
 
 editorcommands.initCommands(document["commands"])

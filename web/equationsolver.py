@@ -8,6 +8,7 @@ model = editormodel.model
 
 def initEquations(parentNode):
   equationTable = html.TABLE()
+  equationTable.class_name = "inner"
   parentNode <= equationTable
   row1 = html.TR()
   td1 = html.TD()
@@ -24,6 +25,7 @@ def initEquations(parentNode):
   td2 = html.TD()
   resolveButton = html.DIV("Resolve")
   resolveButton.bind("click", resolveAction)
+  resolveButton.class_name = "solve"
   td2 <= resolveButton
   row2 <= td2
   equationTable <= row2
