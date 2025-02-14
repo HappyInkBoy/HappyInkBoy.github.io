@@ -8,11 +8,29 @@ model = editormodel.model
 def initMatrices(parentNode):
   matricesTable = html.TABLE()
   row = html.TR()
+
+  colRowsCols = html.TD()
+  colRowsCols.class_name = "matrix_top_cell"
+  rowsColsTable = html.TABLE()
+  rct1 = html.TR()
+  rct1 <= html.TD("Rows:")
+  rct2 = html.TR()
+  rct2 <= html.TD("Cols:")
+  rowsColsTable <= rct1
+  rowsColsTable <= rct2
+  colRowsCols <= rowsColsTable
+  row <= colRowsCols 
+
   colA = html.TD()
+  colA.class_name = "matrix_top_cell"
   colB = html.TD()
+  colB.class_name = "matrix_top_cell"
   colC = html.TD()
+  colC.class_name = "matrix_top_cell"
   colD = html.TD()
+  colD.class_name = "matrix_top_cell"
   colANS = html.TD(id="parent_ans")
+  colANS.class_name = "matrix_top_cell"
   row <= colA
   row <= colB
   row <= colC
@@ -33,6 +51,7 @@ def addMatrix(parentNode, variable):
   model["matrices"][variable] = { "name" : variable, "rows" : 3, "cols" : 3, "matrix" : [[0,0,0],[0,0,0],[0,0,0]] }
   row = parentNode.select_one("table tr")
   col = html.TD()
+  col.class_name = "matrix_top_cell"
 
   beforeNode = document["parent_ans"]
   row.insertBefore(col, beforeNode)
@@ -56,9 +75,11 @@ def initMatrixPlusMinus(parentNode, name, rowsOrCols):
     minus = html.DIV("-")
     minus.classList.add(rowsOrCols)
     minus.classList.add("minus")
+    minus.classList.add("matrix_resizer")
     plus = html.DIV("+")
     plus.classList.add(rowsOrCols)
     plus.classList.add("plus")
+    plus.classList.add("matrix_resizer")
     
     minus.attrs["laData"] = {
         "name" : name,
@@ -214,6 +235,7 @@ def matrixEditAction(element):
 
 
 def onMatrixModelUpdate(name):
+    mutable = name != "ANS"
     matrixModel = model["matrices"][name]
     parentNode = document[name]
     childNodes = parentNode.child_nodes
@@ -256,24 +278,36 @@ def onMatrixModelUpdate(name):
                   "row" : rowIndex,
                   "col" : colIndex
               }
-              colNode.bind("click", matrixEditActionEvent)
+              if mutable:
+                colNode.bind("click", matrixEditActionEvent)
               rowNode <= colNode
             colNode.innerHTML = colValue
 
 def initMatrix(parentNode, name):
+    mutable = name != "ANS"
     matrixEditor = html.TABLE()
     row1 = html.TR()
-    row1 <= html.TD(name)
     tdPlusOrMinus = html.TD()
-    initMatrixPlusMinus(tdPlusOrMinus, name, "rows")
+    if mutable:
+      initMatrixPlusMinus(tdPlusOrMinus, name, "rows")
     row1 <= tdPlusOrMinus
     matrixEditor <= row1
+
     row2 = html.TR()
     tdPlusOrMinus = html.TD()
-    initMatrixPlusMinus(tdPlusOrMinus, name, "cols")
+    if mutable:
+      initMatrixPlusMinus(tdPlusOrMinus, name, "cols")
     row2 <= tdPlusOrMinus
-    m = html.TD(id=name)
-    row2 <= m
     matrixEditor <= row2
+
+    row3 = html.TR()
+    row3 <= html.TD(name)
+    matrixEditor <= row3
+
+    row4 = html.TR()
+    m = html.TD(id=name)
+    row4 <= m
+    matrixEditor <= row4
     parentNode <= matrixEditor
     onMatrixModelUpdate(name)
+  
