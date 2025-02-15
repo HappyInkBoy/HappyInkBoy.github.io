@@ -155,7 +155,7 @@ def solution(equation_matrix_list, variable_list):
 
   solution_dictionary = {}
   for index, row in enumerate(rref_matrix.give_2d_list()):
-    solution_dictionary[variable_list[index]] = row[len(row)-1]
+    solution_dictionary[variable_list[index]] = round(row[len(row)-1], 2)
   
   return solution_dictionary
 
