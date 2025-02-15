@@ -1,4 +1,3 @@
-
 from browser import document, html, window, timer
 
 import editormodel
@@ -72,6 +71,7 @@ def plusMinusAction(event):
   onMatrixModelUpdate(laData["name"])
 
 def initMatrixPlusMinus(parentNode, name, rowsOrCols):
+    parentNode.classList.add("matrix_resizer_parent")
     minus = html.DIV("-")
     minus.classList.add(rowsOrCols)
     minus.classList.add("minus")
@@ -290,6 +290,8 @@ def initMatrix(parentNode, name):
     tdPlusOrMinus = html.TD()
     if mutable:
       initMatrixPlusMinus(tdPlusOrMinus, name, "rows")
+    else:
+      tdPlusOrMinus <= html.BR()
     row1 <= tdPlusOrMinus
     matrixEditor <= row1
 
@@ -297,6 +299,8 @@ def initMatrix(parentNode, name):
     tdPlusOrMinus = html.TD()
     if mutable:
       initMatrixPlusMinus(tdPlusOrMinus, name, "cols")
+    else:
+      tdPlusOrMinus <= html.BR()
     row2 <= tdPlusOrMinus
     matrixEditor <= row2
 
@@ -310,4 +314,3 @@ def initMatrix(parentNode, name):
     matrixEditor <= row4
     parentNode <= matrixEditor
     onMatrixModelUpdate(name)
-  
