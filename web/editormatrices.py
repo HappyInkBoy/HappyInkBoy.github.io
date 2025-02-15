@@ -286,6 +286,8 @@ def onMatrixModelUpdate(name):
 def initMatrix(parentNode, name):
     mutable = name != "ANS"
     matrixEditor = html.TABLE()
+    matrixEditor.class_name = "matrix_collapse"
+
     row1 = html.TR()
     tdPlusOrMinus = html.TD()
     if mutable:
@@ -305,10 +307,12 @@ def initMatrix(parentNode, name):
     matrixEditor <= row2
 
     row3 = html.TR()
+    row3.class_name = name + "_divide"
     row3 <= html.TD(name)
     matrixEditor <= row3
 
     row4 = html.TR()
+    row4.class_name = name + "_divide"
     m = html.TD(id=name)
     row4 <= m
     matrixEditor <= row4
