@@ -20,7 +20,7 @@ document <= solver
 
 document["commands"] <= "Commands"
 document["matrices"] <= "Matrices"
-document["expression"] <= "Expression"
+document["expression"] <= "Expression: "
 document["history"] <= "History"
 document["equation_solver"] <= "Equation Solver"
 
