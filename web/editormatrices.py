@@ -294,6 +294,7 @@ def initMatrix(parentNode, name):
       initMatrixPlusMinus(tdPlusOrMinus, name, "rows")
     else:
       tdPlusOrMinus <= html.BR()
+      tdPlusOrMinus.class_name = "answer_padding"
     row1 <= tdPlusOrMinus
     matrixEditor <= row1
 
@@ -303,6 +304,7 @@ def initMatrix(parentNode, name):
       initMatrixPlusMinus(tdPlusOrMinus, name, "cols")
     else:
       tdPlusOrMinus <= html.BR()
+      tdPlusOrMinus.class_name = "answer_padding"
     row2 <= tdPlusOrMinus
     matrixEditor <= row2
 
