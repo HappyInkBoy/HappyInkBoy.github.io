@@ -143,7 +143,7 @@ regular_expressions = {
   "dual_exp": "^([A-Z]+)([+-☉·x])([A-Z]+)$",
   "single_exp": "^([a-z]+)\(([A-Z]+)\)",
   "multiply_exp": "^([A-Z]+|[-+]?\d*\.?\d+|\d+)\*([A-Z]+|[-+]?\d*\.?\d+|\d+)",
-  "exponent_exp": "^([A-Z]+)\^([-+]?\d*\.?\d+|\d+)"
+  "exponent_exp": "^([A-Z]+)\^([-+]?\d*\.?\d+|\d+)$"
 }
 
 # [-+]?\d*\.?\d+|\d+ is the regex for a float (like 2.5)
