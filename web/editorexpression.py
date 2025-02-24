@@ -97,12 +97,20 @@ def isValidExpression(expression):
 # and basic parser can handle this and assign to ANS
 
 recursive_regex = {
-  "exponent" : "([A-Z]+\^[-+]?\d*\.?\d+|\d+)"
+  "exponent" : "([A-Z]+\^[-+]?\d*\.?\d+|\d+)",
+  "multiply_matrix": "([A-Z]+\*[A-Z]+)",
 }
 
 def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
+  # temporary
+  if freeFlight:
+    return False
+  print("recursive parser")
+  print(expression)
+  print(nextAnsVariable)
   result = parser(expression, freeFlight)
   if result:
+    print("basic parser is happy, done")
     return result
   # priorities
   # regex for VARA^number - can be handled by basic parser
@@ -122,9 +130,20 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     nextAnsVariable=nextAns(nextAnsVariable)
     parentExpressions.append(expression)
     return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
-    # todo replace group(1) into expression with nextAnsVariable
-    # then call recursively ourselves with the new expression and the next nextAnsVariable
   
+  r = re.search(recursive_regex["multiply_matrix"], expression)
+  if r and r.group(1):
+    print("multiply in recursive parser...")
+    subExpression = f"{nextAnsVariable}={r.group(1)}"
+    result = parser(subExpression, freeFlight)
+    if not result:
+      return False
+    newExpression = expression[:r.span(1)[0]] + nextAnsVariable + expression[r.span(1)[1]:]
+    nextAnsVariable=nextAns(nextAnsVariable)
+    parentExpressions.append(expression)
+    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+  
+  print("recursive parser cannot do it, give up")
   return False
 
 # Example: A^2+B^2
@@ -142,7 +161,7 @@ regular_expressions = {
   "implicit_exp": "(.+)",
   "dual_exp": "^([A-Z]+)([+-☉·x])([A-Z]+)$",
   "single_exp": "^([a-z]+)\(([A-Z]+)\)",
-  "multiply_exp": "^([A-Z]+|[-+]?\d*\.?\d+|\d+)\*([A-Z]+|[-+]?\d*\.?\d+|\d+)",
+  "multiply_exp": "^([A-Z]+|[-+]?\d*\.?\d+|\d+)\*([A-Z]+|[-+]?\d*\.?\d+|\d+)$",
   "exponent_exp": "^([A-Z]+)\^([-+]?\d*\.?\d+|\d+)$"
 }
 
@@ -154,6 +173,8 @@ regular_expressions = {
 #
 # if freeFlight is False, evaluate expression and put result in the model
 def parser(expression, freeFlight):
+  print("basic parser")
+  print(expression)
   try:
     expression = expression.replace(" ", "")
     r = re.search(regular_expressions["assignment_exp"], expression)
@@ -166,12 +187,16 @@ def parser(expression, freeFlight):
     r = re.search(regular_expressions["implicit_exp"], expression)
     if r and r.group(1):
       print("valid implicit expression")
+      print(r.group(1))
       parserImplicitExpression(r.group(1), freeFlight)
+      print("crazy!!!")
       clearError()
       return True  
     return False
 
   except Exception as err:
+    print("aah error")
+    print(str(err))
     setError(str(err))
     return False
 
