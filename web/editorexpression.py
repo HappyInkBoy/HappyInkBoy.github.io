@@ -6,6 +6,13 @@ import re
 
 model = editormodel.model
 
+PARSER_DEBUG = False
+
+def log(msg):
+  if not PARSER_DEBUG:
+    return
+  print(msg)
+
 def onExpressionModelUpdate():
   expression = model["expression"]
   intermediateEquations = []
@@ -100,13 +107,20 @@ recursive_regex = {
   "exponent" : "([A-Z]+)\^([-+]?\d*\.?\d+|\d+)",
   "multiply_matrix": "([A-Z]+\*[A-Z]+)",
   "multiply_scalar_matrix": "([-+]?\d*\.?\d+|\d+)\*([A-Z]+)",
-  "multiply_matrix_scalar": "([A-Z]+)\*([-+]?\d*\.?\d+|\d+)"
+  "multiply_matrix_scalar": "([A-Z]+)\*([-+]?\d*\.?\d+|\d+)",
+  "add_subtract_matrix": "([A-Z]+)[-+]([A-Z]+)"
   
 }
 
 def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
+  if PARSER_DEBUG and freeFlight:
+    return False
+  log("recursive parser")
+  log(expression)
+  log(nextAnsVariable)
   result = parser(expression, freeFlight)
   if result:
+    log("basic parser is happy, done")
     return result
   # priorities
   # regex for VARA^number - can be handled by basic parser
@@ -116,8 +130,13 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
   # regex for [beginning of expression or non alpha character]([alpha characters])
   #   the above regex captures a set of parentheses that wraps up a variable name, not prefixing a single operator such as TRACE RREF etc.
   #   it's intended to simply remove that unecessary set of parentheses - see Example 5. above
+  
+  log("search regex exponent")
   r = re.search(recursive_regex["exponent"], expression)
   if r and r.group(1) and r.group(2):
+    log("regex exponent")
+    log(r.group(0))
+    log(r.group(1))
     subExpression = f"{nextAnsVariable}={r.group(0)}"
     result = parser(subExpression, freeFlight)
     if not result:
@@ -127,8 +146,11 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     parentExpressions.append(expression)
     return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
 
+  log("search regex multiply_matrix")
   r = re.search(recursive_regex["multiply_matrix"], expression)
   if r and r.group(1):
+    log("regex in multiply matrices")
+    log(r.group(1))
     subExpression = f"{nextAnsVariable}={r.group(1)}"
     result = parser(subExpression, freeFlight)
     if not result:
@@ -138,8 +160,35 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     parentExpressions.append(expression)
     return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
 
+  log("search regex multiply_scalar-matrix")
   r = re.search(recursive_regex["multiply_scalar_matrix"], expression)
   if r and r.group(1) and r.group(2):
+    log("regex multiply scalar-matrix")
+    log(r.group(0))
+    log(r.group(1))
+    log(r.group(2))
+    subExpression = f"{nextAnsVariable}={r.group(0)}"
+    result = parser(subExpression, freeFlight)
+    if not result:
+      return False
+    newExpression = expression[:r.span(0)[0]]
+    # this handles this case: A-2*B = A+ANSA with ANSA=-2*B.
+    # otherwise we get the erroneous AANSA
+    # This code is not used the the matrix_scalar because that one does not consume the operator in front of the leading term
+    if len(newExpression) > 0 and (r.group(1)[0] == "+" or r.group(1)[0] == "-"):
+      newExpression += "+"
+    newExpression += nextAnsVariable + expression[r.span(0)[1]:]
+    nextAnsVariable=nextAns(nextAnsVariable)
+    parentExpressions.append(expression)
+    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+  
+  log("search regex multiply_matrix-scalar")
+  r = re.search(recursive_regex["multiply_matrix_scalar"], expression)
+  if r and r.group(1) and r.group(2):
+    log("regex in multiply matrix-scalar")
+    log(r.group(0))
+    log(r.group(1))
+    log(r.group(2))
     subExpression = f"{nextAnsVariable}={r.group(0)}"
     result = parser(subExpression, freeFlight)
     if not result:
@@ -148,9 +197,14 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     nextAnsVariable=nextAns(nextAnsVariable)
     parentExpressions.append(expression)
     return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
-  
-  r = re.search(recursive_regex["multiply_matrix_scalar"], expression)
+
+  log("search regex add/subtract")
+  r = re.search(recursive_regex["add_subtract_matrix"], expression)
   if r and r.group(1) and r.group(2):
+    log(r.group(0))
+    log(r.group(1))
+    log(r.group(2))
+    log("regex in matrix addition/subtraction")
     subExpression = f"{nextAnsVariable}={r.group(0)}"
     result = parser(subExpression, freeFlight)
     if not result:
@@ -189,6 +243,8 @@ regular_expressions = {
 #
 # if freeFlight is False, evaluate expression and put result in the model
 def parser(expression, freeFlight):
+  log("basic parser")
+  log(expression)
   try:
     expression = expression.replace(" ", "")
     r = re.search(regular_expressions["assignment_exp"], expression)
@@ -203,12 +259,14 @@ def parser(expression, freeFlight):
       print("valid implicit expression")
       print(r.group(1))
       parserImplicitExpression(r.group(1), freeFlight)
+      log("works!!")
       clearError()
       return True  
     return False
 
   except Exception as err:
-    print(str(err))
+    log("ahh error...")
+    log(str(err))
     setError(str(err))
     return False
 
@@ -344,8 +402,8 @@ def parserDualExpression(leftVariable, dualOperator, rightVariable):
   elif dualOperator == "-":
     result = leftMatrix - rightMatrix
   elif dualOperator == "☉":
-    print(leftMatrix)
-    print(rightMatrix)
+    log(leftMatrix)
+    log(rightMatrix)
     result = linearalgebra.Op.hadamardProduct(leftMatrix,rightMatrix)
   elif dualOperator == "·":
     if len(leftMatrix.vector_list) > 1 or len(rightMatrix.vector_list) > 1:
@@ -422,5 +480,5 @@ def parserExponentExpression(variable, exponent_string):
 
   print(type(variable_matrix), type(exponent))
   result = variable_matrix**exponent
-  print(result)
+  log(result)
   return result.give_2d_list()
