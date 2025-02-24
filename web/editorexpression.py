@@ -97,8 +97,11 @@ def isValidExpression(expression):
 # and basic parser can handle this and assign to ANS
 
 recursive_regex = {
-  "exponent" : "([A-Z]+\^[-+]?\d*\.?\d+|\d+)",
+  "exponent" : "([A-Z]+)\^([-+]?\d*\.?\d+|\d+)",
   "multiply_matrix": "([A-Z]+\*[A-Z]+)",
+  "multiply_scalar_matrix": "(\d*\.?\d+|\d+)\*([A-Z]+)",
+  "multiply_matrix_scalar": "([A-Z]+)\*(\d*\.?\d+|\d+)"
+  
 }
 
 def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
@@ -121,16 +124,18 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
   #   the above regex captures a set of parentheses that wraps up a variable name, not prefixing a single operator such as TRACE RREF etc.
   #   it's intended to simply remove that unecessary set of parentheses - see Example 5. above
   r = re.search(recursive_regex["exponent"], expression)
-  if r and r.group(1):
-    subExpression = f"{nextAnsVariable}={r.group(1)}"
+  if r and r.group(1) and r.group(2):
+    print(r.group(0))
+    print(r.group(1))
+    subExpression = f"{nextAnsVariable}={r.group(0)}"
     result = parser(subExpression, freeFlight)
     if not result:
       return False
-    newExpression = expression[:r.span(1)[0]] + nextAnsVariable + expression[r.span(1)[1]:]
+    newExpression = expression[:r.span(0)[0]] + nextAnsVariable + expression[r.span(0)[1]:]
     nextAnsVariable=nextAns(nextAnsVariable)
     parentExpressions.append(expression)
     return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
-  
+
   r = re.search(recursive_regex["multiply_matrix"], expression)
   if r and r.group(1):
     print("multiply in recursive parser...")
@@ -142,7 +147,31 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     nextAnsVariable=nextAns(nextAnsVariable)
     parentExpressions.append(expression)
     return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+
+  r = re.search(recursive_regex["multiply_scalar_matrix"], expression)
+  print("scalar-matrix multiply in recursive parser...")
+  if r and r.group(1) and r.group(2):
+    subExpression = f"{nextAnsVariable}={r.group(0)}"
+    result = parser(subExpression, freeFlight)
+    if not result:
+      return False
+    newExpression = expression[:r.span(0)[0]] + nextAnsVariable + expression[r.span(0)[1]:]
+    nextAnsVariable=nextAns(nextAnsVariable)
+    parentExpressions.append(expression)
+    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
   
+  r = re.search(recursive_regex["multiply_matrix_scalar"], expression)
+  print("matrix-scalar multiply in recursive parser...")
+  if r and r.group(1) and r.group(2):
+    subExpression = f"{nextAnsVariable}={r.group(0)}"
+    result = parser(subExpression, freeFlight)
+    if not result:
+      return False
+    newExpression = expression[:r.span(0)[0]] + nextAnsVariable + expression[r.span(0)[1]:]
+    nextAnsVariable=nextAns(nextAnsVariable)
+    parentExpressions.append(expression)
+    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+
   print("recursive parser cannot do it, give up")
   return False
 
