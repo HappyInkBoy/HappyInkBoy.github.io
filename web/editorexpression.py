@@ -99,21 +99,14 @@ def isValidExpression(expression):
 recursive_regex = {
   "exponent" : "([A-Z]+)\^([-+]?\d*\.?\d+|\d+)",
   "multiply_matrix": "([A-Z]+\*[A-Z]+)",
-  "multiply_scalar_matrix": "(\d*\.?\d+|\d+)\*([A-Z]+)",
-  "multiply_matrix_scalar": "([A-Z]+)\*(\d*\.?\d+|\d+)"
+  "multiply_scalar_matrix": "([-+]?\d*\.?\d+|\d+)\*([A-Z]+)",
+  "multiply_matrix_scalar": "([A-Z]+)\*([-+]?\d*\.?\d+|\d+)"
   
 }
 
 def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
-  # temporary
-  if freeFlight:
-    return False
-  print("recursive parser")
-  print(expression)
-  print(nextAnsVariable)
   result = parser(expression, freeFlight)
   if result:
-    print("basic parser is happy, done")
     return result
   # priorities
   # regex for VARA^number - can be handled by basic parser
@@ -125,8 +118,6 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
   #   it's intended to simply remove that unecessary set of parentheses - see Example 5. above
   r = re.search(recursive_regex["exponent"], expression)
   if r and r.group(1) and r.group(2):
-    print(r.group(0))
-    print(r.group(1))
     subExpression = f"{nextAnsVariable}={r.group(0)}"
     result = parser(subExpression, freeFlight)
     if not result:
@@ -138,7 +129,6 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
 
   r = re.search(recursive_regex["multiply_matrix"], expression)
   if r and r.group(1):
-    print("multiply in recursive parser...")
     subExpression = f"{nextAnsVariable}={r.group(1)}"
     result = parser(subExpression, freeFlight)
     if not result:
@@ -149,7 +139,6 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
 
   r = re.search(recursive_regex["multiply_scalar_matrix"], expression)
-  print("scalar-matrix multiply in recursive parser...")
   if r and r.group(1) and r.group(2):
     subExpression = f"{nextAnsVariable}={r.group(0)}"
     result = parser(subExpression, freeFlight)
@@ -161,7 +150,6 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
   
   r = re.search(recursive_regex["multiply_matrix_scalar"], expression)
-  print("matrix-scalar multiply in recursive parser...")
   if r and r.group(1) and r.group(2):
     subExpression = f"{nextAnsVariable}={r.group(0)}"
     result = parser(subExpression, freeFlight)
@@ -172,7 +160,6 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     parentExpressions.append(expression)
     return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
 
-  print("recursive parser cannot do it, give up")
   return False
 
 # Example: A^2+B^2
@@ -202,8 +189,6 @@ regular_expressions = {
 #
 # if freeFlight is False, evaluate expression and put result in the model
 def parser(expression, freeFlight):
-  print("basic parser")
-  print(expression)
   try:
     expression = expression.replace(" ", "")
     r = re.search(regular_expressions["assignment_exp"], expression)
@@ -218,13 +203,11 @@ def parser(expression, freeFlight):
       print("valid implicit expression")
       print(r.group(1))
       parserImplicitExpression(r.group(1), freeFlight)
-      print("crazy!!!")
       clearError()
       return True  
     return False
 
   except Exception as err:
-    print("aah error")
     print(str(err))
     setError(str(err))
     return False
