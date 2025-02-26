@@ -6,7 +6,7 @@ import re
 
 model = editormodel.model
 
-PARSER_DEBUG = False
+PARSER_DEBUG = True
 
 def log(msg):
   if not PARSER_DEBUG:
@@ -108,10 +108,25 @@ recursive_regex = {
   "multiply_matrix": "([A-Z]+\*[A-Z]+)",
   "multiply_scalar_matrix": "([-+]?\d*\.?\d+|\d+)\*([A-Z]+)",
   "multiply_matrix_scalar": "([A-Z]+)\*([-+]?\d*\.?\d+|\d+)",
+  "hadamard_product": "([A-Z]+)[☉]([A-Z]+)",
+  "cross_product": "([A-Z]+)[x]([A-Z]+)",
+  "dot_product": "([A-Z]+)[·]([A-Z]+)",
   "add_subtract_matrix": "([A-Z]+)[-+]([A-Z]+)",
   "function_expression": "([a-z]+)\(([A-Z]+)\)",
   "parentheses_expression": "\(([A-Za-z-+*☉·^]+)\)"
 }
+
+# Note that the order of operations for this parser is as follows:
+"""
+1. Exponentiation
+2. Matrix-matrix multiplication
+3. Scalar-matrix multiplication
+4. Hadamard product
+5. Cross product
+6. Dot product
+7. Addition/subtraction
+8. Functions
+"""
 
 def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
   if PARSER_DEBUG and freeFlight:
@@ -199,6 +214,54 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     parentExpressions.append(expression)
     return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
 
+  log("search regex hadamard product")
+  r = re.search(recursive_regex["hadamard_product"], expression)
+  if r and r.group(1) and r.group(2):
+    log(r.group(0))
+    log(r.group(1))
+    log(r.group(2))
+    log("regex in matrix hadamard product")
+    subExpression = f"{nextAnsVariable}={r.group(0)}"
+    result = parser(subExpression, freeFlight)
+    if not result:
+      return False
+    newExpression = expression[:r.span(0)[0]] + nextAnsVariable + expression[r.span(0)[1]:]
+    nextAnsVariable=nextAns(nextAnsVariable)
+    parentExpressions.append(expression)
+    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+
+  log("search regex cross product")
+  r = re.search(recursive_regex["cross_product"], expression)
+  if r and r.group(1) and r.group(2):
+    log(r.group(0))
+    log(r.group(1))
+    log(r.group(2))
+    log("regex in matrix cross product")
+    subExpression = f"{nextAnsVariable}={r.group(0)}"
+    result = parser(subExpression, freeFlight)
+    if not result:
+      return False
+    newExpression = expression[:r.span(0)[0]] + nextAnsVariable + expression[r.span(0)[1]:]
+    nextAnsVariable=nextAns(nextAnsVariable)
+    parentExpressions.append(expression)
+    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+
+  log("search regex dot product")
+  r = re.search(recursive_regex["dot_product"], expression)
+  if r and r.group(1) and r.group(2):
+    log(r.group(0))
+    log(r.group(1))
+    log(r.group(2))
+    log("regex in matrix dot product")
+    subExpression = f"{nextAnsVariable}={r.group(0)}"
+    result = parser(subExpression, freeFlight)
+    if not result:
+      return False
+    newExpression = expression[:r.span(0)[0]] + nextAnsVariable + expression[r.span(0)[1]:]
+    nextAnsVariable=nextAns(nextAnsVariable)
+    parentExpressions.append(expression)
+    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+
   log("search regex add/subtract")
   r = re.search(recursive_regex["add_subtract_matrix"], expression)
   if r and r.group(1) and r.group(2):
@@ -221,7 +284,7 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     log(r.group(0))
     log(r.group(1))
     log(r.group(2))
-    log("regex in matrix addition/subtraction")
+    log("regex in matrix functions")
     subExpression = f"{nextAnsVariable}={r.group(0)}"
     result = parser(subExpression, freeFlight)
     if not result:
