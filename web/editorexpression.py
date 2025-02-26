@@ -6,7 +6,7 @@ import re
 
 model = editormodel.model
 
-PARSER_DEBUG = True
+PARSER_DEBUG = False
 
 def log(msg):
   if not PARSER_DEBUG:
