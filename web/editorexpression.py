@@ -108,8 +108,9 @@ recursive_regex = {
   "multiply_matrix": "([A-Z]+\*[A-Z]+)",
   "multiply_scalar_matrix": "([-+]?\d*\.?\d+|\d+)\*([A-Z]+)",
   "multiply_matrix_scalar": "([A-Z]+)\*([-+]?\d*\.?\d+|\d+)",
-  "add_subtract_matrix": "([A-Z]+)[-+]([A-Z]+)"
-  
+  "add_subtract_matrix": "([A-Z]+)[-+]([A-Z]+)",
+  "function_expression": "([a-z]+)\(([A-Z]+)\)",
+  "parentheses_expression": "\(([A-Za-z-+*☉·^]+)\)"
 }
 
 def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
@@ -210,6 +211,39 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     if not result:
       return False
     newExpression = expression[:r.span(0)[0]] + nextAnsVariable + expression[r.span(0)[1]:]
+    nextAnsVariable=nextAns(nextAnsVariable)
+    parentExpressions.append(expression)
+    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+
+  log("search regex function expressions")
+  r = re.search(recursive_regex["function_expression"], expression)
+  if r and r.group(1) and r.group(2):
+    log(r.group(0))
+    log(r.group(1))
+    log(r.group(2))
+    log("regex in matrix addition/subtraction")
+    subExpression = f"{nextAnsVariable}={r.group(0)}"
+    result = parser(subExpression, freeFlight)
+    if not result:
+      return False
+    newExpression = expression[:r.span(0)[0]] + nextAnsVariable + expression[r.span(0)[1]:]
+    nextAnsVariable=nextAns(nextAnsVariable)
+    parentExpressions.append(expression)
+    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+
+  log("search regex parentheses expression")
+  r = re.search(recursive_regex["parentheses_expression"], expression)
+  if r and r.group(1):
+    log(r.group(0))
+    log(r.group(1))
+    log("regex in parentheses expression")
+    subExpression = f"{nextAnsVariable}={r.group(1)}"
+    nextNextAns = nextAns(nextAnsVariable)
+    result = recursiveParser(subExpression, freeFlight, parentExpressions, nextNextAns)
+    if not result:
+      return False
+    newExpression = expression[:r.span(1)[0]-1] + nextAnsVariable + expression[r.span(1)[1]+1:]
+    #
     nextAnsVariable=nextAns(nextAnsVariable)
     parentExpressions.append(expression)
     return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
