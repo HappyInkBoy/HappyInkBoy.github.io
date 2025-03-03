@@ -318,7 +318,10 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
 
 def nextAns(variable):
   last = variable[len(variable)-1]
-  nextLetter = chr(ord(last)+1)
+  if last == "Z":
+    nextLetter = "AA"
+  else:
+    nextLetter = chr(ord(last)+1)
   return variable[:len(variable)-1] + nextLetter
 # Basic Parser below
 
