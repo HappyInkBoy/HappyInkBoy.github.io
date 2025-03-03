@@ -194,6 +194,9 @@ def matrixEditInputCloseAction(event):
 
 def matrixEditInputCloseDelayedUpdate(element):
   parent = element.parent # the td column that hosts the input field during the edit operation
+  if parent is None:
+    # Skip when user presses arrow keys quickly before each edit timer gets a chance to be handled
+    return
   laData = eval(parent.attrs["laData"])
   name = laData["name"]
   row = laData["row"]
@@ -210,16 +213,16 @@ def matrixEditInputCloseDelayedUpdate(element):
 def matrixEditActionEvent(event):
   matrixEditAction(event.target)
 
-def matrixEditAction(element):  
+def matrixEditAction(element):
   if "laData" not in element.attrs:
-     print("wrong element to hook matrixEditAction")
-     print(element)
-     return
+    print("wrong element to hook matrixEditAction")
+    print(element)
+    return
   laData = eval(element.attrs["laData"])
   name = laData["name"]
   row = laData["row"]
   col = laData["col"]
-  originalValue = element.innerHTML
+  originalValue = element.textContent
   if originalValue == "0":
     originalValue = ""
   element.clear()
