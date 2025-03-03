@@ -43,6 +43,9 @@ def initMatrices(parentNode):
   initMatrix(colD, "D")
   initMatrix(colANS, "ANS")
 
+def isHidden(variableName):
+  return variableName.startswith("ANS") and variableName != "ANS"
+
 def addMatrix(parentNode, variable):
   if variable in model["matrices"]:
     print("error - adding matrix "+variable+" which already exists")
@@ -53,7 +56,8 @@ def addMatrix(parentNode, variable):
   col.class_name = "matrix_top_cell"
 
   beforeNode = document["parent_ans"]
-  row.insertBefore(col, beforeNode)
+  if not isHidden(variable):
+    row.insertBefore(col, beforeNode)
 
   initMatrix(col, variable)
   return model["matrices"][variable]
@@ -240,6 +244,8 @@ def matrixEditAction(element):
 
 
 def onMatrixModelUpdate(name):
+    if isHidden(name):
+      return
     mutable = name != "ANS"
     matrixModel = model["matrices"][name]
     parentNode = document[name]
@@ -289,6 +295,8 @@ def onMatrixModelUpdate(name):
             colNode.innerHTML = colValue
 
 def initMatrix(parentNode, name):
+    if isHidden(name):
+      return
     mutable = name != "ANS"
     matrixEditor = html.TABLE()
     matrixEditor.class_name = "matrix_collapse"
