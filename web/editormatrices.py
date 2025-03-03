@@ -201,6 +201,8 @@ def matrixEditInputCloseDelayedUpdate(element):
   name = laData["name"]
   row = laData["row"]
   col = laData["col"]
+  if element.value == "":
+    element.value = "0"
   try:
     model["matrices"][name]["matrix"][row][col] = float(element.value)
   except Exception:
