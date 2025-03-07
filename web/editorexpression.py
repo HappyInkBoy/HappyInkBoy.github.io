@@ -17,6 +17,7 @@ def onExpressionModelUpdate():
   expression = model["expression"]
   intermediateEquations = []
   recursiveParser(expression, False, intermediateEquations, "ANSA")
+  print(intermediateEquations)
 
 #  if expression == "A=RREF(B)":
 #    B = model["matrices"]["B"]["matrix"]
@@ -128,12 +129,11 @@ recursive_regex = {
 8. Functions
 """
 
-def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
-  if PARSER_DEBUG and freeFlight:
-    return False
+def recursiveParser(expression, freeFlight, intermediateExpressions, nextAnsVariable):
   log("recursive parser")
   log(expression)
   log(nextAnsVariable)
+  intermediateExpressions.append(expression)
   result = parser(expression, freeFlight)
   if result:
     log("basic parser is happy, done")
@@ -157,10 +157,10 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     result = parser(subExpression, freeFlight)
     if not result:
       return False
+    intermediateExpressions.append(subExpression)
     newExpression = expression[:r.span(0)[0]] + nextAnsVariable + expression[r.span(0)[1]:]
     nextAnsVariable=nextAns(nextAnsVariable)
-    parentExpressions.append(expression)
-    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+    return recursiveParser(newExpression, freeFlight, intermediateExpressions, nextAnsVariable)
 
   log("search regex multiply_matrix")
   r = re.search(recursive_regex["multiply_matrix"], expression)
@@ -171,10 +171,10 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     result = parser(subExpression, freeFlight)
     if not result:
       return False
+    intermediateExpressions.append(subExpression)
     newExpression = expression[:r.span(1)[0]] + nextAnsVariable + expression[r.span(1)[1]:]
     nextAnsVariable=nextAns(nextAnsVariable)
-    parentExpressions.append(expression)
-    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+    return recursiveParser(newExpression, freeFlight, intermediateExpressions, nextAnsVariable)
 
   log("search regex multiply_scalar-matrix")
   r = re.search(recursive_regex["multiply_scalar_matrix"], expression)
@@ -187,6 +187,7 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     result = parser(subExpression, freeFlight)
     if not result:
       return False
+    intermediateExpressions.append(subExpression)
     newExpression = expression[:r.span(0)[0]]
     # this handles this case: A-2*B = A+ANSA with ANSA=-2*B.
     # otherwise we get the erroneous AANSA
@@ -195,8 +196,7 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
       newExpression += "+"
     newExpression += nextAnsVariable + expression[r.span(0)[1]:]
     nextAnsVariable=nextAns(nextAnsVariable)
-    parentExpressions.append(expression)
-    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+    return recursiveParser(newExpression, freeFlight, intermediateExpressions, nextAnsVariable)
   
   log("search regex multiply_matrix-scalar")
   r = re.search(recursive_regex["multiply_matrix_scalar"], expression)
@@ -209,10 +209,10 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     result = parser(subExpression, freeFlight)
     if not result:
       return False
+    intermediateExpressions.append(subExpression)
     newExpression = expression[:r.span(0)[0]] + nextAnsVariable + expression[r.span(0)[1]:]
     nextAnsVariable=nextAns(nextAnsVariable)
-    parentExpressions.append(expression)
-    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+    return recursiveParser(newExpression, freeFlight, intermediateExpressions, nextAnsVariable)
 
   log("search regex hadamard product")
   r = re.search(recursive_regex["hadamard_product"], expression)
@@ -225,10 +225,10 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     result = parser(subExpression, freeFlight)
     if not result:
       return False
+    intermediateExpressions.append(subExpression)
     newExpression = expression[:r.span(0)[0]] + nextAnsVariable + expression[r.span(0)[1]:]
     nextAnsVariable=nextAns(nextAnsVariable)
-    parentExpressions.append(expression)
-    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+    return recursiveParser(newExpression, freeFlight, intermediateExpressions, nextAnsVariable)
 
   log("search regex cross product")
   r = re.search(recursive_regex["cross_product"], expression)
@@ -241,10 +241,10 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     result = parser(subExpression, freeFlight)
     if not result:
       return False
+    intermediateExpressions.append(subExpression)
     newExpression = expression[:r.span(0)[0]] + nextAnsVariable + expression[r.span(0)[1]:]
     nextAnsVariable=nextAns(nextAnsVariable)
-    parentExpressions.append(expression)
-    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+    return recursiveParser(newExpression, freeFlight, intermediateExpressions, nextAnsVariable)
 
   log("search regex dot product")
   r = re.search(recursive_regex["dot_product"], expression)
@@ -257,10 +257,10 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     result = parser(subExpression, freeFlight)
     if not result:
       return False
+    intermediateExpressions.append(subExpression)
     newExpression = expression[:r.span(0)[0]] + nextAnsVariable + expression[r.span(0)[1]:]
     nextAnsVariable=nextAns(nextAnsVariable)
-    parentExpressions.append(expression)
-    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+    return recursiveParser(newExpression, freeFlight, intermediateExpressions, nextAnsVariable)
 
   log("search regex add/subtract")
   r = re.search(recursive_regex["add_subtract_matrix"], expression)
@@ -273,10 +273,10 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     result = parser(subExpression, freeFlight)
     if not result:
       return False
+    intermediateExpressions.append(subExpression)
     newExpression = expression[:r.span(0)[0]] + nextAnsVariable + expression[r.span(0)[1]:]
     nextAnsVariable=nextAns(nextAnsVariable)
-    parentExpressions.append(expression)
-    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+    return recursiveParser(newExpression, freeFlight, intermediateExpressions, nextAnsVariable)
 
   log("search regex function expressions")
   r = re.search(recursive_regex["function_expression"], expression)
@@ -289,10 +289,10 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     result = parser(subExpression, freeFlight)
     if not result:
       return False
+    intermediateExpressions.append(subExpression)
     newExpression = expression[:r.span(0)[0]] + nextAnsVariable + expression[r.span(0)[1]:]
     nextAnsVariable=nextAns(nextAnsVariable)
-    parentExpressions.append(expression)
-    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+    return recursiveParser(newExpression, freeFlight, intermediateExpressions, nextAnsVariable)
 
   log("search regex parentheses expression")
   r = re.search(recursive_regex["parentheses_expression"], expression)
@@ -302,14 +302,12 @@ def recursiveParser(expression, freeFlight, parentExpressions, nextAnsVariable):
     log("regex in parentheses expression")
     subExpression = f"{nextAnsVariable}={r.group(1)}"
     nextNextAns = nextAns(nextAnsVariable)
-    result = recursiveParser(subExpression, freeFlight, parentExpressions, nextNextAns)
+    result = recursiveParser(subExpression, freeFlight, intermediateExpressions, nextNextAns)
     if not result:
       return False
     newExpression = expression[:r.span(1)[0]-1] + nextAnsVariable + expression[r.span(1)[1]+1:]
-    #
     nextAnsVariable=nextAns(nextAnsVariable)
-    parentExpressions.append(expression)
-    return recursiveParser(newExpression, freeFlight, parentExpressions, nextAnsVariable)
+    return recursiveParser(newExpression, freeFlight, intermediateExpressions, nextAnsVariable)
 
   return False
 
@@ -349,17 +347,15 @@ def parser(expression, freeFlight):
     expression = expression.replace(" ", "")
     r = re.search(regular_expressions["assignment_exp"], expression)
     if r and r.group(1) and r.group(2):
-      print("valid assignment expression")
+      log("valid assignment expression")
       parserAssignmentExpression(r.group(1), r.group(2), freeFlight)
       clearError()
       return True
     
     r = re.search(regular_expressions["implicit_exp"], expression)
     if r and r.group(1):
-      print("valid implicit expression")
-      print(r.group(1))
+      log("valid implicit expression")
       parserImplicitExpression(r.group(1), freeFlight)
-      log("works!!")
       clearError()
       return True  
     return False
@@ -370,13 +366,21 @@ def parser(expression, freeFlight):
     setError(str(err))
     return False
 
-  
+# return True if variable can be updated / created
+# return False otherwise.
+# Example: always True for ANSX variables, they are needed to compute intermediate steps in complex expressions
+# Example: for user variables and ANS, this is controlled by the freeFlight flag (which is True for type ahead check, and False when user presses ENTER
+# and expect the user variables to be reflecting the output of their expression
+def canModifyVariable(variable, freeFlight):
+  if editormatrices.isHidden(variable):
+    return True
+  return not freeFlight
 
 def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   r = re.search("^([A-Z]+)$", implicitExpression)
   if r and r.group(1):
     result = model["matrices"][implicitExpression]["matrix"]
-    if not freeFlight: 
+    if canModifyVariable(variable, freeFlight): 
       if variable in model["matrices"]:
         modelMatrixResult = model["matrices"][variable]
       else:
@@ -389,7 +393,7 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   r = re.search(regular_expressions["single_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserSingleExpression(r.group(1), r.group(2))
-    if not freeFlight: 
+    if canModifyVariable(variable, freeFlight):
       if variable in model["matrices"]:
         modelMatrixResult = model["matrices"][variable]
       else:
@@ -402,7 +406,7 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   r = re.search(regular_expressions["exponent_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserExponentExpression(r.group(1), r.group(2))
-    if not freeFlight: 
+    if canModifyVariable(variable, freeFlight): 
       if variable in model["matrices"]:
         modelMatrixResult = model["matrices"][variable]
       else:
@@ -415,7 +419,7 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   r = re.search(regular_expressions["multiply_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserMultiplyExpression(r.group(1), r.group(2))
-    if not freeFlight: 
+    if canModifyVariable(variable, freeFlight): 
       if variable in model["matrices"]:
         modelMatrixResult = model["matrices"][variable]
       else:
@@ -428,7 +432,7 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   r = re.search(regular_expressions["dual_exp"], implicitExpression)
   if r and r.group(1) and r.group(2) and r.group(3):
     result = parserDualExpression(r.group(1), r.group(2), r.group(3))
-    if not freeFlight:
+    if canModifyVariable(variable, freeFlight):
       if variable in model["matrices"]:
         modelMatrixResult = model["matrices"][variable]
       else:
@@ -445,7 +449,7 @@ def parserImplicitExpression(implicitExpression, freeFlight):
   if r and r.group(1):
     result = model["matrices"][implicitExpression]["matrix"]
     modelMatrixResult = model["matrices"]["ANS"]
-    if not freeFlight:
+    if canModifyVariable("ANS", freeFlight):
       modelMatrixResult["matrix"] = result
       modelMatrixResult["rows"] = len(result)
       modelMatrixResult["cols"] = len(result[0])
@@ -455,7 +459,7 @@ def parserImplicitExpression(implicitExpression, freeFlight):
   if r and r.group(1) and r.group(2):
     result = parserSingleExpression(r.group(1), r.group(2))
     modelMatrixResult = model["matrices"]["ANS"]
-    if not freeFlight:
+    if canModifyVariable("ANS", freeFlight):
       modelMatrixResult["matrix"] = result
       modelMatrixResult["rows"] = len(result)
       modelMatrixResult["cols"] = len(result[0])
@@ -465,7 +469,7 @@ def parserImplicitExpression(implicitExpression, freeFlight):
   if r and r.group(1) and r.group(2):
     result = parserExponentExpression(r.group(1), r.group(2))
     modelMatrixResult = model["matrices"]["ANS"]
-    if not freeFlight: 
+    if canModifyVariable("ANS", freeFlight): 
       modelMatrixResult["matrix"] = result
       modelMatrixResult["rows"] = len(result)
       modelMatrixResult["cols"] = len(result[0])
@@ -475,7 +479,7 @@ def parserImplicitExpression(implicitExpression, freeFlight):
   if r and r.group(1) and r.group(2):
     result = parserMultiplyExpression(r.group(1), r.group(2))
     modelMatrixResult = model["matrices"]["ANS"]
-    if not freeFlight:
+    if canModifyVariable("ANS", freeFlight):
       modelMatrixResult["matrix"] = result
       modelMatrixResult["rows"] = len(result)
       modelMatrixResult["cols"] = len(result[0])
@@ -485,7 +489,7 @@ def parserImplicitExpression(implicitExpression, freeFlight):
   if r and r.group(1) and r.group(2) and r.group(3):
     result = parserDualExpression(r.group(1), r.group(2), r.group(3))
     modelMatrixResult = model["matrices"]["ANS"]
-    if not freeFlight:
+    if canModifyVariable("ANS", freeFlight):
       modelMatrixResult["matrix"] = result
       modelMatrixResult["rows"] = len(result)
       modelMatrixResult["cols"] = len(result[0])
