@@ -153,9 +153,30 @@
     box-shadow: 0 3px #4c7ed0;
     transform: translateY(3px);
   }
+  #lake {
+    background-image: url("lake.png");
+    background-size: 625px 417px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 625px;
+    height: 417px;
+  }
+  .lake_bubble.visible {
+    position: absolute;
+    top: 60;
+    right: 0;
+    width: 300px;
+    height: 200px;
+    font-size: 1.5em;
+    text-align: center;
+  }
   </style>
   <a href="guide.html">How to use the calculator</a>
 <body>
+  <div id="lake"></div>
+  <div class="lake_bubble visible hidden" id="bubble1">Select the zero on the matrices to edit them</div>
+  <div class="lake_bubble visible" id="bubble2">Press the buttons in the commands section to add operations to your expression</div>
 </body>
 
 </html>
