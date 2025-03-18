@@ -183,22 +183,24 @@
   }
 
   #lakeNext {
+    background-image: url("next_tip.png");
+    background-size: 50px 50px;
     position: absolute;
-    top: 360;
+    top: 420;
     right: 300;
     width: 50px;
-    height: 20px;
-    background-color: red;
+    height: 50px;
     z-index : 100;
   }
 
   #lakePrev {
+    background-image: url("previous_tip.png");
+    background-size: 50px 50px;
     position: absolute;
-    top: 360;
+    top: 420;
     right: 550;
     width: 50px;
-    height: 20px;
-    background-color: yellow;
+    height: 50px;
     z-index : 100;
   }
 
@@ -215,9 +217,9 @@
   </style>
   <a href="guide.html">How to use the calculator</a>
 <body>
-  <img src="lake.png" id="lake">
-  <div id="lakeNext" onclick="lakeClick('next')">Next</div>
-  <div id="lakePrev" onclick="lakeClick('prev')">Prev</div>
+  <img src="jean_lac2.PNG" id="lake">
+  <div id="lakeNext" onclick="lakeClick('next')"></div>
+  <div id="lakePrev" onclick="lakeClick('prev')"></div>
   <div class="lake_bubble visible" id="bubble0">Select the zero on the matrices to edit them</div>
   <div class="lake_bubble hidden" id="bubble1" hidden="true">Press the buttons in the commands section to add operations to your expression</div>
   <div class="lake_bubble hidden" id="bubble2" hidden="true">Press the plus or minus buttons to add or remove columns and rows in the matrices</div>
