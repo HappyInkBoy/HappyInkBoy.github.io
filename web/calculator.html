@@ -12,6 +12,25 @@
     </script>
     <script type="text/python" src="linearalgebra.py"></script>
     <script type="text/python" src="editor.py"></script>
+    <script>
+      lakeID = 0
+      maxLakeID = 3
+      function lakeClick(arg) {
+        if (arg == "next") {
+          lakeID = (lakeID + 1) % maxLakeID
+        }
+        if (arg == "prev") {
+          lakeID = (lakeID + maxLakeID - 1) % maxLakeID
+        }
+        for (let i=0;i<maxLakeID;i++) {
+          node = document.getElementById("bubble"+i)
+          node.classList.remove("visible")
+          node.classList.remove("hidden")
+          node.classList.add(lakeID == i ? "visible" : "hidden")
+          node.hidden = lakeID != i;
+        }
+      }
+    </script>
 </head>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Archivo">
 <style>
@@ -162,6 +181,27 @@
     width: 625px;
     height: 417px;
   }
+
+  #lakeNext {
+    position: absolute;
+    top: 360;
+    right: 300;
+    width: 50px;
+    height: 20px;
+    background-color: red;
+    z-index : 100;
+  }
+
+  #lakePrev {
+    position: absolute;
+    top: 360;
+    right: 550;
+    width: 50px;
+    height: 20px;
+    background-color: yellow;
+    z-index : 100;
+  }
+
   .lake_bubble.visible {
     position: absolute;
     top: 60;
@@ -170,13 +210,17 @@
     height: 200px;
     font-size: 1.5em;
     text-align: center;
+    z-index : 1;
   }
   </style>
   <a href="guide.html">How to use the calculator</a>
 <body>
-  <div id="lake"></div>
-  <div class="lake_bubble visible hidden" id="bubble1">Select the zero on the matrices to edit them</div>
-  <div class="lake_bubble visible" id="bubble2">Press the buttons in the commands section to add operations to your expression</div>
+  <img src="lake.png" id="lake">
+  <div id="lakeNext" onclick="lakeClick('next')">Next</div>
+  <div id="lakePrev" onclick="lakeClick('prev')">Prev</div>
+  <div class="lake_bubble visible" id="bubble0">Select the zero on the matrices to edit them</div>
+  <div class="lake_bubble hidden" id="bubble1" hidden="true">Press the buttons in the commands section to add operations to your expression</div>
+  <div class="lake_bubble hidden" id="bubble2" hidden="true">Press the plus or minus buttons to add or remove columns and rows in the matrices</div>
 </body>
 
 </html>
