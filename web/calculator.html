@@ -16,18 +16,34 @@
       lakeID = 0
       maxLakeID = 3
       function lakeClick(arg) {
+        console.log("lakeClick")
         if (arg == "next") {
           lakeID = (lakeID + 1) % maxLakeID
         }
         if (arg == "prev") {
           lakeID = (lakeID + maxLakeID - 1) % maxLakeID
         }
+
+        document.getElementById("A").classList.remove("targetlake")
+        document.getElementById("targetbubble1").classList.remove("targetlake")
+        document.getElementById("targetbubble2A").classList.remove("targetlake")
+
         for (let i=0;i<maxLakeID;i++) {
+          console.log("bubble"+i)
           node = document.getElementById("bubble"+i)
           node.classList.remove("visible")
           node.classList.remove("hidden")
           node.classList.add(lakeID == i ? "visible" : "hidden")
           node.hidden = lakeID != i;
+
+          targetId = ""
+          if (i == 0) targetId = "A";
+          if (i == 1) targetId = "targetbubble1";
+          if (i == 2) targetId = "targetbubble2A";
+          if (targetId != "") {
+            node = document.getElementById(targetId)
+            node.classList.add(lakeID == i ? "targetlake" : "nottargetlake")
+          }          
         }
       }
     </script>
@@ -214,6 +230,10 @@
     text-align: center;
     z-index : 1;
   }
+  .targetlake {
+    background-color: red;
+  }
+
   </style>
   <a href="guide.html">How to use the calculator</a>
 <body>

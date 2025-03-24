@@ -302,7 +302,7 @@ def initMatrix(parentNode, name):
     matrixEditor.class_name = "matrix_collapse"
 
     row1 = html.TR()
-    tdPlusOrMinus = html.TD()
+    tdPlusOrMinus = html.TD(id="targetbubble2"+name)
     if mutable:
       initMatrixPlusMinus(tdPlusOrMinus, name, "rows")
     else:

@@ -14,7 +14,7 @@ def commandAction(event):
   return
 
 def initCommands(parentNode):
-  commandsTable = html.TABLE()
+  commandsTable = html.TABLE(id="targetbubble1")
   row = html.TR()
   for cmd in model["commands"]:
     td = html.TD()
