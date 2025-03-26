@@ -45,6 +45,15 @@ p2{
     margin-right: 10px;
     margin-bottom: 20px;
 }
+p4{
+    display: block;
+    color: #002343;
+    text-align: left;
+    font-family: "Chivo";
+    font-size: 16px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
 table,th{
     border: 1px solid #073763;  
     border-collapse: collapse;
@@ -176,4 +185,32 @@ each command as well as how to use them. </p2>
         <td><a href="https://online.stat.psu.edu/statprogram/reviews/matrix-algebra/gauss-jordan-elimination">PennState</a></td>
     </tr>
 </table>
-<p3 class = text>NOTE: The calculator can compute complex expressions involving multiple operations and functions. </p2>
+<p3 class = text> <br/> NOTE: The calculator can compute complex expressions involving multiple operations and functions. </p3>
+<p4>EXAMPLES:</p4>
+<table>
+    <tr>
+        <th>Combination</th>
+        <th style = "width:25%">Use Example</th>
+        <th>Limits/Requirements</th>
+    </tr>
+    <tr>
+        <td>Transposing a sum of matrices</td>
+        <td>transpose(A + B + C)</td>
+        <td>Matrices must be of equivalent dimensions</td>
+    </tr>
+    <tr>
+        <td>Finding determinant of a product of matrices</td>
+        <td>det(A * B)</td>
+        <td>Matrices must be of compatible dimensions</td>
+    </tr>
+    <tr>
+        <td>Evaluating trace of transposed sum of multiple matrices</td>
+        <td>trace(transpose(A + B))</td>
+        <td>Matrices must be of equivalent dimensions</td>
+    </tr>
+    <tr>
+        <td>Evaluating the reduced row echelon form of the sum of multiple matrices</td>
+        <td>rref(A + B)</td>
+        <td>Matrices must be of equivalent dimensions and sum of matrices must be of compatible dimensions for reduced row echelon form</td>
+    </tr>
+</table>
