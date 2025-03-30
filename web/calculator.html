@@ -71,6 +71,11 @@
           bubbleNode.hidden = false
           bubbleNode.classList.add("visible")
           bubbleNode.classList.remove("hidden")
+          targetId = targetIDs[lakeID]
+          if (targetId != "") {
+            targetNode = document.getElementById(targetId)
+            targetNode.classList.add("targetlake")
+          }
         }
         else if (node.classList.contains("hide")) {
           node.classList.remove("hide")
@@ -84,8 +89,8 @@
           bubbleNode.classList.remove("visible")
           targetId = targetIDs[lakeID]
           if (targetId != "") {
-            node = document.getElementById(targetId)
-            node.classList.remove("targetlake")
+            targetNode = document.getElementById(targetId)
+            targetNode.classList.remove("targetlake")
           }
 
         }
