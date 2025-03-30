@@ -15,6 +15,17 @@
     <script>
       lakeID = 0
       maxLakeID = 8
+      targetIDs = [
+        "A",
+        "targetbubble1",
+        "targetbubble2A",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+
       function lakeClick(arg) {
         console.log("lakeClick")
         if (arg == "next") {
@@ -36,10 +47,7 @@
           node.classList.add(lakeID == i ? "visible" : "hidden")
           node.hidden = lakeID != i;
 
-          targetId = ""
-          if (i == 0) targetId = "A";
-          if (i == 1) targetId = "targetbubble1";
-          if (i == 2) targetId = "targetbubble2A";
+          targetId = targetIDs[i]
           if (targetId != "") {
             node = document.getElementById(targetId)
             node.classList.add(lakeID == i ? "targetlake" : "nottargetlake")
@@ -74,6 +82,12 @@
           bubbleNode.hidden = true
           bubbleNode.classList.add("hidden")
           bubbleNode.classList.remove("visible")
+          targetId = targetIDs[lakeID]
+          if (targetId != "") {
+            node = document.getElementById(targetId)
+            node.classList.remove("targetlake")
+          }
+
         }
       }
 
@@ -267,7 +281,7 @@
 
   #lakeStart {
     position: absolute;
-    top: 0;
+    top: 20;
     right: 400;
   }
 
