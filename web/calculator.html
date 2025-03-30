@@ -14,7 +14,7 @@
     <script type="text/python" src="editor.py"></script>
     <script>
       lakeID = 0
-      maxLakeID = 3
+      maxLakeID = 8
       function lakeClick(arg) {
         console.log("lakeClick")
         if (arg == "next") {
@@ -46,6 +46,37 @@
           }          
         }
       }
+
+      function lakeShow() {
+        node = document.getElementById("lakeStart")
+        imgNode = document.getElementById("lake")
+        nextNode = document.getElementById("lakeNext")
+        prevNode = document.getElementById("lakePrev")
+        bubbleNode = document.getElementById("bubble"+lakeID)
+        if (node.classList.contains("start")) {
+          node.classList.remove("start")
+          node.classList.add("hide")
+          node.innerHTML = "Stop Tutorial"
+          imgNode.hidden = false
+          nextNode.hidden = false
+          prevNode.hidden = false
+          bubbleNode.hidden = false
+          bubbleNode.classList.add("visible")
+          bubbleNode.classList.remove("hidden")
+        }
+        else if (node.classList.contains("hide")) {
+          node.classList.remove("hide")
+          node.classList.add("start")
+          node.innerHTML = "Start Tutorial"
+          imgNode.hidden = true
+          nextNode.hidden = true
+          prevNode.hidden = true
+          bubbleNode.hidden = true
+          bubbleNode.classList.add("hidden")
+          bubbleNode.classList.remove("visible")
+        }
+      }
+
     </script>
 </head>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Archivo">
@@ -234,15 +265,27 @@
     background-color: red;
   }
 
+  #lakeStart {
+    position: absolute;
+    top: 0;
+    right: 400;
+  }
+
   </style>
   <a href="guide.html">How to use the calculator</a>
 <body>
-  <img src="jean_lac2.PNG" id="lake">
-  <div id="lakeNext" onclick="lakeClick('next')"></div>
-  <div id="lakePrev" onclick="lakeClick('prev')"></div>
-  <div class="lake_bubble visible" id="bubble0">Select the zero on the matrices to edit them</div>
+  <img src="jean_lac2.PNG" id="lake" hidden="true">
+  <div id="lakeNext" onclick="lakeClick('next')" hidden="true"></div>
+  <div id="lakePrev" onclick="lakeClick('prev')" hidden="true"></div>
+  <div id="lakeStart" class="start" onclick="lakeShow()">Start Tutorial</div>
+  <div class="lake_bubble hidden" id="bubble0" hidden="true">Select the zero on the matrices to edit them. You can use the arrow keys to navigate the matrix</div>
   <div class="lake_bubble hidden" id="bubble1" hidden="true">Press the buttons in the commands section to add operations to your expression</div>
   <div class="lake_bubble hidden" id="bubble2" hidden="true">Press the plus or minus buttons to add or remove columns and rows in the matrices</div>
+  <div class="lake_bubble hidden" id="bubble3" hidden="true">Input your desired matrices and commands in the expression box. You can use letters to represent a matrix</div>
+  <div class="lake_bubble hidden" id="bubble4" hidden="true">Press the Enter key to see the result of your calculation in the ANS matrix</div>
+  <div class="lake_bubble hidden" id="bubble5" hidden="true">To use the equation solver, enter your equation in standard form (with your variables to the left side). Don't leave any empty lines between equations</div>
+  <div class="lake_bubble hidden" id="bubble6" hidden="true">Ensure that there is the appropriate amount of equations for the amount of variables (ex: 2 equations for 2 variables)</div>
+  <div class="lake_bubble hidden" id="bubble7" hidden="true">Then, click the "solve" button and the values of your variables will be displayed under the text box</div>
 </body>
 
 </html>
