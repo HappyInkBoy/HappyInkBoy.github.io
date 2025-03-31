@@ -376,10 +376,34 @@ def canModifyVariable(variable, freeFlight):
     return True
   return not freeFlight
 
+def roundMatrix(matrix_list):
+  """
+  This is just a function to round any float value in the matrix
+  Args:
+    matrix_list (2d list)
+  Returns:
+    rounded_list (2d list)
+  """
+
+  if not isinstance(matrix_list,list):
+    raise TypeError("roundMatrix() can only accept a 2d list as an argument")
+  elif not isinstance(matrix_list[0],list):
+    raise TypeError("list passed to roundMatrix() as an argument must be 2 dimensional")
+
+  rounded_list = []
+  for sublist in matrix_list:
+    rounded_sublist = []
+    for element in sublist:
+      rounded_sublist.append(round(element,3))
+    rounded_list.append(rounded_sublist)
+
+  return rounded_list
+
 def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   r = re.search("^([A-Z]+)$", implicitExpression)
   if r and r.group(1):
     result = model["matrices"][implicitExpression]["matrix"]
+    result = roundMatrix(result)
     if canModifyVariable(variable, freeFlight): 
       if variable in model["matrices"]:
         modelMatrixResult = model["matrices"][variable]
@@ -393,6 +417,7 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   r = re.search(regular_expressions["single_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserSingleExpression(r.group(1), r.group(2))
+    result = roundMatrix(result)
     if canModifyVariable(variable, freeFlight):
       if variable in model["matrices"]:
         modelMatrixResult = model["matrices"][variable]
@@ -406,6 +431,7 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   r = re.search(regular_expressions["exponent_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserExponentExpression(r.group(1), r.group(2))
+    result = roundMatrix(result)
     if canModifyVariable(variable, freeFlight): 
       if variable in model["matrices"]:
         modelMatrixResult = model["matrices"][variable]
@@ -419,6 +445,7 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   r = re.search(regular_expressions["multiply_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserMultiplyExpression(r.group(1), r.group(2))
+    result = roundMatrix(result)
     if canModifyVariable(variable, freeFlight): 
       if variable in model["matrices"]:
         modelMatrixResult = model["matrices"][variable]
@@ -432,6 +459,7 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   r = re.search(regular_expressions["dual_exp"], implicitExpression)
   if r and r.group(1) and r.group(2) and r.group(3):
     result = parserDualExpression(r.group(1), r.group(2), r.group(3))
+    result = roundMatrix(result)
     if canModifyVariable(variable, freeFlight):
       if variable in model["matrices"]:
         modelMatrixResult = model["matrices"][variable]
@@ -448,6 +476,7 @@ def parserImplicitExpression(implicitExpression, freeFlight):
   r = re.search("^([A-Z]+)$", implicitExpression)
   if r and r.group(1):
     result = model["matrices"][implicitExpression]["matrix"]
+    result = roundMatrix(result)
     modelMatrixResult = model["matrices"]["ANS"]
     if canModifyVariable("ANS", freeFlight):
       modelMatrixResult["matrix"] = result
@@ -458,6 +487,7 @@ def parserImplicitExpression(implicitExpression, freeFlight):
   r = re.search(regular_expressions["single_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserSingleExpression(r.group(1), r.group(2))
+    result = roundMatrix(result)
     modelMatrixResult = model["matrices"]["ANS"]
     if canModifyVariable("ANS", freeFlight):
       modelMatrixResult["matrix"] = result
@@ -468,6 +498,7 @@ def parserImplicitExpression(implicitExpression, freeFlight):
   r = re.search(regular_expressions["exponent_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserExponentExpression(r.group(1), r.group(2))
+    result = roundMatrix(result)
     modelMatrixResult = model["matrices"]["ANS"]
     if canModifyVariable("ANS", freeFlight): 
       modelMatrixResult["matrix"] = result
@@ -478,6 +509,7 @@ def parserImplicitExpression(implicitExpression, freeFlight):
   r = re.search(regular_expressions["multiply_exp"], implicitExpression)
   if r and r.group(1) and r.group(2):
     result = parserMultiplyExpression(r.group(1), r.group(2))
+    result = roundMatrix(result)
     modelMatrixResult = model["matrices"]["ANS"]
     if canModifyVariable("ANS", freeFlight):
       modelMatrixResult["matrix"] = result
@@ -488,6 +520,7 @@ def parserImplicitExpression(implicitExpression, freeFlight):
   r = re.search(regular_expressions["dual_exp"], implicitExpression)
   if r and r.group(1) and r.group(2) and r.group(3):
     result = parserDualExpression(r.group(1), r.group(2), r.group(3))
+    result = roundMatrix(result)
     modelMatrixResult = model["matrices"]["ANS"]
     if canModifyVariable("ANS", freeFlight):
       modelMatrixResult["matrix"] = result
