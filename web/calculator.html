@@ -19,15 +19,14 @@
         "A",
         "targetbubble1",
         "targetbubble2A",
+        "expression-input",
         "",
+        "equationtextarea",
         "",
-        "",
-        "",
-        ""
+        "solvehighlight"
       ]
 
       function lakeClick(arg) {
-        console.log("lakeClick")
         if (arg == "next") {
           lakeID = (lakeID + 1) % maxLakeID
         }
@@ -35,9 +34,11 @@
           lakeID = (lakeID + maxLakeID - 1) % maxLakeID
         }
 
-        document.getElementById("A").classList.remove("targetlake")
-        document.getElementById("targetbubble1").classList.remove("targetlake")
-        document.getElementById("targetbubble2A").classList.remove("targetlake")
+        for (let i=0;i<targetIDs.length;i++) {
+          if (targetIDs[i] != "") {
+            document.getElementById(targetIDs[i]).classList.remove("targetlake")
+          }
+        }
 
         for (let i=0;i<maxLakeID;i++) {
           console.log("bubble"+i)

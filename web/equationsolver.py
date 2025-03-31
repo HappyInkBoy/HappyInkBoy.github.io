@@ -22,7 +22,7 @@ def initEquations(parentNode):
   equationTable <= row1
 
   row2 = html.TR()
-  td2 = html.TD()
+  td2 = html.TD(id="solvehighlight")
   resolveButton = html.DIV("Solve")
   resolveButton.bind("click", resolveAction)
   resolveButton.class_name = "solve"
