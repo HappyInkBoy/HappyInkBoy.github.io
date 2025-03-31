@@ -240,10 +240,10 @@
     transform: translateY(3px);
   }
   #lake {
-    background-image: url("lake.png");
+    background-image: url("square_jean_lac.png");
     background-size: 625px 417px;
     position: absolute;
-    top: 0;
+    top: 20;
     right: 0;
     width: 625px;
     height: 417px;
@@ -253,7 +253,7 @@
     background-image: url("next_tip.png");
     background-size: 50px 50px;
     position: absolute;
-    top: 420;
+    top: 440;
     right: 300;
     width: 50px;
     height: 50px;
@@ -264,7 +264,7 @@
     background-image: url("previous_tip.png");
     background-size: 50px 50px;
     position: absolute;
-    top: 420;
+    top: 440;
     right: 550;
     width: 50px;
     height: 50px;
@@ -274,8 +274,8 @@
   .lake_bubble.visible {
     position: absolute;
     top: 60;
-    right: 0;
-    width: 300px;
+    right: 25;
+    width: 270px;
     height: 200px;
     font-size: 1.5em;
     text-align: center;
@@ -294,7 +294,7 @@
   </style>
   <a href="guide.html">How to use the calculator</a>
 <body>
-  <img src="jean_lac2.PNG" id="lake" hidden="true">
+  <img src="square_jean_lac.PNG" id="lake" hidden="true">
   <div id="lakeNext" onclick="lakeClick('next')" hidden="true"></div>
   <div id="lakePrev" onclick="lakeClick('prev')" hidden="true"></div>
   <div id="lakeStart" class="start" onclick="lakeShow()">Start Tutorial</div>
@@ -303,7 +303,7 @@
   <div class="lake_bubble hidden" id="bubble2" hidden="true">Press the plus or minus buttons to add or remove columns and rows in the matrices</div>
   <div class="lake_bubble hidden" id="bubble3" hidden="true">Input your desired matrices and commands in the expression box. You can use letters to represent a matrix</div>
   <div class="lake_bubble hidden" id="bubble4" hidden="true">Press the Enter key to see the result of your calculation in the ANS matrix</div>
-  <div class="lake_bubble hidden" id="bubble5" hidden="true">To use the equation solver, enter your equation in standard form (with your variables to the left side). Don't leave any empty lines between equations</div>
+  <div class="lake_bubble hidden" id="bubble5" hidden="true">To use the equation solver, enter your equation in standard form (with your variables to the left side)</div>
   <div class="lake_bubble hidden" id="bubble6" hidden="true">Ensure that there is the appropriate amount of equations for the amount of variables (ex: 2 equations for 2 variables)</div>
   <div class="lake_bubble hidden" id="bubble7" hidden="true">Then, click the "solve" button and the values of your variables will be displayed under the text box</div>
 </body>
