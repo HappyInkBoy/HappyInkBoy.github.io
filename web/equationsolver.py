@@ -60,6 +60,13 @@ def onSolutionsModelUpdate():
 
   solutionsNode.innerHTML=solutionText
 
+def removeEmptyEquations(equation_list):
+  clean_equation_list = []
+  for equation in equation_list:
+    if equation != "":
+      clean_equation_list.append(equation)
+  return clean_equation_list
+
 def convertToMatrix(equations):
   """
   Args:
@@ -73,6 +80,7 @@ def convertToMatrix(equations):
     [2,-3,4,-10]
     ]
   """
+  equations = removeEmptyEquations(equations)
   parsedEquations = []
   allVariables = {}
   for equation in equations:
