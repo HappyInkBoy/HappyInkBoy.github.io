@@ -384,11 +384,8 @@ def roundMatrix(matrix_list):
   Returns:
     rounded_list (2d list)
   """
-
-  if not isinstance(matrix_list,list):
+  if not isinstance(matrix_list, list):
     raise TypeError("roundMatrix() can only accept a 2d list as an argument")
-  elif not isinstance(matrix_list[0],list):
-    raise TypeError("list passed to roundMatrix() as an argument must be 2 dimensional")
 
   rounded_list = []
   for sublist in matrix_list:
@@ -402,7 +399,7 @@ def roundMatrix(matrix_list):
 def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   r = re.search("^([A-Z]+)$", implicitExpression)
   if r and r.group(1):
-    result = model["matrices"][implicitExpression]["matrix"]
+    result = list(model["matrices"][implicitExpression]["matrix"])
     result = roundMatrix(result)
     if canModifyVariable(variable, freeFlight): 
       if variable in model["matrices"]:
@@ -475,7 +472,7 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
 def parserImplicitExpression(implicitExpression, freeFlight):
   r = re.search("^([A-Z]+)$", implicitExpression)
   if r and r.group(1):
-    result = model["matrices"][implicitExpression]["matrix"]
+    result = list(model["matrices"][implicitExpression]["matrix"])
     result = roundMatrix(result)
     modelMatrixResult = model["matrices"]["ANS"]
     if canModifyVariable("ANS", freeFlight):
