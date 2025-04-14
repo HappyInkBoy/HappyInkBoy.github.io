@@ -14,7 +14,7 @@
     <script type="text/python" src="editor.py"></script>
     <script>
       lakeID = 0
-      maxLakeID = 8
+      maxLakeID = 9
       targetIDs = [
         "A",
         "targetbubble1",
@@ -23,7 +23,8 @@
         "ANS",
         "equationtextarea",
         "equationtextarea",
-        "solvehighlight"
+        "solvehighlight",
+        "history"
       ]
 
       function lakeClick(arg) {
@@ -347,6 +348,7 @@
   <div class="lake_bubble hidden" id="bubble5" hidden="true">To use the equation solver, enter your equation in standard form (with your variables to the left side)</div>
   <div class="lake_bubble hidden" id="bubble6" hidden="true">Ensure that there is the appropriate amount of equations for the amount of variables (ex: 2 equations for 2 variables)</div>
   <div class="lake_bubble hidden" id="bubble7" hidden="true">Then, click the "solve" button and the values of your variables will be displayed under the text box</div>
+  <div class="lake_bubble hidden" id="bubble8" hidden="true">Click on History to check the previously entered commands</div>
 </body>
 
 </html>
