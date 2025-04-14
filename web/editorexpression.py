@@ -1,6 +1,6 @@
 from browser import document, html, window
 
-import editormodel, editormatrices, linearalgebra
+import editormodel, editormatrices, linearalgebra, editorhistory
 
 import re
 
@@ -33,7 +33,8 @@ def expressionInputAction(event):
      element.class_name = "valid" if isValidExpression(element.value) else "invalid"
      return
   model["expression"] = element.value
-  element.value = ""
+  editorhistory.addHistoryItem(element.value)
+  #element.value = ""
   onExpressionModelUpdate()
 
 def enterCommand(commandName):

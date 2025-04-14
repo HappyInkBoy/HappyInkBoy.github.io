@@ -10,6 +10,7 @@ editor <= html.TR(html.TD(html.DIV(id="commands")))
 editor <= html.TR(html.TD(html.DIV(id="matrices")))
 editor <= html.TR(html.TD(html.DIV(id="expression")))
 editor <= html.TR(html.TD(html.DIV(id="error")))
+editor <= html.TR(html.TD(html.DIV(id="history")))
 document <= editor
 
 solver = html.TABLE()
@@ -20,6 +21,7 @@ document <= solver
 document["commands"] <= "Commands"
 document["matrices"] <= "Matrices"
 document["expression"] <= "Expression: "
+document["history"] <= "History"
 document["equation_solver"] <= "Equation Solver"
 
 editorcommands.initCommands(document["commands"])
