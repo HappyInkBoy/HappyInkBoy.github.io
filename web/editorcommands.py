@@ -17,7 +17,7 @@ def initCommands(parentNode):
   commandsTable = html.TABLE(id="targetbubble1")
   row = html.TR()
   for cmd in model["commands"]:
-    td = html.TD()
+    td = html.TD(id="operation"+str(model["commands"].index(cmd)))
     td.classList.add("command")
     td.classList.add(cmd["operation_type"])
     td <= cmd["command"]
