@@ -152,7 +152,6 @@
           console.log("yay1")
           node.classList.remove("fact_start")
           node.classList.add("fact_hide")
-          node.innerHTML = "Hide history facts"
           imgNode.hidden = false
           textNode.hidden = false
           boardNode.hidden = false
@@ -169,7 +168,6 @@
         else if (node.classList.contains("fact_hide")) {
           node.classList.remove("fact_hide")
           node.classList.add("fact_start")
-          node.innerHTML = "Show history facts"
           imgNode.hidden = true
           textNode.hidden = true
           boardNode.hidden = true
@@ -464,6 +462,16 @@
     position: absolute;
     top: 560;
     right: 300;
+    background-image: url("unpressed_button.png");
+    background-size: 200px 200px;
+    width: 200px;
+    height: 200px;
+  }
+  #lakeFact:active {
+    background-image: url("pressed_button.png");
+    background-size: 200px 200px;
+    width: 200px;
+    height: 200px;
   }
   #prof {
     background-image: url("prof_lac.png");
@@ -511,7 +519,7 @@
   <div class="lake_bubble hidden" id="bubble6" hidden="true">Ensure that there is the appropriate amount of equations for the amount of variables (ex: 2 equations for 2 variables)</div>
   <div class="lake_bubble hidden" id="bubble7" hidden="true">Then, click the "solve" button and the values of your variables will be displayed under the text box</div>
   <div class="lake_bubble hidden" id="bubble8" hidden="true">Click on History to check the previously entered commands</div>
-  <div id="lakeFact" class="fact_start" onclick="factShow()">Show history facts</div>
+  <div id="lakeFact" class="fact_start" onclick="factShow()"></div>
   <img src="prof_lac.png" id="prof" hidden="true">
   <img src="green_board.png" id="board" hidden="true">
   <div id="factNext" onclick="factClick('next')" hidden="true"></div>
