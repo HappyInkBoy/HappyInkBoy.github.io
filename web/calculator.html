@@ -58,15 +58,19 @@
       }
 
       function lakeShow() {
-        node = document.getElementById("lakeStart")
+        showNode = document.getElementById("lakeStart")
         imgNode = document.getElementById("lake")
         nextNode = document.getElementById("lakeNext")
         prevNode = document.getElementById("lakePrev")
         bubbleNode = document.getElementById("bubble"+lakeID)
-        if (node.classList.contains("start")) {
-          node.classList.remove("start")
-          node.classList.add("hide")
-          node.innerHTML = "Stop Tutorial"
+        factNode = document.getElementById("lakeFact")
+        if (factNode.classList.contains("fact_hide")) {
+          return
+        }
+        if (showNode.classList.contains("start")) {
+          showNode.classList.remove("start")
+          showNode.classList.add("hide")
+          showNode.innerHTML = "Stop Tutorial"
           imgNode.hidden = false
           nextNode.hidden = false
           prevNode.hidden = false
@@ -79,10 +83,10 @@
             targetNode.classList.add("targetlake")
           }
         }
-        else if (node.classList.contains("hide")) {
-          node.classList.remove("hide")
-          node.classList.add("start")
-          node.innerHTML = "Start Tutorial"
+        else if (showNode.classList.contains("hide")) {
+          showNode.classList.remove("hide")
+          showNode.classList.add("start")
+          showNode.innerHTML = "Start Tutorial"
           imgNode.hidden = true
           nextNode.hidden = true
           prevNode.hidden = true
@@ -141,17 +145,19 @@
       }
 
       function factShow() {
-        console.log("Yay")
-        node = document.getElementById("lakeFact")
+        factNode = document.getElementById("lakeFact")
         imgNode = document.getElementById("prof")
         boardNode = document.getElementById("board")
         textNode = document.getElementById("text"+textID)
         nextNode = document.getElementById("factNext")
         prevNode = document.getElementById("factPrev")
-        if (node.classList.contains("fact_start")) {
-          console.log("yay1")
-          node.classList.remove("fact_start")
-          node.classList.add("fact_hide")
+        lakeNode = document.getElementById("lakeStart")
+        if (lakeNode.classList.contains("hide")) {
+          return
+        }
+        if (factNode.classList.contains("fact_start")) {
+          factNode.classList.remove("fact_start")
+          factNode.classList.add("fact_hide")
           imgNode.hidden = false
           textNode.hidden = false
           boardNode.hidden = false
@@ -165,9 +171,9 @@
             operationNode.classList.add("operationlake")
           }
         }
-        else if (node.classList.contains("fact_hide")) {
-          node.classList.remove("fact_hide")
-          node.classList.add("fact_start")
+        else if (factNode.classList.contains("fact_hide")) {
+          factNode.classList.remove("fact_hide")
+          factNode.classList.add("fact_start")
           imgNode.hidden = true
           textNode.hidden = true
           boardNode.hidden = true
@@ -494,8 +500,8 @@
   .lake_board.visible {
     position: absolute;
     top: 145;
-    right: 125;
-    width: 270px;
+    right: 85;
+    width: 350px;
     height: 200px;
     font-size: 1.5em;
     text-align: center;
@@ -524,13 +530,13 @@
   <img src="green_board.png" id="board" hidden="true">
   <div id="factNext" onclick="factClick('next')" hidden="true"></div>
   <div id="factPrev" onclick="factClick('prev')" hidden="true"></div>
-  <div class="lake_board hidden" id="text0" hidden="true">Lorem ipsum dolor sit</div>
-  <div class="lake_board hidden" id="text1" hidden="true">placeholder placeholder placeholder</div>
-  <div class="lake_board hidden" id="text2" hidden="true">Lorem ipsum dolor sit</div>
-  <div class="lake_board hidden" id="text3" hidden="true">placeholder placeholder placeholder</div>
-  <div class="lake_board hidden" id="text4" hidden="true">Lorem ipsum dolor sit</div>
-  <div class="lake_board hidden" id="text5" hidden="true">placeholder placeholder placeholder</div>
-  <div class="lake_board hidden" id="text6" hidden="true">Lorem ipsum dolor sit</div>
+  <div class="lake_board hidden" id="text0" hidden="true">1. Matrix Multiplication:</div>
+  <div class="lake_board hidden" id="text1" hidden="true">2. Cross Product:</div>
+  <div class="lake_board hidden" id="text2" hidden="true">3. Dot Product</div>
+  <div class="lake_board hidden" id="text3" hidden="true">4. Hadamard Product:</div>
+  <div class="lake_board hidden" id="text4" hidden="true">5. Reduced Row Echelon Form:</div>
+  <div class="lake_board hidden" id="text5" hidden="true">6. Determinant:</div>
+  <div class="lake_board hidden" id="text6" hidden="true">7. Trace:</div>
 </body>
 
 </html>
