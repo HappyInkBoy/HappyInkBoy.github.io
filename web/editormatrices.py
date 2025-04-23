@@ -71,7 +71,14 @@ def plusMinusAction(event):
   if matrixModel[laData["rowsOrCols"]] == 0:
      matrixModel[laData["rowsOrCols"]] = 1
      return
+  oldMatrix = matrixModel["matrix"]
+  # The old matrix is merged into the new one
   matrixModel["matrix"] = [[0 for col in range(matrixModel["cols"])] for row in range(matrixModel["rows"])]
+  for rowIndex, row in enumerate(oldMatrix):
+    for colIndex, col in enumerate(row):
+      value = row[colIndex]
+      if rowIndex < len(matrixModel["matrix"]) and colIndex < len(matrixModel["matrix"][0]):
+        matrixModel["matrix"][rowIndex][colIndex] = value
   onMatrixModelUpdate(laData["name"])
 
 def initMatrixPlusMinus(parentNode, name, rowsOrCols):
