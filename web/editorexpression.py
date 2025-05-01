@@ -131,6 +131,17 @@ recursive_regex = {
 """
 
 def recursiveParser(expression, freeFlight, intermediateExpressions, nextAnsVariable):
+  """
+  Takes a complex expression, identifies sub-expression and passes them to the basic parser.
+  Sub-expressions are then replaced with variables and this repeats until there is only one expression left.
+  Args:
+    expression (str): The user's math expression
+    freeFlight (bool): True if there are no problems with the expression. False is otherwise.
+    intermediateExpressions (list): List that records every expression and sub-expression
+    nextAnsVariable (str): The name of a variable used to calculate intermediate steps
+  Returns:
+    result (bool): True if expression is valid. False if otherwise
+  """
   log("recursive parser")
   log(expression)
   log(nextAnsVariable)
@@ -342,6 +353,14 @@ regular_expressions = {
 #
 # if freeFlight is False, evaluate expression and put result in the model
 def parser(expression, freeFlight):
+  """
+  Takes an expression and identifies whether it is assigning a value to another matrix, or if it implicitly assigns value to the answer matrix
+  Args:
+    expression (str): The user's math expression
+    freeFlight (bool): True if there are no problems with the expression. False is otherwise.
+  Returns:
+    (bool): True if there are no problems with the expression. False is otherwise.
+  """
   log("basic parser")
   log(expression)
   try:
@@ -398,6 +417,16 @@ def roundMatrix(matrix_list):
   return rounded_list
 
 def parserAssignmentExpression(variable, implicitExpression, freeFlight):
+  """
+  Identifies what operation/function is used in the expression by using regular expressions
+  A specific matrix is modified based on the result of the calculation from the user's expression
+  Args:
+    variable (str): Represents the id of a matrix
+    implicitExpression (str): The expression containing an operation/function
+    freeFlight (bool): True if there are no problems with the expression. False is otherwise.
+  Returns:
+    None
+  """
   r = re.search("^([A-Z]+)$", implicitExpression)
   if r and r.group(1):
     result = list(model["matrices"][implicitExpression]["matrix"])
@@ -471,6 +500,15 @@ def parserAssignmentExpression(variable, implicitExpression, freeFlight):
   raise Exception("Invalid Assignment Expression") 
 
 def parserImplicitExpression(implicitExpression, freeFlight):
+  """
+  Identifies what operation/function is used in the expression by using regular expressions
+  The answer matrix is modified based on the result of the calculation from the user's expression
+  Args:
+    implicitExpression (str): The expression containing an operation/function
+    freeFlight (bool): True if there are no problems with the expression. False is otherwise.
+  Returns:
+    None
+  """
   r = re.search("^([A-Z]+)$", implicitExpression)
   if r and r.group(1):
     result = list(model["matrices"][implicitExpression]["matrix"])

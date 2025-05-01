@@ -70,9 +70,9 @@ def removeEmptyEquations(equation_list):
 def convertToMatrix(equations):
   """
   Args:
-    equations (list): ["x+y-2z=0", "5x+2y-z=0", "-x+4y+2z=5", "2x-3y+4z=-10"]
+    equations (list): Ex ["x+y-2z=0", "5x+2y-z=0", "-x+4y+2z=5", "2x-3y+4z=-10"]
   Returns:
-    result (list[list]):
+    result (list[list]): Ex
     [
     [1,1,-2,0],
     [5,2,-1,0],
@@ -143,7 +143,14 @@ def parseEquation(equation):
   return result
 
 def solution(equation_matrix_list, variable_list):
-
+  """
+  Uses a matrix representing the system of equations to solve for the values of the variables
+  Args:
+    equation_matrix_list (list(list)): Represents the coefficients of each variable in the system of equations
+    variable_list (list): List of strings that represents the variables in the system of equations
+  Returns:
+    solution_dictionary (dict): Contains solution values corresponding to each variable in the system of equations
+  """
   equation_matrix = la.Matrix.from_2d_list(equation_matrix_list)
 
   if len(equation_matrix.vector_list) > len(equation_matrix.vector_list[0].components)+1:
