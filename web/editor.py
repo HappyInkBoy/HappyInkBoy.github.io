@@ -4,6 +4,8 @@ import editormodel, editorcommands, editormatrices, editorexpression, equationso
 
 window.model = editormodel.model
 
+parent = document["parentEditor"]
+
 editor = html.TABLE()
 editor.class_name = "outer editor"
 editor <= html.TR(html.TD(html.DIV(id="commands")))
@@ -11,12 +13,15 @@ editor <= html.TR(html.TD(html.DIV(id="matrices")))
 editor <= html.TR(html.TD(html.DIV(id="expression")))
 editor <= html.TR(html.TD(html.DIV(id="error")))
 editor <= html.TR(html.TD(html.DIV(id="history")))
-document <= editor
+parent <= editor
 
 solver = html.TABLE()
 solver.class_name = "outer solver"
 solver <= html.TR(html.TD(html.DIV(id="equation_solver")))
-document <= solver
+parent <= solver
+
+lakeFact = html.DIV()
+
 
 document["commands"] <= "Commands"
 document["matrices"] <= "Matrices"

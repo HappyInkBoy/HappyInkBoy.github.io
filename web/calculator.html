@@ -194,10 +194,12 @@
 </head>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Archivo">
 
-<link rel="stylesheet" href="calculator.css">
+<link rel="stylesheet" href="calculator.css?v=1">
 
 <a id = "guide_link" href="guide.html" target="_blank">How to use the calculator</a>
 <body>
+  <div id="parentEditor"></div>
+  <div id="lakeFact" class="fact_start" onclick="factShow()"></div>
   <img src="square_jean_lac.png" id="lake" hidden="true">
   <div id="lakeNext" onclick="lakeClick('next')" hidden="true"></div>
   <div id="lakePrev" onclick="lakeClick('prev')" hidden="true"></div>
@@ -211,7 +213,6 @@
   <div class="lake_bubble hidden" id="bubble6" hidden="true">Ensure that there is the appropriate amount of equations for the amount of variables (ex: 2 equations for 2 variables)</div>
   <div class="lake_bubble hidden" id="bubble7" hidden="true">Then, click the "solve" button and the values of your variables will be displayed under the text box</div>
   <div class="lake_bubble hidden" id="bubble8" hidden="true">Click on History to check the previously entered commands</div>
-  <div id="lakeFact" class="fact_start" onclick="factShow()"></div>
   <img src="prof_lac.png" id="prof" hidden="true">
   <img src="green_board.png" id="board" hidden="true">
   <div id="factNext" onclick="factClick('next')" hidden="true"></div>

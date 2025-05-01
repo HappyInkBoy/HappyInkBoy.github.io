@@ -269,9 +269,6 @@ td.answer_padding {
   text-align: center;
 }
 #lakeFact {
-  position: absolute;
-  top: 560;
-  right: 300;
   background-image: url("unpressed_button.png");
   background-size: 200px 200px;
   width: 200px;
