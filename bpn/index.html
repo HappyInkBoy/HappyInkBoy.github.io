@@ -3,6 +3,9 @@
 <head>
     <title>BPN</title>
     <meta charset="utf-8">
+    <script type="text/javascript"
+        src="./pi.js">
+    </script>
     <script>
       // This code comes from this stack overflow post: https://stackoverflow.com/questions/4712310/javascript-how-to-detect-if-a-word-is-highlighted
       function getSelectedText() {
@@ -27,16 +30,20 @@ document.onkeyup = doSomethingWithSelectedText;
     </script>
 </head>
 
-<link rel="stylesheet" href="index.css?v=1">
+<link rel="stylesheet" href="index.css?v=2">
 
 <body>
-  <h1 class="title">Welcome to NORDBPN</h1>
-  <div class="title">(New Ontario Really Delicious Baked Phone Numbers)</div>
-  <div class="contact_input">
-    <input type="text" id="friend_name">
-    <input type="text" id="friend_phone_number">
-  </div>
+  <h1 class="title" id="welcome">Welcome to NORDBPN</h1>
+  <p class="title" id="acronym">(New Ontario Really Delicious Baked Phone Numbers)</p>
+  <p class="title" id="login">To log in, please input your phone number by highlighting it:</p>
+
+  <div id="pi_display"></div>
 
 </body>
+
+<script>
+  var pi_div = document.getElementById("pi_display");
+  pi_div.innerHTML = PI;
+</script>
 
 </html>

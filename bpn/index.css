@@ -1,12 +1,6 @@
 .title {
   text-align: center;
 }
-.contact_input {
-  text-align: center;
-}
-#friend_name {
-  text-align: center;
-}
-#friend_phone_number {
-  text-align: center;
+#pi_display {
+  word-break: break-all;
 }
