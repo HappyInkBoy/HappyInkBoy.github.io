@@ -11,18 +11,25 @@
       function getSelectedText() {
         var text = "";
         if (typeof window.getSelection != "undefined") {
-            text = window.getSelection().toString();
+          text = window.getSelection().toString();
         } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
-            text = document.selection.createRange().text;
+          text = document.selection.createRange().text;
         }
         return text;
       }
 
       function doSomethingWithSelectedText() {
-          var selectedText = getSelectedText();
-          if (selectedText) {
-              alert("Got selected text " + selectedText);
-          }
+        var selectedText = getSelectedText();
+        if (selectedText) {
+          alert("Got selected text " + selectedText);
+        }
+      }
+      
+      function showPi() {
+        piNode = document.getElementById("pi_display")
+        buttonNode = document.getElementById("loading_button")
+        piNode.hidden = false
+        buttonNode.hidden = true
       }
 
 document.onmouseup = doSomethingWithSelectedText;
@@ -30,14 +37,14 @@ document.onkeyup = doSomethingWithSelectedText;
     </script>
 </head>
 
-<link rel="stylesheet" href="index.css?v=2">
+<link rel="stylesheet" href="index.css?v=1">
 
 <body>
   <h1 class="title" id="welcome">Welcome to NORDBPN</h1>
   <p class="title" id="acronym">(New Ontario Really Delicious Baked Phone Numbers)</p>
   <p class="title" id="login">To log in, please input your phone number by highlighting it:</p>
-
-  <div id="pi_display"></div>
+  <div id="loading_button" onclick="showPi()">Click me</div>
+  <div id="pi_display" hidden="true"></div>
 
 </body>
 
