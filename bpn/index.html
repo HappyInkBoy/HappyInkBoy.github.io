@@ -18,10 +18,20 @@
         return text;
       }
 
+      contact_list = [];
+
       function doSomethingWithSelectedText() {
+        let regex = /\d/;
         var selectedText = getSelectedText();
         if (selectedText) {
           alert("Got selected text " + selectedText);
+        }
+        if (regex.test(selectedText)) {
+          console.log("NUMBA")
+          contact_list.push(selectedText)
+          console.log(contact_list)
+        } else if (selectedText != "") {
+          console.log("No numba")
         }
       }
       
