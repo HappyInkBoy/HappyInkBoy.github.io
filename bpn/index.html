@@ -7,6 +7,18 @@
         src="./pi.js">
     </script>
     <script>
+
+      // represents the list of contacts
+      // each entry is itself an array of 2 strings : name, phone number (empty string if not set)
+      // this is represented in the UI by an HTML table
+      // each table row has 2 columns
+      //   first column is an input field - represents the name
+      //   second column displays the phone number
+      //  selected row is the row with the name input field that has or was the last one to have focus
+      contacts = []
+      activeRow = 0;
+
+
       // This code comes from this stack overflow post: https://stackoverflow.com/questions/4712310/javascript-how-to-detect-if-a-word-is-highlighted
       function getSelectedText() {
         var text = "";
@@ -20,6 +32,18 @@
 
       contact_list = [];
 
+      // inject the given string in the phone column of the contacts table
+      // at the last active row
+      function insertPhoneNumber(phoneNumber) {
+        var tableNode = document.getElementById("contacts");
+        if (activeRow < 0 && activeRow >= tableNode.rows.length) {
+          console.log("can't insert phone number, active row "+activeRow);
+          return;
+        }
+        var row = tableNode.rows[activeRow];
+        row.cells[1].innerHTML = phoneNumber;
+      }
+
       function doSomethingWithSelectedText() {
         let regex = /\d/;
         var selectedText = getSelectedText();
@@ -30,6 +54,7 @@
           console.log("NUMBA")
           contact_list.push(selectedText)
           console.log(contact_list)
+          insertPhoneNumber(selectedText)
         } else if (selectedText != "") {
           console.log("No numba")
         }
@@ -42,17 +67,41 @@
         buttonNode.hidden = true
       }
 
+      function addEntry() {
+        var tableNode = document.getElementById("contacts");
+        var rowCount = tableNode.rows.length;
+        var row = tableNode.insertRow(rowCount);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var newId = ""+rowCount;
+        cell1.innerHTML = "<input type='text' id='"+newId+"'>";
+        var inputNode = document.getElementById(newId);
+        inputNode.addEventListener("focus", (event) => {
+          activeRow = event.target.id
+          for (i = 0; i < tableNode.rows.length; i++) { 
+            tableNode.rows[i].classList.remove("activecontact");
+          }
+          tableNode.rows[activeRow].classList.add("activecontact");
+        });
+      }
+
 document.onmouseup = doSomethingWithSelectedText;
 document.onkeyup = doSomethingWithSelectedText;
     </script>
 </head>
 
-<link rel="stylesheet" href="index.css?v=1">
+<link rel="stylesheet" href="index.css?v=4">
 
 <body>
   <h1 class="title" id="welcome">Welcome to NORDBPN</h1>
   <p class="title" id="acronym">(New Ontario Really Delicious Baked Phone Numbers)</p>
-  <p class="title" id="login">To log in, please input your phone number by highlighting it:</p>
+  <table id="contacts">
+    <tr id="table_title">
+      <td onclick="addEntry()">Name</td>
+      <td>Phone Number</td>
+    </tr>
+  </table>
+  <p class="title" id="login">To input the phone number, please highlighting it:</p>
   <div id="loading_button" onclick="showPi()">Click me</div>
   <div id="pi_display" hidden="true"></div>
 

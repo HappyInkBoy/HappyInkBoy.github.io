@@ -1,8 +1,16 @@
+table, th, td {
+  border:1px solid black;
+  margin-left: auto;
+  margin-right: auto;
+}
 .title {
   text-align: center;
 }
 #pi_display {
   word-break: break-all;
+}
+.activecontact {
+  background-color: lightblue;
 }
 #loading_button {
   position: relative;
