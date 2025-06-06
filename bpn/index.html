@@ -85,12 +85,20 @@
         });
       }
 
+      document.addEventListener('keydown', function(event) {
+        if ((event.ctrlKey || event.metaKey) && (event.key === 'f' || event.key === 'F')) {
+          event.preventDefault();
+          alert("Nice try kiddo. You can't use ctrl f here.")
+          console.log('Ctrl + F was pressed!');
+        }
+      });
+
 document.onmouseup = doSomethingWithSelectedText;
 document.onkeyup = doSomethingWithSelectedText;
     </script>
 </head>
 
-<link rel="stylesheet" href="index.css?v=4">
+<link rel="stylesheet" href="index.css?v=5">
 
 <body>
   <h1 class="title" id="welcome">Welcome to NORDBPN</h1>
