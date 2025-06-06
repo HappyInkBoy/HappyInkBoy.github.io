@@ -39,6 +39,8 @@
         if (activeRow < 0 && activeRow >= tableNode.rows.length) {
           console.log("can't insert phone number, active row "+activeRow);
           return;
+        } else if (activeRow == 0) {
+          return;
         }
         var row = tableNode.rows[activeRow];
         row.cells[1].innerHTML = phoneNumber;
@@ -61,10 +63,12 @@
       }
       
       function showPi() {
-        piNode = document.getElementById("pi_display")
-        buttonNode = document.getElementById("loading_button")
-        piNode.hidden = false
-        buttonNode.hidden = true
+        piNode = document.getElementById("pi_display");
+        buttonNode = document.getElementById("loading_button");
+        piNode.hidden = false;
+        buttonNode.hidden = true;
+        welcomeNode = document.getElementById("welcome");
+        welcomeNode.style.color = 'red';
       }
 
       function addEntry() {
