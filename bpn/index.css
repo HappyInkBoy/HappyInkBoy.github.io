@@ -12,6 +12,15 @@ table, th, td {
 .activecontact {
   background-color: lightblue;
 }
+#grantSanderson {
+  background-image: url("pi_creature.png");
+  background-size: 200px 200px;
+  position: absolute;
+  top: 20;
+  right: 0;
+  width: 200px;
+  height: 200px;
+}
 #loading_button {
   position: relative;
   text-align: center;

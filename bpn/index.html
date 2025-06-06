@@ -79,6 +79,8 @@
         piNode.style.color = 'red';
         bgNode = document.getElementById("pageBody");
         bgNode.style.backgroundColor = "#00ff00";
+        grantNode = document.getElementById("grantSanderson")
+        grantNode.hidden = false
       }
 
       function addEntry() {
@@ -124,6 +126,7 @@ document.onkeyup = doSomethingWithSelectedText;
     </tr>
   </table>
   <p class="title" id="login">To input the phone number, please highlight it:</p>
+  <img src="pi_creature.png" id="grantSanderson" hidden="true"></div>
   <div id="loading_button" onclick="showPi()">Click me</div>
   <div id="pi_display" hidden="true"></div>
 
