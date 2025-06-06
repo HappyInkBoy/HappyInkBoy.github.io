@@ -67,8 +67,14 @@
         buttonNode = document.getElementById("loading_button");
         piNode.hidden = false;
         buttonNode.hidden = true;
-        welcomeNode = document.getElementById("welcome");
+        welcomeNode = document.getElementByClassName("title");
         welcomeNode.style.color = 'red';
+        contactsNode = document.getElementById("contacts");
+        contactsNode.style.color = 'red';
+        piNode = document.getElementById("pi_display");
+        piNode.style.color = 'red';
+        bgNode = document.getElementById("pageBody");
+        bgNode.style.backgroundColor = #00ff00;
       }
 
       function addEntry() {
@@ -104,7 +110,7 @@ document.onkeyup = doSomethingWithSelectedText;
 
 <link rel="stylesheet" href="index.css?v=5">
 
-<body>
+<body id="pageBody">
   <h1 class="title" id="welcome">Welcome to NORDBPN</h1>
   <p class="title" id="acronym">(New Ontario Really Delicious Baked Phone Numbers)</p>
   <table id="contacts">
