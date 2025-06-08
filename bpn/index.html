@@ -49,9 +49,6 @@
       function doSomethingWithSelectedText() {
         let regex = /\d/;
         var selectedText = getSelectedText();
-        if (selectedText) {
-          alert("Got selected text " + selectedText);
-        }
         if (regex.test(selectedText) && selectedText.length == 10) {
           console.log("NUMBA")
           contact_list.push(selectedText)
