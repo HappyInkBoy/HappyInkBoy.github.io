@@ -1,3 +1,10 @@
+/* Fun with C
+ * See https://www.youtube.com/watch?v=rSsYr1gU_A4 for my VS Code setup on Mac ( C/C++ extension and Runner extension )
+ * and https://c-faq.com/aryptr/dynmuldimary.html for multi-dimensional array. We use the simplest approach
+ * int *array3 = malloc(nrows * ncolumns * sizeof(int));
+ */
+
+
 #include <stdio.h>
 #include <stdlib.h>
 
