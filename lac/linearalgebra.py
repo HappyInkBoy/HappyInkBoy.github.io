@@ -454,7 +454,7 @@ class Op():
     if Vector.isSameDimension(v1, v2):
       if v1.magnitude() == 0 or v2.magnitude() == 0:
         raise ValueError("Cannot find the angle between two vectors if one of them is the zero vector")
-      numerator = cls.dotProduct(v1,v2)
+      numerator = Op.dotProduct(v1,v2)
       denominator = v1.magnitude()*v2.magnitude()
       
       angle = math.acos(numerator/denominator)

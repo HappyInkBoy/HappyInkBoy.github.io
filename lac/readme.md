@@ -11,7 +11,7 @@
 
 # To consume as a user
 
-Open web browser to https://happyinkboy.github.io/web/calculator.html
+Open web browser to https://happyinkboy.github.io/lac/calculator.html
 
 # References:
 
