@@ -1,0 +1,45 @@
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>HTML math testing page</title>
+		<link rel="stylesheet" href="math_testing.css">
+	</head>
+	<body>
+		<link rel="stylesheet" href="mathquill-0.10.1/mathquill.css"/>
+		<script src="jquery-3.7.1.min.js"></script>
+		<script src="mathquill-0.10.1/mathquill.js"></script>
+		<script>
+		var MQ = MathQuill.getInterface(2);
+		</script>
+
+		<div>Hello math world</div>
+		<!--I am currently using https://docs.mathquill.com/en/latest/Getting_Started/ for starting out with mathquill-->
+		
+		<p>Solve <span id="problem">ax^2 + bx + c = 0</span>.</p>
+		<script>
+			var problemSpan = document.getElementById('problem');
+			MQ.StaticMath(problemSpan);
+		</script>
+
+		<p><span id="answer">x=</span></p>
+
+		<script>
+			function checkAnswer(expression) {
+				console.log(expression)
+			}
+
+			var answerSpan = document.getElementById('answer');
+			var answerMathField = MQ.MathField(answerSpan, {
+				handlers: {
+					edit: function() {
+						var enteredMath = answerMathField.latex(); // Get entered math in LaTeX format
+						checkAnswer(enteredMath);
+					}
+				}
+			});
+		</script>
+
+	</body>
+</html>
