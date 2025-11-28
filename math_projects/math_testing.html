@@ -33,12 +33,41 @@
 			var answerSpan = document.getElementById('answer');
 			var answerMathField = MQ.MathField(answerSpan, {
 				handlers: {
+					edited: function (mf) {
+						var latex = mf.latex();
+						// very naive example: replace a bare 'cbrt'
+						var newLatex = latex.replace(/cbrt(?![a-zA-Z])/g, '\\sqrt[3]{}');
+
+						if (newLatex !== latex) {
+							mf.latex(newLatex);
+							mf.moveToRightEnd();  // crude cursor handling
+						}
+					},
 					edit: function() {
-						var enteredMath = answerMathField.latex(); // Get entered math in LaTeX format
+						var enteredMath = answerMathField.latex();
 						checkAnswer(enteredMath);
 					}
 				}
 			});
+
+			new_config = {
+				spaceBehavesLikeTab: true,
+				leftRightIntoCmdGoes: 'up',
+				restrictMismatchedBrackets: true,
+				sumStartsWithNEquals: true,
+				supSubsRequireOperand: true,
+				charsThatBreakOutOfSupSub: '=<>',
+				autoSubscriptNumerals: true,
+				autoCommands: 'pi theta sqrt sum infty alpha beta gamma nthroot int',
+				autoOperatorNames: 'sin cos',
+				maxDepth: 10,
+				substituteTextarea: function() {
+					return document.createElement('textarea');
+				}
+			}
+
+			MQ.config(new_config)
+
 		</script>
 
 	</body>
