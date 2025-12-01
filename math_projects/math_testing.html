@@ -4,6 +4,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<title>HTML math testing page</title>
+		<link rel="icon" type="image/x-icon" href="LAC2.jpg"> <!--THIS file directory will have to change when I put this site on github pages-->
 		<link rel="stylesheet" href="math_testing.css">
 	</head>
 	<body>
@@ -29,18 +30,25 @@
 			function checkAnswer(expression) {
 				console.log(expression)
 			}
+			// Remember that the strings representing latex must have a adjacent backslashes (so that the program does not treat the backslash as an escape sequence)
+			var customAutoCommands = [
+				[/cbrt(?![a-zA-Z])/g,'\\sqrt[3]{}'],
+				[/quad(?![a-zA-Z])/g,'\\frac{-b\\pm\\sqrt{b^{2}-4ac}}{2a}']	
+			]
 
 			var answerSpan = document.getElementById('answer');
 			var answerMathField = MQ.MathField(answerSpan, {
 				handlers: {
-					edited: function (mf) {
-						var latex = mf.latex();
-						// very naive example: replace a bare 'cbrt'
-						var newLatex = latex.replace(/cbrt(?![a-zA-Z])/g, '\\sqrt[3]{}');
+					edited: function (mathText) {
+						var latex = mathText.latex();
 
-						if (newLatex !== latex) {
-							mf.latex(newLatex);
-							mf.moveToRightEnd();  // crude cursor handling
+						for (let i=0;i<customAutoCommands.length;i++) {
+							var newLatex = latex.replace(customAutoCommands[i][0], customAutoCommands[i][1]);
+
+							if (newLatex !== latex) {
+								mathText.latex(newLatex);
+								mathText.moveToRightEnd();  // crude cursor handling
+							}
 						}
 					},
 					edit: function() {
@@ -58,8 +66,8 @@
 				supSubsRequireOperand: true,
 				charsThatBreakOutOfSupSub: '=<>',
 				autoSubscriptNumerals: true,
-				autoCommands: 'pi theta sqrt sum infty alpha beta gamma nthroot int',
-				autoOperatorNames: 'sin cos',
+				autoCommands: 'pi theta lambda sqrt sum infty alpha beta gamma nthroot int',
+				autoOperatorNames: 'sin cos tan csc sec cot arcsin arccos arctan ln log arg det trace dim ker abs',
 				maxDepth: 10,
 				substituteTextarea: function() {
 					return document.createElement('textarea');
