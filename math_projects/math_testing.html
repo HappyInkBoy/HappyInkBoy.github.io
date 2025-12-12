@@ -18,26 +18,71 @@
 		<div>Hello math world</div>
 		<!--I am currently using https://docs.mathquill.com/en/latest/Getting_Started/ for starting out with mathquill-->
 		
-		<p>Solve <span id="problem">ax^2 + bx + c = 0</span>.</p>
+		<p>Solve <span id="problem">x^n + y^n = 1</span> for when the derivative is 1</p>
 		<script>
 			var problemSpan = document.getElementById('problem');
 			MQ.StaticMath(problemSpan);
 		</script>
 
 		<p><span id="answer">x=</span></p>
+		<p><span id="answer2">y=</span></p>
 
 		<script>
 			function checkAnswer(expression) {
 				console.log(expression)
 			}
+			function getCursorOffset(mathquill){
+				// This function is from https://github.com/mathquill/mathquill/issues/908
+				mathquill.focus();
+				let offset = mathquill.__controller.cursor.offset();
+				console.log("ok")
+				console.log(offset)
+				if (!offset) {
+					offset = { 'top': 0, 'left': 0 }
+				}
+				return offset
+			};
+
+
 			// Remember that the strings representing latex must have a adjacent backslashes (so that the program does not treat the backslash as an escape sequence)
 			var customAutoCommands = [
 				[/cbrt(?![a-zA-Z])/g,'\\sqrt[3]{}'],
-				[/quad(?![a-zA-Z])/g,'\\frac{-b\\pm\\sqrt{b^{2}-4ac}}{2a}']	
+				[/quad(?![a-zA-Z])/g,'\\frac{-b\\pm\\sqrt{b^{2}-4ac}}{2a}']
 			]
 
+			handlerSet = {
+				edited: function (mathText) {
+					var latex = mathText.latex();
+
+					for (let i=0;i<customAutoCommands.length;i++) {
+						var newLatex = latex.replace(customAutoCommands[i][0], customAutoCommands[i][1]);
+
+						if (newLatex !== latex) {
+							mathText.latex(newLatex);
+							mathText.moveToRightEnd();  // crude cursor handling
+						}
+					}
+				},
+				moveOutOf : function (direction, mathField) {
+					// direction (int): -1 represents moving out towards the left. 1 represents moving towards the right
+
+					if (direction === 1) {
+						console.log("Right")
+					}
+					else if (direction === -1) {
+						console.log("Left")
+					}
+				},
+				edit: function() {
+					var enteredMath = answerMathField.latex();
+					checkAnswer(enteredMath);
+				}
+			}
+
 			var answerSpan = document.getElementById('answer');
-			var answerMathField = MQ.MathField(answerSpan, {
+			var answerMathField = MQ.MathField(answerSpan, {handlerSet});
+			var answerSpan2 = document.getElementById('answer2')
+			var answerMathField2 = MQ.MathField(answerSpan2,{
 				handlers: {
 					edited: function (mathText) {
 						var latex = mathText.latex();
@@ -49,6 +94,16 @@
 								mathText.latex(newLatex);
 								mathText.moveToRightEnd();  // crude cursor handling
 							}
+						}
+					},
+					moveOutOf : function (direction, mathField) {
+						// direction (int): -1 represents moving out towards the left. 1 represents moving towards the right
+
+						if (direction === 1) {
+							console.log("Right")
+						}
+						else if (direction === -1) {
+							console.log("Left")
 						}
 					},
 					edit: function() {
