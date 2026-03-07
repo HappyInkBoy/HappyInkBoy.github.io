@@ -32,6 +32,9 @@
 				console.log(expression)
 			}
 			function getCursorOffset(mathquill){
+				// This function is not going to be used. 
+				// Mathquill has handlers to detect if the cursor is trying to exit the math field from the left, right, top, or bottom.
+				// Those handlers will be much more usefull than this function.
 				// This function is from https://github.com/mathquill/mathquill/issues/908
 				mathquill.focus();
 				let offset = mathquill.__controller.cursor.offset();
@@ -44,7 +47,8 @@
 			};
 
 
-			// Remember that the strings representing latex must have a adjacent backslashes (so that the program does not treat the backslash as an escape sequence)
+			// Remember that the strings representing latex must have a adjacent backslashes 
+			// (so that the program does not treat the backslash as an escape sequence)
 			var customAutoCommands = [
 				[/cbrt(?![a-zA-Z])/g,'\\sqrt[3]{}'],
 				[/quad(?![a-zA-Z])/g,'\\frac{-b\\pm\\sqrt{b^{2}-4ac}}{2a}']
