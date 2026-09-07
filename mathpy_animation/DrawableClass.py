@@ -145,7 +145,7 @@ class Drawable2D:
 		"""
 
 		points = self.parametricFunction.getNewCurvePoints(start=self.start, end=self.end, steps=self.steps)
-		listMethods.displacePointsModify(self.getCenter() + self.getPosition(), points)
+		listMethods.displacePointsModify(self.getAbsolutePosition(), points)
 
 		self.curvePoints = points
 
@@ -175,15 +175,57 @@ class Drawable2D:
 # You could also make a subclass of the parametricFunction2D class which contains a BezierCurve4Point2D object so that it can allow the user to provide animation parameters so that they can use the evaluate() method of the bezier curve and then apply additional functions onto it that use the animation parameters
 # In truth, you just need to make a way for the Drawable4PointBezierCurve2D object to allow the user to provide a bezierCurve object and also possibly a function which uses the .evaluate() method of that bezierCurve object and takes animation parameters to then return a Vec2 object. Use whatever means necessary to do this. I need to go to sleep... ∫
 class Drawable4PointBezierCurve2D(Drawable2D):
+	"""
+	Note! If you pass a animatedBezierCurveFunction as an argument, it HAS to include a call to the CS.generalBezierCurve() function.
+	You can use additional animation parameters on it.
+	"""
 
-	def __init__(self, bezierCurveParametricFunction: BezierCurve4Point2DParametricFunction, center: Vec2 = CENTER, position: Vec2 = Vec2(), start: float = 0, end: float = 1, steps: int = 100, color: List[int] = [255, 255, 255, 255], width: float = 1.0, batch: pyglet.graphics.Batch = None):
+	def __init__(self, bezierCurve: BezierCurve4Point2D, center: Vec2 = CENTER, position: Vec2 = Vec2(), steps: int = 50, color: List[int] = [255, 255, 255, 255], width: float = 1.0, animatedBezierCurveFunction: Callable[[float, List[Vec2]], Vec2] = None, animationParameters: List[float] = None, batch: pyglet.graphics.Batch = None):
+
+		self.bezierCurve = bezierCurve
+		self.end = len(bezierCurve.controlPointsList)
+		self.animatedBezierCurveFunction = animatedBezierCurveFunction
+		self.animationParameters = animationParameters
 		
-		super().__init__(bezierCurveParametricFunction, center, position, start, end, steps, color, width, batch)
+		super().__init__(None, center, position, 0, 1, steps, color, width, batch)
 
 	def setControlPoints(self, newControlPoints: List[Vec2 | str]):
 
-		self.parametricFunction.bezierCurve.setControlPoints(newControlPoints)
+		self.bezierCurve.setControlPoints(newControlPoints)
 
+	def _calculateCurvePoints(self) -> None:
+
+		pointsList = []
+
+		for i in range(len(self.bezierCurve.controlPointsList)):
+			segmentPoints = []
+			for j in range(self.steps + 1):
+				t = j/self.steps
+
+
+				if self.animationParameters == None:
+					point = CS.generalBezierCurve(t, self.bezierCurve.controlPointsList[i])
+				else:
+					point = self.animatedBezierCurveFunction(t, self.bezierCurve.controlPointsList[i])
+
+				point = point + self.getAbsolutePosition()
+				segmentPoints.append(point)
+			pointsList.append(segmentPoints)
+
+		self.curvePoints = pointsList
+
+	def _calculateDrawing(self) -> List[pyglet.shapes.MultiLine]:
+
+		lineSegments = []
+
+		self._calculateCurvePoints()
+
+		absolutePos = self.getAbsolutePosition()
+
+		for i in range(len(self.curvePoints)):
+			lineSegments.append(pyglet.shapes.MultiLine(*(self.curvePoints[i]), color=self.color, thickness=self.width, batch=self.batch))
+
+		return lineSegments
 
 
 
