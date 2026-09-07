@@ -91,19 +91,19 @@ class BezierCurve4Point2D:
 		"""
 
 		if (parameter > 0) and (parameter < len(self.controlPointsList)):
-			currentControlPoints = self.controlPointsList[math.floor(parameter)]
+			currentControlPoints = self.controlPointsList[math.ceil(parameter) - 1]
 		elif parameter >= len(self.controlPointsList):
 			currentControlPoints = self.controlPointsList[-1]
 		else:
 			currentControlPoints = self.controlPointsList[0]
 
 		relativeParameter = parameter % 1
-		if parameter == len(self.controlPointsList):
+		if (parameter == math.floor(parameter)) and (parameter != 0):
 			"""
 			This is done because if the parameter is the last possible value for the bezier curve, it will end up being modulo'd to 0 and
 			then it be evaluating it at the start of the bezier curve of the last controlPoint list (when we want it to be at the END of that bezier curve) 
 			"""
-			relativeParameter += 1
+			relativeParameter = 1
 
 
 		return CS.generalBezierCurve(relativeParameter, controlPoints = currentControlPoints)
