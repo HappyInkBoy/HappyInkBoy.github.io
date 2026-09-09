@@ -126,26 +126,36 @@ class DrawableCircleGradient(DrawableGradient):
 
 class DrawableRectangleGradient(DrawableGradient):
 
-	def __init__(self, center = CENTER, bottomLeftPoint: Vec2 = Vec2(-10,-10), topRightPoint: Vec2 = Vec2(10,10), numberOfShapes: int = 10, gradientOfColors: List[List[int]] | None = None, batch: pyglet.graphics.Batch = None):
+	def __init__(self, center = CENTER, bottomLeftPoint: Vec2 = Vec2(), width: int | float = 20, height: int | float = 20, numberOfShapes: int = 10, gradientOfColors: List[List[int]] | None = None, angle: float = 0, batch: pyglet.graphics.Batch = None):
 		super().__init__(center = center, numberOfShapes = numberOfShapes, gradientOfColors = gradientOfColors, batch = batch)
 
 		self.bottomLeftPoint = bottomLeftPoint
-		self.topRightPoint = topRightPoint
+		self.width = width
+		self.height = height
+		self.angle = angle
 
 	def _calculateDrawings(self) -> List[pyglet.shapes.Circle]:
 		"""
-		Recalculates and returns the rectangle objects
+		Recalculates and returns the rectangle objects.
+		The polygons will be rotated by self.angle radians with the pivot point being the bottom left point
 		"""
 
 		newRectanglesList = []
 
-		verticalChange = (self.topRightPoint[1] - self.bottomLeftPoint[1])/self.numberOfShapes
-		rectangleWidth = self.topRightPoint[0] - self.bottomLeftPoint[0]
+		verticalChange = self.height/self.numberOfShapes
+		rectangleWidth = self.width
 
 		for i in range(self.numberOfShapes):
-			currentBottomLeftPoint = self.bottomLeftPoint + Vec2(0, i*verticalChange) + self.center
+			currentBottomLeftPoint = self.bottomLeftPoint + (Vec2(0, i*verticalChange)).rotate(self.angle)
+			currentBottomRightPoint = currentBottomLeftPoint + Vec2(rectangleWidth, 0).rotate(self.angle)
+			currentTopRightPoint = currentBottomRightPoint + Vec2(0, i*verticalChange).rotate(self.angle)
+			currentTopLeftPoint = currentTopRightPoint + Vec2(-rectangleWidth, 0).rotate(self.angle)
 
-			newRectanglesList.append(pyglet.shapes.Rectangle(x=currentBottomLeftPoint[0], y=currentBottomLeftPoint[1], width=rectangleWidth, height=verticalChange, color=self.gradientOfColors[i], batch=self.batch))
+			if i == 0: print(currentBottomLeftPoint)
+
+			newRectanglesList.append(pyglet.shapes.Polygon(currentBottomLeftPoint+self.center, currentBottomRightPoint+self.center, currentTopRightPoint+self.center, currentTopLeftPoint+self.center, color=self.gradientOfColors[i], batch=self.batch))
+
+			#newRectanglesList.append(pyglet.shapes.Rectangle(x=currentBottomLeftPoint[0], y=currentBottomLeftPoint[1], width=rectangleWidth, height=verticalChange, color=self.gradientOfColors[i], batch=self.batch))
 
 		return newRectanglesList
 

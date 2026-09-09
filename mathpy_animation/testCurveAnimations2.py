@@ -48,9 +48,13 @@ circles1 = DrawableCircleGradient(center=CENTER, initialRadius=10, finalRadius=5
 circles1.setColorGradientFrom2ColorsHSV(colorOuter=[10,1,0.75], colorInner=[70,0,1], spread=1.1)
 circles1.setOpacity(0)
 
-rect1 = DrawableRectangleGradient(center=CENTER, bottomLeftPoint=Vec2(-1200, -750), topRightPoint=Vec2(1200,750), numberOfShapes=200, batch=BACKGROUND_BATCH)
-rect1.setColorGradientFrom2ColorsHSV(color0=[200,0.2,1], color1=[200,0.2,0])
+rect1 = DrawableRectangleGradient(center=CENTER, bottomLeftPoint=Vec2(-1220, 750), width=1500, height=1200, numberOfShapes=150, batch=BACKGROUND_BATCH, angle=-math.pi/2)
+rect1.setColorGradientFrom2ColorsHSV(color0=[200,0.2,0.5], color1=[200,0.2,0])
 rect1.updateDrawings()
+
+rect2 = DrawableRectangleGradient(center=CENTER, bottomLeftPoint=Vec2(0, 750), width=1500, height=1200, numberOfShapes=200, batch=BACKGROUND_BATCH, angle=-math.pi/2)
+rect2.setColorGradientFrom2ColorsHSV(color0=[200,0.2,0], color1=[200,0.2,0.5])
+rect2.updateDrawings()
 
 # ––––––––––––––––– #
 # Updater Functions #
