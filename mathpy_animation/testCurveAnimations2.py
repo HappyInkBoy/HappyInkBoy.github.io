@@ -8,7 +8,7 @@ from animationFunctions import smoothStep
 from settings import *
 from DrawableClass import Drawable2D, Drawable4PointBezierCurve2D
 from ParametricFunction import ParametricFunction2D, BezierCurve4Point2D, BezierCurve4Point2DParametricFunction
-from DrawableGradients import DrawableCircleGradient
+from DrawableGradients import DrawableCircleGradient, DrawableRectangleGradient
 
 # –––––––––––––––– #
 # Global Variables #
@@ -16,6 +16,8 @@ from DrawableGradients import DrawableCircleGradient
 
 ZERO_VECTOR = Vec2()
 BATCH = pyglet.graphics.Batch() # Each animation file should come with its own batches. This will allow you to better manage individual animations and drawing batches of different animation files in the main.py
+
+BACKGROUND_BATCH = pyglet.graphics.Batch() # This batch should only be used for sprites/shapes that will only be drawn once (i.e. not updated in any functions)
 
 # –––––––––– #
 # Parameters #
@@ -46,7 +48,9 @@ circles1 = DrawableCircleGradient(center=CENTER, initialRadius=10, finalRadius=5
 circles1.setColorGradientFrom2ColorsHSV(colorOuter=[10,1,0.75], colorInner=[70,0,1], spread=1.1)
 circles1.setOpacity(0)
 
-
+rect1 = DrawableRectangleGradient(center=CENTER, bottomLeftPoint=Vec2(-1200, -750), topRightPoint=Vec2(1200,750), numberOfShapes=200, batch=BACKGROUND_BATCH)
+rect1.setColorGradientFrom2ColorsHSV(color0=[200,0.2,1], color1=[200,0.2,0])
+rect1.updateDrawings()
 
 # ––––––––––––––––– #
 # Updater Functions #

@@ -31,7 +31,7 @@ class DrawableGradient(ABC):
 		"""
 		self.gradientOfColors = newGradientOfColors
 
-	def setColorGradientFrom2ColorsHSV(self, colorOuter: List[int | float], colorInner: List[int | float], spread: float = 1.0) -> None:
+	def setColorGradientFrom2ColorsHSV(self, color0: List[int | float], color1: List[int | float], spread: float = 1.0) -> None:
 		"""
 		Takes two lists of HSV values and sets the colorGradient to be a list containing self.numberOfShapes number of RGB values that form a gradient from colorOuterHSV to colorInnerHSV
 		Arguments:
@@ -40,22 +40,22 @@ class DrawableGradient(ABC):
 			spread (float): spread values > 1 will make the color change more dense in the start. spread values < 1 will make the color change more dense in the end.
 		"""
 
-		newColorGradient = colorFunctions.colorGradientHSV(colorOuter, colorInner, self.numberOfShapes, spread)
+		newColorGradient = colorFunctions.colorGradientHSV(color0, color1, self.numberOfShapes, spread)
 
 		for i in range(len(self.gradientOfColors)):
 			for j in range(3):
 				self.gradientOfColors[i][j] = newColorGradient[i][j]
 
-	def setColorGradientFrom2ColorsRGB(self, colorOuter: List[int | float], colorInner: List[int | float], spread: float = 1.0) -> None:
+	def setColorGradientFrom2ColorsRGB(self, color0: List[int | float], color1: List[int | float], spread: float = 1.0) -> None:
 		"""
-		Takes two lists of HSV values and sets the colorGradient to be a list containing self.numberOfShapes number of RGB values that form a gradient from colorOuterRGB to colorInnerRGB
+		Takes two lists of RGB values and sets the colorGradient to be a list containing self.numberOfShapes number of RGB values that form a gradient from colorOuterRGB to colorInnerRGB
 		Arguments:
-			colorOuterHSV (List[int | float]): Starting color of the gradient (in HSV format)
-			colorInnerHSV (List[int | float]): Ending color of the gradient (in HSV format)
+			colorOuterHSV (List[int | float]): Starting color of the gradient (in RGB format)
+			colorInnerHSV (List[int | float]): Ending color of the gradient (in RGB format)
 			spread (float): spread values > 1 will make the color change more dense in the start. spread values < 1 will make the color change more dense in the end.
 		"""
 
-		newColorGradient = colorFunctions.colorGradientRGB(colorOuter, colorInner, self.numberOfShapes, spread)
+		newColorGradient = colorFunctions.colorGradientRGB(color0, color1, self.numberOfShapes, spread)
 
 		for i in range(len(self.gradientOfColors)):
 			for j in range(3):
@@ -98,6 +98,12 @@ class DrawableCircleGradient(DrawableGradient):
 		self.finalRadius = finalRadius
 		self.radiusSpread = radiusSpread
 
+	def setColorGradientFrom2ColorsRGB(self, colorOuter: List[int | float], colorInner: List[int | float], spread: float = 1.0) -> None:
+		super().setColorGradientFrom2ColorsRGB(color0=colorOuter, color1=colorInner, spread=spread)
+
+	def setColorGradientFrom2ColorsHSV(self, colorOuter: List[int | float], colorInner: List[int | float], spread: float = 1.0) -> None:
+		super().setColorGradientFrom2ColorsHSV(color0=colorOuter, color1=colorInner, spread=spread)
+
 	def _calculateDrawings(self) -> List[pyglet.shapes.Circle]:
 		"""
 		Recalculates and returns the Circle objects
@@ -117,3 +123,31 @@ class DrawableCircleGradient(DrawableGradient):
 
 	def updateDrawings(self) -> None:
 		self.circlesList = self._calculateDrawings()
+
+class DrawableRectangleGradient(DrawableGradient):
+
+	def __init__(self, center = CENTER, bottomLeftPoint: Vec2 = Vec2(-10,-10), topRightPoint: Vec2 = Vec2(10,10), numberOfShapes: int = 10, gradientOfColors: List[List[int]] | None = None, batch: pyglet.graphics.Batch = None):
+		super().__init__(center = center, numberOfShapes = numberOfShapes, gradientOfColors = gradientOfColors, batch = batch)
+
+		self.bottomLeftPoint = bottomLeftPoint
+		self.topRightPoint = topRightPoint
+
+	def _calculateDrawings(self) -> List[pyglet.shapes.Circle]:
+		"""
+		Recalculates and returns the rectangle objects
+		"""
+
+		newRectanglesList = []
+
+		verticalChange = (self.topRightPoint[1] - self.bottomLeftPoint[1])/self.numberOfShapes
+		rectangleWidth = self.topRightPoint[0] - self.bottomLeftPoint[0]
+
+		for i in range(self.numberOfShapes):
+			currentBottomLeftPoint = self.bottomLeftPoint + Vec2(0, i*verticalChange) + self.center
+
+			newRectanglesList.append(pyglet.shapes.Rectangle(x=currentBottomLeftPoint[0], y=currentBottomLeftPoint[1], width=rectangleWidth, height=verticalChange, color=self.gradientOfColors[i], batch=self.batch))
+
+		return newRectanglesList
+
+	def updateDrawings(self) -> None:
+		self.rectanglesList = self._calculateDrawings()
