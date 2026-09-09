@@ -10,7 +10,7 @@ from abc import ABC, abstractmethod
 
 class DrawableGradient(ABC):
 
-	def __init__(self, center: Vec2 = CENTER, position: Vec2 = Vec2(), numberOfShapes: int = 10, gradientOfColors: List[List[int]] | None = None, batch: pyglet.graphics.Batch = None):
+	def __init__(self, center: Vec2 = CENTER, position: Vec2 = Vec2(), numberOfShapes: int = 10, gradientOfColors: List[List[int]] | None = None, batch: pyglet.graphics.Batch = None, group: pyglet.graphics.Group = None):
 		self.center = center
 		self.position = position
 		self.numberOfShapes = numberOfShapes
@@ -20,6 +20,7 @@ class DrawableGradient(ABC):
 		else:
 			self.gradientOfColors = gradientOfColors
 		self.batch = batch
+		self.group = group
 		
 
 	def setPosition(self, newPosition: Vec2):
@@ -91,8 +92,8 @@ class DrawableGradient(ABC):
 
 class DrawableCircleGradient(DrawableGradient):
 
-	def __init__(self, center: Vec2 = CENTER, position: Vec2 = Vec2(), initialRadius: float = 0, finalRadius: float = 1.0, numberOfShapes: int = 10, radiusSpread: float = 1.0, gradientOfColors: List[List[int]] | None = None, batch: pyglet.graphics.Batch = None):
-		super().__init__(center, position, numberOfShapes, gradientOfColors, batch)
+	def __init__(self, center: Vec2 = CENTER, position: Vec2 = Vec2(), initialRadius: float = 0, finalRadius: float = 1.0, numberOfShapes: int = 10, radiusSpread: float = 1.0, gradientOfColors: List[List[int]] | None = None, batch: pyglet.graphics.Batch = None, group: pyglet.graphics.Group = None):
+		super().__init__(center, position, numberOfShapes, gradientOfColors, batch, group)
 
 		self.initialRadius = initialRadius
 		self.finalRadius = finalRadius
@@ -126,7 +127,7 @@ class DrawableCircleGradient(DrawableGradient):
 
 class DrawableRectangleGradient(DrawableGradient):
 
-	def __init__(self, center = CENTER, bottomLeftPoint: Vec2 = Vec2(), width: int | float = 20, height: int | float = 20, numberOfShapes: int = 10, gradientOfColors: List[List[int]] | None = None, angle: float = 0, batch: pyglet.graphics.Batch = None):
+	def __init__(self, center = CENTER, bottomLeftPoint: Vec2 = Vec2(), width: int | float = 20, height: int | float = 20, numberOfShapes: int = 10, gradientOfColors: List[List[int]] | None = None, angle: float = 0, batch: pyglet.graphics.Batch = None, group: pyglet.graphics.Group = None):
 		super().__init__(center = center, numberOfShapes = numberOfShapes, gradientOfColors = gradientOfColors, batch = batch)
 
 		self.bottomLeftPoint = bottomLeftPoint
@@ -151,7 +152,7 @@ class DrawableRectangleGradient(DrawableGradient):
 			currentTopRightPoint = currentBottomRightPoint + Vec2(0, i*verticalChange).rotate(self.angle)
 			currentTopLeftPoint = currentTopRightPoint + Vec2(-rectangleWidth, 0).rotate(self.angle)
 
-			newRectanglesList.append(pyglet.shapes.Polygon(currentBottomLeftPoint+self.center, currentBottomRightPoint+self.center, currentTopRightPoint+self.center, currentTopLeftPoint+self.center, color=self.gradientOfColors[i], batch=self.batch))
+			newRectanglesList.append(pyglet.shapes.Polygon(currentBottomLeftPoint+self.center, currentBottomRightPoint+self.center, currentTopRightPoint+self.center, currentTopLeftPoint+self.center, color=self.gradientOfColors[i], batch=self.batch, group=self.group))
 
 			#newRectanglesList.append(pyglet.shapes.Rectangle(x=currentBottomLeftPoint[0], y=currentBottomLeftPoint[1], width=rectangleWidth, height=verticalChange, color=self.gradientOfColors[i], batch=self.batch))
 

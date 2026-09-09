@@ -26,7 +26,7 @@ class Drawable2D:
 	"""
 	
 
-	def __init__(self, parametricFunction: ParametricFunction2D, center: Vec2 = CENTER, position: Vec2 = Vec2(), start: float = 0, end: float = 1, steps: int = 100, color: List[int] = [255, 255, 255, 255], width: float = 1, batch: pyglet.graphics.Batch = None):
+	def __init__(self, parametricFunction: ParametricFunction2D, center: Vec2 = CENTER, position: Vec2 = Vec2(), start: float = 0, end: float = 1, steps: int = 100, color: List[int] = [255, 255, 255, 255], width: float = 1, batch: pyglet.graphics.Batch = None, group: pyglet.graphics.Group = None):
 		self.center = center
 		self.parametricFunction = parametricFunction
 		self.position = position
@@ -37,6 +37,7 @@ class Drawable2D:
 		self.color = color
 		self.width = width
 		self.batch = batch
+		self.group = group
 
 		self.updateDrawing()
 
@@ -162,7 +163,7 @@ class Drawable2D:
 		"""
 
 		self._calculateCurvePoints()
-		lines = pyglet.shapes.MultiLine(*(self._getCurvePoints()), color=self.color, thickness=self.width, batch=self.batch)
+		lines = pyglet.shapes.MultiLine(*(self._getCurvePoints()), color=self.color, thickness=self.width, batch=self.batch, group=self.group)
 
 		return lines
 
@@ -180,14 +181,14 @@ class Drawable4PointBezierCurve2D(Drawable2D):
 	You can use additional animation parameters on it.
 	"""
 
-	def __init__(self, bezierCurve: BezierCurve4Point2D, center: Vec2 = CENTER, position: Vec2 = Vec2(), steps: int = 50, color: List[int] = [255, 255, 255, 255], width: float = 1.0, animatedBezierCurveFunction: Callable[[float, List[Vec2]], Vec2] = None, animationParameters: List[float] = None, batch: pyglet.graphics.Batch = None):
+	def __init__(self, bezierCurve: BezierCurve4Point2D, center: Vec2 = CENTER, position: Vec2 = Vec2(), steps: int = 50, color: List[int] = [255, 255, 255, 255], width: float = 1.0, animatedBezierCurveFunction: Callable[[float, List[Vec2]], Vec2] = None, animationParameters: List[float] = None, batch: pyglet.graphics.Batch = None, group: pyglet.graphics.Group = None):
 
 		self.bezierCurve = bezierCurve
 		self.end = len(bezierCurve.controlPointsList)
 		self.animatedBezierCurveFunction = animatedBezierCurveFunction
 		self.animationParameters = animationParameters
 		
-		super().__init__(None, center, position, 0, 1, steps, color, width, batch)
+		super().__init__(None, center, position, 0, 1, steps, color, width, batch, group)
 
 	def setControlPoints(self, newControlPoints: List[Vec2 | str]):
 
@@ -223,7 +224,7 @@ class Drawable4PointBezierCurve2D(Drawable2D):
 		absolutePos = self.getAbsolutePosition()
 
 		for i in range(len(self.curvePoints)):
-			lineSegments.append(pyglet.shapes.MultiLine(*(self.curvePoints[i]), color=self.color, thickness=self.width, batch=self.batch))
+			lineSegments.append(pyglet.shapes.MultiLine(*(self.curvePoints[i]), color=self.color, thickness=self.width, batch=self.batch, group=self.group))
 
 		return lineSegments
 

@@ -12,7 +12,6 @@ from settings import *
 def on_draw():
 	WINDOW.clear()
 
-	testCurveAnimations2.BACKGROUND_BATCH.draw()
 	testCurveAnimations2.BATCH.draw()
 
 # ––––– #
