@@ -151,8 +151,6 @@ class DrawableRectangleGradient(DrawableGradient):
 			currentTopRightPoint = currentBottomRightPoint + Vec2(0, i*verticalChange).rotate(self.angle)
 			currentTopLeftPoint = currentTopRightPoint + Vec2(-rectangleWidth, 0).rotate(self.angle)
 
-			if i == 0: print(currentBottomLeftPoint)
-
 			newRectanglesList.append(pyglet.shapes.Polygon(currentBottomLeftPoint+self.center, currentBottomRightPoint+self.center, currentTopRightPoint+self.center, currentTopLeftPoint+self.center, color=self.gradientOfColors[i], batch=self.batch))
 
 			#newRectanglesList.append(pyglet.shapes.Rectangle(x=currentBottomLeftPoint[0], y=currentBottomLeftPoint[1], width=rectangleWidth, height=verticalChange, color=self.gradientOfColors[i], batch=self.batch))
