@@ -167,12 +167,12 @@ class Drawable2D:
 
 		self._calculateCurvePoints()
 
-		if self.enableLine == True:
+		if self.enableLine:
 			lines = pyglet.shapes.MultiLine(*(self._getCurvePoints()), color=self.color, thickness=self.width, batch=self.batch, group=self.group)
 		else:
 			lines = None
 
-		if self.enableFill == True:
+		if self.enableFill:
 			fillPolygon = pyglet.shapes.Polygon(*(self.curvePoints), color=self.color, batch = self.batch, group=self.group)
 		else:
 			fillPolygon = None
@@ -238,13 +238,13 @@ class Drawable4PointBezierCurve2D(Drawable2D):
 
 		absolutePos = self.getAbsolutePosition()
 
-		if self.enableLine == True:
+		if self.enableLine:
 			for i in range(len(self.curvePoints)):
 				lineSegments.append(pyglet.shapes.MultiLine(*(self.curvePoints[i]), color=self.color, thickness=self.width, batch=self.batch, group=self.group))
 		else:
 			lineSegments = None
 
-		if self.enableFill == True:
+		if self.enableFill:
 			for i in range(len(self.curvePoints)):
 				fillPolygonSegments.append(pyglet.shapes.Polygon(*(self.curvePoints[i]), color=self.color, batch=self.batch, group=self.group))
 		else:
