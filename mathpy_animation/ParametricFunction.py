@@ -77,6 +77,7 @@ class BezierCurve4Point2D:
 				relative4PointIndex = 0
 				if controlPointsListFormat[currentListFormatIndex] != 0:
 					controlPointsListFormat.append(0)
+					currentListFormatIndex += 1
 				continue
 			if (relative4PointIndex % 3) != 0: # Makes sure that the nested for loop only gets executed iff i is at the index of the start of a sequence to form a 4 point bezier curve
 				relative4PointIndex += 1
@@ -89,6 +90,21 @@ class BezierCurve4Point2D:
 			relative4PointIndex += 1
 
 		return newSegmentedControlPoints, controlPointsListFormat
+
+	@staticmethod
+	def evaluateFromGivenControlPoints(parameter: float, controlPoints: List[List[Vec2]]) -> Vec2:
+		if (parameter > 0) and (parameter < len(controlPoints)):
+			currentControlPoints = controlPoints[math.ceil(parameter) - 1]
+		elif parameter >= len(controlPoints):
+			currentControlPoints = controlPoints[-1]
+		else:
+			currentControlPoints = controlPoints[0]
+
+		relativeParameter = parameter % 1
+		if (parameter == math.floor(parameter)) and (parameter != 0):
+			relativeParameter = 1
+
+		return CS.generalBezierCurve(relativeParameter, controlPoints = currentControlPoints)
 
 	def evaluate(self, parameter: float):
 		"""

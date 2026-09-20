@@ -209,19 +209,22 @@ class Drawable4PointBezierCurve2D(Drawable2D):
 	def _calculateCurvePoints(self) -> None:
 
 		pointsList = []
+		runningControlPointsListFormatSum = 0
 
 		for i in range(len(self.bezierCurve.controlPointsListFormat)):
 			segmentPoints = []
+			currentControlPointsList = self.bezierCurve.controlPointsList[runningControlPointsListFormatSum : runningControlPointsListFormatSum+self.bezierCurve.controlPointsListFormat[i]]
 			for j in range(self.steps + 1):
 				t = self.bezierCurve.controlPointsListFormat[i]*(j/self.steps)
 
 				if self.animationParameters == None:
-					point = self.bezierCurve.evaluate(t)
+					point = self.bezierCurve.evaluateFromGivenControlPoints(t, currentControlPointsList)
 				else:
 					point = self.animatedBezierCurveFunction(t)
 
 				point = point + self.getAbsolutePosition()
 				segmentPoints.append(point)
+			runningControlPointsListFormatSum += self.bezierCurve.controlPointsListFormat[i]
 			pointsList.append(segmentPoints)
 
 		self.curvePoints = pointsList
