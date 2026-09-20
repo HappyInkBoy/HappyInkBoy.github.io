@@ -43,7 +43,7 @@ eye_control_points = [
 bc1 = BezierCurve4Point2D(controlPoints=eye_control_points)
 #parametricFunction1 = lambda t, animParams: bc1.evaluate(t).rotate(math.tau * smoothStep(animParams[0]))
 #line1 = Drawable4PointBezierCurve2D(CENTER, BezierCurve4Point2DParametricFunction(bc1, parametricFunction1, animationParameters1), start=0, end=2.0, batch=BATCH)
-line1 = Drawable4PointBezierCurve2D(bc1, batch=BATCH, group=FOREGROUND)
+line1 = Drawable4PointBezierCurve2D(bc1, batch=BATCH, group=FOREGROUND, enableFill=True)
 
 circles1 = DrawableCircleGradient(center=CENTER, initialRadius=10, finalRadius=50, numberOfShapes=15, batch=BATCH, group=FOREGROUND)
 circles1.setColorGradientFrom2ColorsHSV(colorOuter=[10,1,0.75], colorInner=[70,0,1], spread=1.1)
@@ -58,8 +58,8 @@ rect2.setColorGradientFrom2ColorsHSV(color0=[200,0.2,0], color1=[200,0.2,0.5])
 rect2.updateDrawings()
 
 #TESTING
-paraCurve1 = ParametricFunction2D(lambda t: Vec2(10*t,t**2))
-paraCurve1Drawing = Drawable2D(parametricFunction=paraCurve1, center=CENTER, start=-20, end=20, batch=BATCH, group=FOREGROUND, enableFill=True)
+#paraCurve1 = ParametricFunction2D(lambda t: Vec2(10*t,t**2))
+#paraCurve1Drawing = Drawable2D(parametricFunction=paraCurve1, center=CENTER, start=-20, end=20, batch=BATCH, group=FOREGROUND, enableFill=True)
 
 # ––––––––––––––––– #
 # Updater Functions #

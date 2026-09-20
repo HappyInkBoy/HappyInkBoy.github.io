@@ -48,7 +48,7 @@ class BezierCurve4Point2D:
 		self.setControlPoints(controlPoints)
 
 	def setControlPoints(self, controlPoints: List[Vec2 | str]) -> None:
-		self.controlPointsList = BezierCurve4Point2D.create4PointSequences(controlPoints)
+		self.controlPointsList, self.controlPointsListFormat = BezierCurve4Point2D.create4PointSequences(controlPoints)
 
 	@staticmethod
 	def create4PointSequences(controlPoints: List[Vec2 | str]) -> List[List[Vec2]]:
@@ -57,6 +57,8 @@ class BezierCurve4Point2D:
 		"""
 
 		newSegmentedControlPoints = []
+		controlPointsListFormat = [0]
+		currentListFormatIndex = 0
 
 		breakListIndicator = "B"
 
@@ -73,6 +75,8 @@ class BezierCurve4Point2D:
 
 			if ((i < (len(controlPoints) - 1)) and (controlPoints[i+1] == breakListIndicator)) or (controlPoints[i] == breakListIndicator):
 				relative4PointIndex = 0
+				if controlPointsListFormat[currentListFormatIndex] != 0:
+					controlPointsListFormat.append(0)
 				continue
 			if (relative4PointIndex % 3) != 0: # Makes sure that the nested for loop only gets executed iff i is at the index of the start of a sequence to form a 4 point bezier curve
 				relative4PointIndex += 1
@@ -81,9 +85,10 @@ class BezierCurve4Point2D:
 				controlPointSequence.append(controlPoints[j])
 
 			newSegmentedControlPoints.append(controlPointSequence)
+			controlPointsListFormat[currentListFormatIndex] += 1 # Means that for this segment, the parametric length of the bezier curve is increased by 1
 			relative4PointIndex += 1
 
-		return newSegmentedControlPoints
+		return newSegmentedControlPoints, controlPointsListFormat
 
 	def evaluate(self, parameter: float):
 		"""
