@@ -23,10 +23,11 @@ class Drawable2D:
 		width (float): The thickness of the multiline object
 		batch (Batch): The batch that the calling object will be placed in
 		lines (MultiLine): The MultiLine object to be drawn. This object will be stored in the Drawable2D object's instance
+		filledPolygon (Polygon): The polygon object that fills in the MultiLine. This object will be stored in the Drawable2D object's instance
 	"""
 	
 
-	def __init__(self, parametricFunction: ParametricFunction2D, center: Vec2 = CENTER, position: Vec2 = Vec2(), start: float = 0, end: float = 1, steps: int = 100, color: List[int] = [255, 255, 255, 255], width: float = 1, batch: pyglet.graphics.Batch = None, group: pyglet.graphics.Group = None):
+	def __init__(self, parametricFunction: ParametricFunction2D, center: Vec2 = CENTER, position: Vec2 = Vec2(), start: float = 0, end: float = 1, steps: int = 100, color: List[int] = [255, 255, 255, 255], width: float = 1, batch: pyglet.graphics.Batch = None, group: pyglet.graphics.Group = None, enableLine: bool = True, enableFill: bool = False):
 		self.center = center
 		self.parametricFunction = parametricFunction
 		self.position = position
@@ -38,6 +39,8 @@ class Drawable2D:
 		self.width = width
 		self.batch = batch
 		self.group = group
+		self.enableLine = enableLine
+		self.enableFill = enableFill
 
 		self.updateDrawing()
 
@@ -163,13 +166,22 @@ class Drawable2D:
 		"""
 
 		self._calculateCurvePoints()
-		lines = pyglet.shapes.MultiLine(*(self._getCurvePoints()), color=self.color, thickness=self.width, batch=self.batch, group=self.group)
 
-		return lines
+		if self.enableLine == True:
+			lines = pyglet.shapes.MultiLine(*(self._getCurvePoints()), color=self.color, thickness=self.width, batch=self.batch, group=self.group)
+		else:
+			lines = None
+
+		if self.enableFill == True:
+			fillPolygon = pyglet.shapes.Polygon(*(self.curvePoints), color=self.color, batch = self.batch, group=self.group)
+		else:
+			fillPolygon = None
+
+		return lines, fillPolygon
 
 	def updateDrawing(self) -> None:
 
-		self.lines = self._calculateDrawing()
+		self.lines, self.fillPolygon = self._calculateDrawing()
 
 
 # Make it so that the user is able to provide an optional parametric function (callable, not the object) which uses the BezierCurve4Point's evaluate() method along with some animation parameters

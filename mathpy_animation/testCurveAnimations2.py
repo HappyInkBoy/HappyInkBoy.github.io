@@ -57,6 +57,10 @@ rect2 = DrawableRectangleGradient(center=CENTER, bottomLeftPoint=Vec2(0, 750), w
 rect2.setColorGradientFrom2ColorsHSV(color0=[200,0.2,0], color1=[200,0.2,0.5])
 rect2.updateDrawings()
 
+#TESTING
+paraCurve1 = ParametricFunction2D(lambda t: Vec2(10*t,t**2))
+paraCurve1Drawing = Drawable2D(parametricFunction=paraCurve1, center=CENTER, start=-20, end=20, batch=BATCH, group=FOREGROUND, enableFill=True)
+
 # ––––––––––––––––– #
 # Updater Functions #
 # ––––––––––––––––– #
