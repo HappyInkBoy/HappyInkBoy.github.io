@@ -4,6 +4,7 @@ import math
 from typing import List, Callable
 from pyglet.math import Vec2, Vec3
 import customShapes as CS
+from enum import Enum
 
 class ParametricFunction2D:
 	"""
@@ -60,7 +61,7 @@ class BezierCurve4Point2D:
 		controlPointsListFormat = [0]
 		currentListFormatIndex = 0
 
-		breakListIndicator = "B"
+		breakListIndicator = BezierCurveCommands.BREAK_CURVE
 
 		relative4PointIndex = 0
 
@@ -129,6 +130,9 @@ class BezierCurve4Point2D:
 
 		return CS.generalBezierCurve(relativeParameter, controlPoints = currentControlPoints)
 
+class BezierCurveCommands(Enum):
+	BREAK_CURVE = 1
+
 class BezierCurve4Point2DParametricFunction(ParametricFunction2D):
 
 	def __init__(self, bezierCurve: BezierCurve4Point2D, animationFunction: Callable[[float | List[float]], Vec2] | None = None, animationParameters = None):
@@ -165,7 +169,7 @@ l1 = [
 	Vec2(40,40),
 	Vec2(50,50),
 	Vec2(60,60),
-	"B",
+	BezierCurveCommands.BREAK_CURVE,
 	Vec2(70,70),
 	Vec2(80,80),
 	Vec2(90,90),
@@ -173,7 +177,7 @@ l1 = [
 	Vec2(110,110),
 	Vec2(120,120),
 	Vec2(130,130),
-	"B",
+	BezierCurveCommands.BREAK_CURVE,
 	Vec2(140,140),
 	Vec2(150,150),
 	Vec2(160,160),

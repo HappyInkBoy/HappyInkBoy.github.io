@@ -7,7 +7,7 @@ import vectorFunctions as VF
 from animationFunctions import smoothStep
 from settings import *
 from DrawableClass import Drawable2D, Drawable4PointBezierCurve2D
-from ParametricFunction import ParametricFunction2D, BezierCurve4Point2D, BezierCurve4Point2DParametricFunction
+from ParametricFunction import ParametricFunction2D, BezierCurve4Point2D, BezierCurve4Point2DParametricFunction, BezierCurveCommands
 from DrawableGradients import DrawableCircleGradient, DrawableRectangleGradient
 
 # –––––––––––––––– #
@@ -53,7 +53,7 @@ l1 = [
 	Vec2(-100,-100),
 	Vec2(0,-50),
 	Vec2(0,0),
-	"B",
+	BezierCurveCommands.BREAK_CURVE,
 	Vec2(100,-100),
 	Vec2(200,-80),
 	Vec2(200,90),
@@ -61,7 +61,7 @@ l1 = [
 	Vec2(0,0),
 	Vec2(50,-50),
 	Vec2(100,-100),
-	"B",
+	BezierCurveCommands.BREAK_CURVE,
 	Vec2(140,440),
 	Vec2(130,450),
 	Vec2(160,460),
