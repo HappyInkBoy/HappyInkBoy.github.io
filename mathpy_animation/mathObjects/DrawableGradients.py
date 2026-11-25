@@ -1,8 +1,6 @@
 import pyglet
-import listMethods
 import math
-import colorFunctions
-import customShapes as CS
+from mathObjects import colorFunctions
 from typing import List, Callable
 from pyglet.math import Vec2, Vec3
 from settings import *

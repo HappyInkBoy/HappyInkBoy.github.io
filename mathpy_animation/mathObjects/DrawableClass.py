@@ -1,12 +1,9 @@
 import pyglet
-import listMethods
+from mathObjects import colorFunctions, listMethods, customShapes, ParametricFunction
 import math
-import colorFunctions
 from typing import List, Callable
 from pyglet.math import Vec2, Vec3
-import customShapes as CS
 from settings import *
-from ParametricFunction import ParametricFunction2D, BezierCurve4Point2D, BezierCurve4Point2DParametricFunction
 
 class Drawable2D:
 	"""
@@ -27,7 +24,7 @@ class Drawable2D:
 	"""
 	
 
-	def __init__(self, parametricFunction: ParametricFunction2D, center: Vec2 = CENTER, position: Vec2 = Vec2(), start: float = 0, end: float = 1, steps: int = 100, color: List[int] = [255, 255, 255, 255], width: float = 1, batch: pyglet.graphics.Batch = None, group: pyglet.graphics.Group = None, enableLine: bool = True, enableFill: bool = False):
+	def __init__(self, parametricFunction: ParametricFunction.ParametricFunction2D, center: Vec2 = CENTER, position: Vec2 = Vec2(), start: float = 0, end: float = 1, steps: int = 100, color: List[int] = [255, 255, 255, 255], width: float = 1, batch: pyglet.graphics.Batch = None, group: pyglet.graphics.Group = None, enableLine: bool = True, enableFill: bool = False):
 		self.center = center
 		self.parametricFunction = parametricFunction
 		self.position = position
@@ -44,7 +41,7 @@ class Drawable2D:
 
 		self.updateDrawing()
 
-	def getParametricFunction(self) -> ParametricFunction2D:
+	def getParametricFunction(self) -> ParametricFunction.ParametricFunction2D:
 		"""
 		"""
 
@@ -193,7 +190,7 @@ class Drawable4PointBezierCurve2D(Drawable2D):
 	You can use additional animation parameters on it.
 	"""
 
-	def __init__(self, bezierCurve: BezierCurve4Point2D, center: Vec2 = CENTER, position: Vec2 = Vec2(), steps: int = 50, color: List[int] = [255, 255, 255, 255], width: float = 1.0, animatedBezierCurveFunction: Callable[[float], Vec2] = None, animationParameters: List[float] = None, batch: pyglet.graphics.Batch = None, group: pyglet.graphics.Group = None, enableLine: bool = True, enableFill: bool = False):
+	def __init__(self, bezierCurve: ParametricFunction.BezierCurve4Point2D, center: Vec2 = CENTER, position: Vec2 = Vec2(), steps: int = 50, color: List[int] = [255, 255, 255, 255], width: float = 1.0, animatedBezierCurveFunction: Callable[[float], Vec2] = None, animationParameters: List[float] = None, batch: pyglet.graphics.Batch = None, group: pyglet.graphics.Group = None, enableLine: bool = True, enableFill: bool = False):
 
 		self.bezierCurve = bezierCurve
 		self.end = len(bezierCurve.controlPointsList)

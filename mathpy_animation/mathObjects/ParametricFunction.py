@@ -1,9 +1,8 @@
 import pyglet
-import listMethods
 import math
 from typing import List, Callable
 from pyglet.math import Vec2, Vec3
-import customShapes as CS
+from mathObjects import customShapes
 from enum import Enum
 
 class ParametricFunction2D:
@@ -105,7 +104,7 @@ class BezierCurve4Point2D:
 		if (parameter == math.floor(parameter)) and (parameter != 0):
 			relativeParameter = 1
 
-		return CS.generalBezierCurve(relativeParameter, controlPoints = currentControlPoints)
+		return customShapes.generalBezierCurve(relativeParameter, controlPoints = currentControlPoints)
 
 	def evaluate(self, parameter: float):
 		"""
@@ -128,7 +127,7 @@ class BezierCurve4Point2D:
 			relativeParameter = 1
 
 
-		return CS.generalBezierCurve(relativeParameter, controlPoints = currentControlPoints)
+		return customShapes.generalBezierCurve(relativeParameter, controlPoints = currentControlPoints)
 
 class BezierCurveCommands(Enum):
 	BREAK_CURVE = 1

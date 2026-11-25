@@ -2,8 +2,7 @@ import math
 from typing import List
 import pyglet
 from pyglet.clock import schedule_once, schedule_interval_for_duration
-import testCurveAnimations
-import testCurveAnimations2
+from animations import testCurveAnimations2
 from settings import *
 
 

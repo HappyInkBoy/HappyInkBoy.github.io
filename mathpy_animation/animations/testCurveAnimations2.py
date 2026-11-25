@@ -1,14 +1,11 @@
 import math
 import pyglet
 from pyglet.math import Vec2, Vec3
-import listMethods
-import customShapes as CS
-import vectorFunctions as VF
-from animationFunctions import smoothStep
+
+from mathObjects import DrawableClass, animationFunctions, ParametricFunction, DrawableGradients
+from mathObjects import customShapes as CS
+from mathObjects import vectorFunctions as VF
 from settings import *
-from DrawableClass import Drawable2D, Drawable4PointBezierCurve2D
-from ParametricFunction import ParametricFunction2D, BezierCurve4Point2D, BezierCurve4Point2DParametricFunction, BezierCurveCommands
-from DrawableGradients import DrawableCircleGradient, DrawableRectangleGradient
 
 # –––––––––––––––– #
 # Global Variables #
@@ -40,10 +37,10 @@ eye_control_points = [
 
 # Creating the drawable objects
 
-bc1 = BezierCurve4Point2D(controlPoints=eye_control_points)
+bc1 = ParametricFunction.BezierCurve4Point2D(controlPoints=eye_control_points)
 #parametricFunction1 = lambda t, animParams: bc1.evaluate(t).rotate(math.tau * smoothStep(animParams[0]))
 #line1 = Drawable4PointBezierCurve2D(CENTER, BezierCurve4Point2DParametricFunction(bc1, parametricFunction1, animationParameters1), start=0, end=2.0, batch=BATCH)
-line1 = Drawable4PointBezierCurve2D(bc1, batch=BATCH, group=FOREGROUND)
+line1 = DrawableClass.Drawable4PointBezierCurve2D(bc1, batch=BATCH, group=FOREGROUND)
 
 """
 l1 = [
@@ -73,15 +70,15 @@ bc2 = BezierCurve4Point2D(l1)
 bcDrawing2 = Drawable4PointBezierCurve2D(bc2, center=CENTER, position=Vec2(500,0), batch=BATCH, group=FOREGROUND, enableFill=True)
 """
 
-circles1 = DrawableCircleGradient(center=CENTER, initialRadius=10, finalRadius=50, numberOfShapes=15, batch=BATCH, group=FOREGROUND)
+circles1 = DrawableGradients.DrawableCircleGradient(center=CENTER, initialRadius=10, finalRadius=50, numberOfShapes=15, batch=BATCH, group=FOREGROUND)
 circles1.setColorGradientFrom2ColorsHSV(colorOuter=[10,1,0.75], colorInner=[70,0,1], spread=1.1)
 circles1.setOpacity(0)
 
-rect1 = DrawableRectangleGradient(center=CENTER, bottomLeftPoint=Vec2(-1220, 750), width=1500, height=1200, numberOfShapes=150, batch=BATCH, angle=-math.pi/2, group=BACKGROUND)
+rect1 = DrawableGradients.DrawableRectangleGradient(center=CENTER, bottomLeftPoint=Vec2(-1220, 750), width=1500, height=1200, numberOfShapes=150, batch=BATCH, angle=-math.pi/2, group=BACKGROUND)
 rect1.setColorGradientFrom2ColorsHSV(color0=[200,0.2,0.5], color1=[200,0.2,0])
 rect1.updateDrawings()
 
-rect2 = DrawableRectangleGradient(center=CENTER, bottomLeftPoint=Vec2(0, 750), width=1500, height=1200, numberOfShapes=200, batch=BATCH, angle=-math.pi/2, group=BACKGROUND)
+rect2 = DrawableGradients.DrawableRectangleGradient(center=CENTER, bottomLeftPoint=Vec2(0, 750), width=1500, height=1200, numberOfShapes=200, batch=BATCH, angle=-math.pi/2, group=BACKGROUND)
 rect2.setColorGradientFrom2ColorsHSV(color0=[200,0.2,0], color1=[200,0.2,0.5])
 rect2.updateDrawings()
 
@@ -96,7 +93,7 @@ rect2.updateDrawings()
 def updateTestCurve1(dt):
 	global line1, animationParameters1, eye_control_points
 	animationParameters1[0] += 0.5*dt
-	smoothParam0 = smoothStep(animationParameters1[0])
+	smoothParam0 = animationFunctions.smoothStep(animationParameters1[0])
 
 	eye_control_points[1] = Vec2(100,-175 + (1-smoothParam0)*(175))
 	eye_control_points[2] = Vec2(-100,-175 + (1-smoothParam0)*(175))
